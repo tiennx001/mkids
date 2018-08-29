@@ -1,0 +1,14 @@
+signout:
+  is_secure: true
+
+changePassword:
+  is_secure: true
+
+updateStatus:
+  is_secure: true
+
+deleteStatus:
+  is_secure: true
+
+getStatus:
+  is_secure: true

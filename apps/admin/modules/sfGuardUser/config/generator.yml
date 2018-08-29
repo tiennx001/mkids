@@ -1,0 +1,82 @@
+generator:
+  class: tmcTwitterBootstrapDoctrineGenerator
+  param:
+    model_class:           sfGuardUser
+    theme:                 tmcTwitterBootstrap
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          sf_guard_user
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+    css:                   admin/sfGuardUser
+
+    config:
+      actions: 
+        _list:    {label: Quay trở lại danh sách}
+        _save:    {label: Lưu}
+        _delete:  {label: Xóa}
+        _edit:    {label: Chi tiết}
+      fields:
+        username: {label: Tên đăng nhập}
+        email_address:      {label: Địa chỉ Email}
+        created_at:         {label: Ngày tạo}
+        updated_at:         {label: Ngày cập nhật}
+        last_login:         {label: Đăng nhập lần cuối}
+        is_super_admin:     {label: SuperAdmin}
+        is_active:          {label: Kích hoạt}
+        password:           {label: Gán mật khẩu}
+        groups_list:        {label: Nhóm người dùng}
+      list:
+        max_per_page: 10
+        title: Quản lý người dùng
+        display: [order_no, =username, email_address, is_active, last_login, created_at]
+        fields:
+          order_no:
+            label: 'Order No.'
+          created_at:
+            is_partial: true
+          last_login:
+            is_partial: true
+          username:           {label: Tên người dùng}
+        table_method: getSortUsernameAscList
+        actions:
+          _new:       {label: Thêm người dùng}
+        object_actions: ~
+        batch_actions:
+#          _delete: ~
+          deactive:   {label: Khóa}
+          active:     {label: Mở khóa}
+
+      filter:
+        class: sfGuardUserCustomAdminFormFilter
+        display: [username, is_active]
+        fields:
+          is_active: {label: Trạng thái kích hoạt}
+      form:
+        class: sfGuardUserCustomAdminForm
+        display: [username,password, email_address, is_active, groups_list]
+      edit:
+        title: Chỉnh sửa người dùng
+        fields:
+          username:           {label: Tên đăng nhập *}
+          password:           {label: Gán mật khẩu *}
+          email_address:      {label: Địa chỉ Email *}
+        actions:
+          _list: ~
+          _delete: ~
+          _save: ~
+          _save_and_exit: ~
+      new:
+        title: Thêm mới người dùng
+        actions:
+          _list: ~
+          _save: ~
+          _save_and_add: {label: Lưu và thêm mới}
+        fields:
+          username:           {label: Tên đăng nhập *}
+          password:           {label: Gán mật khẩu *}
+          email_address:      {label: Địa chỉ Email *}
+      show:    ~
+      revert:  ~

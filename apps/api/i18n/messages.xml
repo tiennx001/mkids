@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+    <file source-language="EN" target-language="vi" datatype="plaintext" original="messages" date="2012-08-14T05:42:04Z"
+          product-name="messages">
+        <header/>
+        <body>
+            <trans-unit>
+                <source>Authenticate Success</source>
+                <target>Xác thực tài khoản thành công</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Authenticate Fail</source>
+                <target>Thông tin đăng nhập không hợp lệ</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Unauthorized</source>
+                <target>Xác thực tài khoản thất bại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Missing Parameters</source>
+                <target>Thiếu tham số</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Invalid Parameter Value</source>
+                <target>Nhập sai giá trị tham số</target>
+            </trans-unit>
+            <trans-unit>
+                <source>User Has Not Registered Yet</source>
+                <target>User chưa đăng ký tài khoản</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Success</source>
+                <target>Thành công</target>
+            </trans-unit>
+            <trans-unit>
+                <source>No Results</source>
+                <target>Không có kết quả</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Invalid Phone Number</source>
+                <target>Nhập không đúng định dạng số điện thoại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Invalid Email</source>
+                <target>Nhập không đúng định dạng email</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Created</source>
+                <target>Đã tạo</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Accepted</source>
+                <target>Đã được chấp nhận</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Bad Request</source>
+                <target>Yêu cầu không hợp lệ</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Unauthorized</source>
+                <target>Tài khoản chưa được xác thực</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Forbidden</source>
+                <target>Bị chặn</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Not Found</source>
+                <target>Liên kết không được tìm thấy</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Method Not Allowed</source>
+                <target>Yêu cầu sử dụng phương thức POST</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Request Timeout</source>
+                <target>Thời gian yêu cầu hết hạn</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Internal Server Error</source>
+                <target>Hệ thống bận</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Bad Gateway</source>
+                <target>Gateway không hợp lệ</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Service Unavailable</source>
+                <target>Dịch vụ không hợp lệ</target>
+            </trans-unit>
+            <trans-unit>
+                <source>System Error</source>
+                <target>Hệ thống bận</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Your password must have at least 8 characters, include letter, number and special characters.</source>
+                <target>Mật khẩu của bạn phải chứa ít nhất 8 ký tự, bao gồm chữ cái, số và ký tự đặc biệt</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Password min length 8 char</source>
+                <target>Mật khẩu có độ dài ít nhất 8 ký tự</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Password max length 30 char</source>
+                <target>Mật khẩu có độ dài tối đa 30 ký tự</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Email has already existed.</source>
+                <target>Email đã tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Phone number has already existed.</source>
+                <target>Số điện thoại đã tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Username does not contain special characters</source>
+                <target>Tên đại diện không chứa ký tự đặc biệt</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Required</source>
+                <target>Bạn chưa nhập đầy đủ thông tin</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Invalid Verification Code</source>
+                <target>Mã xác nhận không hợp lệ</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Cannot create token, please try again</source>
+                <target>Không thể tạo phiên đăng nhập, vui lòng thử lại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Your account has been blocked for ten minutes</source>
+                <target>Tài khoản của bạn đã bị khóa 10 phút</target>
+            </trans-unit>
+            <trans-unit>
+                <source>You have reached the limit per hour</source>
+                <target>Bạn đã thực hiện thao tác này vượt quá giới hạn trong vòng 1 giờ</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Additional phone number cannot be identical to the main phone number</source>
+                <target>Số điện thoại phụ không được trùng với số điện thoại chính</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Additional phone number has already exist</source>
+                <target>Số điện thoại này đã tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Max length is %max_length%</source>
+                <target>Tối đa %max_length% ký tự</target>
+            </trans-unit>
+            <trans-unit>
+                <source>No message available</source>
+                <target>Chưa tạo thông điệp</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

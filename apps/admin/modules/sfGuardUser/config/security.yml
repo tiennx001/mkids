@@ -1,0 +1,5 @@
+all:
+  is_secure:   true
+  credentials: [[admin,adminUser,adminUserGroup]]
+#new:
+#  is_secure: true

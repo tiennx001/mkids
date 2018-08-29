@@ -1,0 +1,42 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/11-App
+
+# default values
+all:
+  truncate_length: 50  ## Gia tri truncate length khi xau ky tu qua dai
+  # sfCKEditorPlugin
+  ckeditor:
+    basePath: /js/ckeditor
+  ckfinder:
+    active: true
+    basePath: /js/ckfinder
+  #tim kiem voi ky tu dac biet
+  .array:
+    search_special_char:
+      "%":  "\%"
+      "'":  "\'"
+      "_": "\_"
+      "&": "\&"
+    
+  tmcTwitterBootstrapPlugin:
+    bootstrap_path:              /tmcTwitterBootstrapPlugin/css/bootstrap.min.css
+    responsive_bootstrap_path:   /tmcTwitterBootstrapPlugin/css/bootstrap-responsive.min.css
+    admin_styles_path:           /tmcTwitterBootstrapPlugin/css/styles.css
+    jquery_path:                 /tmcTwitterBootstrapPlugin/js/jquery.min.js
+    bootstrap_js_path:           /tmcTwitterBootstrapPlugin/js/bootstrap.min.js
+    admin_js_path:               /tmcTwitterBootstrapPlugin/js/global.js
+    dashboard_name: Hệ thống quản trị
+
+    header:
+      menu:
+        Quản trị hệ thống:
+#          credentials: [[[admin,adminUser]]]
+          dropdown:
+            Quản lý nhóm người dùng:
+              route: sf_guard_group_collection
+            Quản lý người dùng:
+              route: sf_guard_user
+            Quản lý quyền:
+              route: sf_guard_permission
+ 
+

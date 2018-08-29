@@ -1,0 +1,119 @@
+tld_introduction_intro:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                TldIntroduction
+    module:               intro
+    prefix_path:          /intro
+    column:               id
+    with_wildcard_routes: true
+
+tld_product:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                TldProduct
+    module:               product
+    prefix_path:          /product
+    column:               id
+    with_wildcard_routes: true
+
+tld_product_category:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                TldProductCategory
+    module:               productCategory
+    prefix_path:          /productCategory
+    column:               id
+    with_wildcard_routes: true
+
+tld_contact:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                TldContact
+    module:               contact
+    prefix_path:          /contact
+    column:               id
+    with_wildcard_routes: true
+
+
+
+
+ajaxSearch:
+  url:  /ajax_search
+  param: { module: vtManageTheme, action: ajaxSearch }
+ajaxActive:
+  url:  /ajax_active
+  param: { module: vtManageTheme, action: ajaxActive }
+ajaxDelete:
+  url:  /ajax-theme-delete/:_csrf_token
+  param: { module: vtManageTheme, action: ajaxDelete }
+
+ajaxLoad:
+  url:  /ajax_load
+  param: { module: ajax, action: ajaxLoad }
+
+sf_guard_change_password:
+  url:   /guard/change_password
+  param: { module: sfGuardAuth, action: changePassword }
+
+sf_guard_group:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                sfGuardGroup
+    module:               sfGuardGroup
+    prefix_path:          /sfGuardGroup
+    column:               id
+    with_wildcard_routes: true
+
+sf_guard_user:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                sfGuardUser
+    module:               sfGuardUser
+    prefix_path:          /sfGuardUser
+    column:               id
+    with_wildcard_routes: true
+
+sf_guard_group:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                sfGuardGroup
+    module:               sfGuardGroup
+    prefix_path:          /sfGuardGroup
+    column:               id
+    with_wildcard_routes: true
+
+sf_guard_signin:
+  url:   /login
+  param: { module: sfGuardAuth, action: signin }
+sf_guard_signout:
+  url:   /logout
+  param: { module: sfGuardAuth, action: signout }
+
+sf_guard_permission:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                sfGuardPermission
+    module:               sfGuardPermission
+    prefix_path:          /sfGuardPermission
+    column:               id
+    with_wildcard_routes: true
+
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+# default rules
+homepage:
+  url:   /
+  param: { module: vtHomePage, action: index }
+
+# generic rules
+error404:
+  url: /page-not-found
+  param: { module: default, action: error404 }
+# please, remove them by adding more specific rules
+default_index:
+  url:   /:module
+  param: { action: index }
+
+default:
+  url:   /:module/:action/*

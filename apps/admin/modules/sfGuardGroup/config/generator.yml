@@ -1,0 +1,71 @@
+generator:
+  class: tmcTwitterBootstrapDoctrineGenerator
+  param:
+    model_class:           sfGuardGroup
+    theme:                 tmcTwitterBootstrap
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          sf_guard_group
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: 
+        _list: {label: Quay trở lại danh sách}
+        _save: {label: Lưu}
+        _delete: {label: Xóa}
+        _edit: {label: Chi tiết}
+      fields:  
+        name: {label: Tên nhóm người dùng}
+        description: {label: Mô tả}
+      list:    
+        title: Quản lý nhóm người dùng
+        display: [order_no, =name, description]
+        max_per_page: 10
+#        table_method: getSortNameAscList
+        fields:
+          list_th_actions: {label: Xử lý}
+          order_no:
+            label: 'Order No.'
+          name:
+            truncate_length: 50
+          description:
+            truncate_length: 120
+        actions:
+          _new: {label: Thêm nhóm người dùng}
+        object_actions: []
+        #  _show: {label: Chi tiết}
+        #  _delete: ~
+        sort: [name, asc]
+
+      filter:
+        class: sfGuardGroupAdminFormFilter
+        display: [name]
+        
+      form:    
+        class: sfGuardGroupAdminForm
+        display: [name, description, permissions_list]
+        fields:
+          permissions_list: {label: Quyền sử dụng}
+          name: {label: Tên nhóm người dùng *}
+      edit:    
+        title: Chỉnh sửa nhóm người dùng
+
+        fields:
+          name:
+            is_partial: true
+        actions:
+          _list: ~
+          _delete: ~
+          _save: ~
+          _save_and_exit: ~
+      new:
+        title: Thêm mới nhóm người dùng
+        actions:
+          _list: ~
+          _save: ~
+          _save_and_add: {label: Lưu và thêm mới}
+      show: ~
+      revert:  ~

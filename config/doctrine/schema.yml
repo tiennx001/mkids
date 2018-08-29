@@ -1,0 +1,357 @@
+connection: doctrine
+
+#BANG SESSION DANG NHAP cho BACKEND
+SessionsAdmin:
+  columns:
+    sess_id: {type: string(64), primary: true, comment: "ID session"}
+    sess_data: {type: clob, notnull: true, comment: "Session data"}
+    sess_time: {type: integer(11), notnull: true, comment: "Thoi diem luu session"}
+    sess_userid: {type: integer(20), default: null, comment: "ID cua nguoi dung tuong ung voi session"}
+
+TblUser:
+  tableName: tbl_user
+  actAs:
+    Timestampable: ~
+  columns:
+    name: { type: string(255), notnull: true, comment: 'Họ tên người dùng' }
+    gender: { type: tinyint(1), default: 0, comment: 'Giới tính (0: Nữ; 1: Nam)' }
+    email: { type: string(255), comment: 'Email người dùng' }
+    facebook: { type: string(255), comment: 'Địa chỉ facebook' }
+    address: { type: string(255), comment: 'Địa điểm' }
+    description: { type: clob, comment: 'Mô tả' }
+    image_path: { type: string(255), comment: 'Ảnh đại diện cho người dùng' }
+    msisdn: { type: string(18), notnull: true, unique: true, comment: 'Số điện thoại của người dùng' }
+    password: { type: string(255), notnull: true, comment: 'Mật khẩu (đã được mã hóa)' }
+    salt: { type: string(255), notnull: true, comment: 'Chuỗi mã hóa mật khẩu' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: bị khóa; 1: kích hoạt)' }
+    last_update: {type: timestamp, comment: 'Thoi gian gan nhat nguoi dung xem notification'}
+    is_lock: { type: boolean, default: false, comment: 'Đã khóa account hay chưa' }
+    lock_time: { type: integer(20), comment: 'Thời gian khóa' }
+    type: { type: tinyint(2), comment: 'Loại user (0: Hiệu trưởng - 1: Giáo viên - 2: Phụ huynh' }
+
+TblTokenSession:
+  tableName: tbl_token_session
+  actAs:
+    Timestampable: ~
+  columns:
+    user_id: { type: integer(8), unique: true, comment: 'ID tai khoan dang ky su dung app' }
+    account: { type: string(255), unique: true, notnull: true, comment: 'Tai khoan cua nguoi dung' }
+    msisdn: { type: string(15), unique: true, notnull: true, comment: 'So dien thoai cua nguoi dung' }
+    token: { type: string(255), notnull: true, comment: 'Token xac thuc' }
+    expired_time: { type: timestamp, notnull: true, comment: 'Thoi gian token co hien luc'}
+    key_refresh: { type: string(255), notnull: true, comment: 'Key refresh phuc vu lay lai token' }
+    os_type: { type: integer(3), default: 0, comment: 'Loại HĐH (0: Android; 1: iOS)' }
+  relations:
+    TblUser: { class: TblUser, local: user_id, type: one, foreignAlias: TblTokenSession }
+
+TblSetting:
+  options:
+    comment:  'Bang Luu cau hinh cua he thong'
+  tableName: tbl_setting
+  columns:
+    id: { type: integer(8), primary: true, autoincrement: true, comment: "ID tu tang" }
+    name: { type: string(127), notnull: true, unique: true }
+    description: { type: string(255) }
+    type: { type: enum, notnull: true, values: [text, boolean, select, textarea, number, datetime], default: 'text' }
+    cfg_type: { type: enum, notnull: true, values: [ALL, CMS, WEB, WAP, SMS], default: 'ALL' }
+    value: { type: string(1023) }
+    params: { type: string(1023) }
+    group_name: { type: string(255), notnull: true, default: '' }
+    default_value: { type: string(1023), default: '' }
+    credentials: { type: string(255) }
+
+TblOtp:
+  options:
+    comment: 'Bang luu thong tin ma xac nhan'
+  tableName: tbl_otp
+  actAs:
+    Timestampable: ~
+  columns:
+    account: { type: string(255), notnull: true, comment: 'Địa chỉ mail hoặc SĐT cần xác thực' }
+    otp: { type: string(100), notnull: true, comment: 'Mã otp' }
+    is_lock: { type: boolean, default: false, comment: 'Đã khóa account hay chưa' }
+    lock_time: { type: integer(20), default: 0, comment: 'Thời gian khóa' }
+    expired_time: { type: timestamp, notnull: true, comment: 'Thời gian mã xác nhận còn hiệu lực' }
+
+TblUserSigninLog:
+  tableName: tbl_user_signin_log
+  options:
+    symfony:
+      form: false
+      filter: false
+  columns:
+    user_name: {type: string(255)}
+    created_time: {type: integer}
+
+sfGuardUser:
+  columns:
+    pass_update_at: { type: timestamp, comment: "Thoi gian update mat khau" }
+    is_lock_signin:  { type: boolean, comment: "Trang thai: 1 - bi khoa tai khoan, 0 - ko bi khoa" }
+    locked_time: { type: integer, comment: "Thoi diem khoa tai khoan" }
+
+TblSchool:
+  tableName: tbl_school
+  actAs:
+    Timestampable: ~
+  columns:
+    name: { type: string(127), notnull: true, comment: 'Tên trường' }
+    phone: { type: string(15), comment: 'SĐT liên hệ' }
+    email: { type: string(63), comment: 'Email' }
+    website: { type: string(127), comment: 'Website' }
+    address: { type: string(255), comment: 'Địa chỉ' }
+    description: { type: string(1023), comment: 'Mô tả chung' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblUser: { class: TblUser, refClass: TblUserSchoolRef, local: school_id, foreign: user_id }
+
+TblUserSchoolRef:
+  tableName: tbl_user_school_ref
+  actAs:
+    Timestampable:
+      created:
+        disabled: true
+      updated:
+        disabled: true
+  columns:
+    user_id: { type: integer(8), notnull: true, comment: 'ID user' }
+    school_id: { type: integer(8), notnull: true, comment: 'ID trường' }
+
+TblGroup:
+  tableName: tbl_group
+  actAs:
+    Timestampable: ~
+  columns:
+    name: { type: string(127), notnull: true, comment: 'Tên trường' }
+    description: { type: string(1023), comment: 'Mô tả chung' }
+    school_id: { type: integer(8), notnull: true, comment: 'ID trường' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblSchool: { class: TblSchool, local: school_id }
+
+TblClass:
+  tableName: tbl_class
+  actAs:
+    Timestampable: ~
+  columns:
+    name: { type: string(127), notnull: true, comment: 'Tên lớp' }
+    description: { type: string(1023), comment: 'Mô tả chung' }
+    group_id: { type: integer(5), notnull: true, comment: 'ID khối' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblGroup: { class: TblGroup, local: group_id }
+    TblUser: { class: TblUser, refClass: TblUserClassRef, local: class_id, foreign: user_id }
+
+TblUserClassRef:
+  tableName: tbl_user_class_ref
+  actAs:
+    Timestampable:
+      created:
+        disabled: true
+      updated:
+        disabled: true
+  columns:
+    user_id: { type: integer(8), notnull: true, comment: 'ID user' }
+    class_id: { type: integer(8), notnull: true, comment: 'ID lớp học' }
+
+TblMember:
+  tableName: tbl_member
+  actAs:
+    Timestampable: ~
+  columns:
+    name: { type: string(127), notnull: true, comment: 'Tên học sinh' }
+    birthday: { type: string(23), comment: 'Ngày sinh' }
+    height: { type: integer(5), comment: 'Chiều cao (cm)' }
+    weight: { type: integer(5), comment: 'Cân nặng (kg)' }
+    description: { type: string(1023), comment: 'Giới thiệu chung' }
+    image_path: { type: string(255), comment: 'Ảnh đại diện của học sinh' }
+    class_id: { type: integer(8), notnull: true, comment: 'ID lớp' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblClass: { class: TblClass, local: class_id }
+    TblUser: { class: TblUser, local: member_id, refClass: TblMemberUserRef, foreign: user_id }
+
+TblMemberUserRef:
+  tableName: tbl_member_user_ref
+  actAs:
+    Timestampable:
+      created:
+        disabled: true
+      updated:
+        disabled: true
+  columns:
+    member_id: { type: integer(8), comment: 'ID học sinh' }
+    user_id: { type: integer(8), notnull: true, comment: 'ID phụ huynh' }
+
+TblMenu:
+  tableName: tbl_menu
+  actAs:
+    Timestampable: ~
+  columns:
+    title: { type: string(127), notnull: true, comment: 'Tiêu đề' }
+    description: { type: string(1023), notnull: true, comment: 'Giới thiệu chung' }
+    image_path: { type: string(255), comment: 'Ảnh minh họa' }
+    type: { type: tinyint(2), comment: 'Loại thực đơn (0: Sáng - 1: Trưa - 2: Chiều)' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblGroup: { class: TblGroup, refClass: TblMenuRef, local: menu_id, foreign: group_id }
+    TblClass: { class: TblClass, refClass: TblMenuRef, local: menu_id, foreign: class_id }
+    TblMember: { class: TblMember, refClass: TblMenuRef, local: menu_id, foreign: member_id }
+
+TblMenuRef:
+  tableName: tbl_menu_ref
+  actAs:
+    Timestampable:
+      created:
+        disabled: true
+      updated:
+        disabled: true
+  columns:
+    member_id: { type: integer(8), comment: 'ID học sinh' }
+    class_id: { type: integer(8), comment: 'ID lớp học' }
+    group_id: { type: integer(8), comment: 'ID khối' }
+    menu_id: { type: integer(8), notnull: true, comment: 'ID thực đơn' }
+
+TblNotificationProgram:
+  tableName: tbl_notification_program
+  actAs:
+    Timestampable: ~
+  columns:
+    type: { type: tinyint(2), notnull: true, default: 0, comment: 'Phạm vi thông báo (0 - Toàn trường; 1 - Theo khối; 2 - Theo lớp; 3 - Từng cá nhân)' }
+    content: { type: string(1024), notnull: true, comment: 'Nội dung thông báo' }
+    article_id: { type: integer(8), comment: 'Gắn thông báo vào bài viết' }
+    start_time: { type: datetime, notnull: true, comment: 'Thời gian bắt đầu' }
+    user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
+    status: { type: tinyint(2), notnull: true, default: 0, comment: 'Trạng thái (0: nháp; 1: chờ phê duyệt; 2: phê duyệt; 3: đã gửi)' }
+  relations:
+    TblUser: { class: TblUser, local: user_id }
+    TblArticle: { class: TblArticle, local: article_id }
+    TblGroup: { class: TblGroup, refClass: TblNotificationProgramRef, local: program_id, foreign: group_id }
+    TblClass: { class: TblClass, refClass: TblNotificationProgramRef, local: program_id, foreign: class_id }
+    TblMember: { class: TblMember, refClass: TblNotificationProgramRef, local: program_id, foreign: member_id }
+
+TblNotificationProgramRef:
+  tableName: tbl_notification_program_ref
+  actAs:
+    Timestampable:
+      created:
+        disabled: true
+      updated:
+        disabled: true
+  columns:
+    member_id: { type: integer(8), comment: 'ID học sinh' }
+    class_id: { type: integer(8), comment: 'ID lớp học' }
+    group_id: { type: integer(8), comment: 'ID khối' }
+    program_id: { type: integer(8), notnull: true, comment: 'ID chương trình' }
+
+TblArticle:
+  tableName: tbl_article
+  actAs:
+    Timestampable: ~
+  columns:
+    title: { type: string(255), notnull: true, comment: 'Tiêu đề' }
+    content: { type: string(65535), notnull: true, comment: 'Nội dung bài viết' }
+    image_path: { type: string(255), comment: 'Ảnh minh họa' }
+    type: { type: tinyint(2), notnull: true, default: 0, comment: 'Phạm vi tin tức (0 - Toàn trường; 1 - Theo khối; 2 - Theo lớp; 3 - Từng cá nhân)' }
+    user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblUser: { class: TblUser, local: user_id }
+    TblGroup: { class: TblGroup, refClass: TblArticleRef, local: article_id, foreign: group_id }
+    TblClass: { class: TblClass, refClass: TblArticleRef, local: article_id, foreign: class_id }
+    TblMember: { class: TblMember, refClass: TblArticleRef, local: article_id, foreign: member_id }
+
+TblArticleRef:
+  tableName: tbl_article_ref
+  actAs:
+    Timestampable:
+      created:
+        disabled: true
+      updated:
+        disabled: true
+  columns:
+    member_id: { type: integer(8), comment: 'ID học sinh' }
+    class_id: { type: integer(8), comment: 'ID lớp học' }
+    group_id: { type: integer(8), comment: 'ID khối' }
+    article_id: { type: integer(8), notnull: true, comment: 'ID bài viết' }
+
+TblComment:
+  tableName: tbl_comment
+  actAs:
+    Timestampable: ~
+  columns:
+    user_id: { type: integer(8), notnull: true, comment: 'ID người bình luận' }
+    content: { type: string(1023), notnull: true, comment: 'Nội dung bình luận' }
+    parent_id: { type: integer(8), comment: 'ID bình luận gốc' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+  relations:
+    TblUser: { class: TblUser, local: user_id }
+    TblComment: { class: TblComment, local: parent_id }
+
+TblMemberActivity:
+  tableName: tbl_member_activity
+  actAs:
+    Timestampable: ~
+  columns:
+    member_id: { type: integer(8), notnull: true, comment: 'ID học sinh' }
+    date: { type: date, notnull: true, comment: 'Ngày hoạt động' }
+    type: { type: tinyint(2), notnull: true, default: 0, comment: 'Loạt hoạt động (0: Đi học; 1: Nghỉ học; 2: Đi dã ngoại; 3: Hoạt động văn nghệ; 4: Khai giảng; 5: Bế giảng; 6: Bắt đầu đi học; 7: Nghỉ hẳn)' }
+    description: { type: string(255), comment: 'Thông tin hoạt động' }
+    health: { type: tinyint(2), default: 0, comment: 'Sức khỏe (0: Ốm; 1: Bình thường; 2: Khỏe mạnh)' }
+    height: { type: integer(5), comment: 'Chiều cao (cm)' }
+    weight: { type: integer(5), comment: 'Cân nặng (kg)' }
+  relations:
+    TblMember: { class: TblMember, local: member_id }
+
+TblSummary:
+  tableName: tbl_summary
+  actAs:
+    Timestampable: ~
+  columns:
+    member_id: { type: integer(8), comment: 'ID học sinh' }
+    date: { type: date, comment: 'Ngày hoạt động' }
+    week: { type: integer(5), comment: 'Tuần' }
+    summary: { type: tinyint(2), comment: 'Tổng kết (0: Kém; 1: Yếu; 2: TB; 3: Khá; 4: Tốt; 5: Xuất sắc)' }
+    learning: { type: tinyint(2), comment: 'Tổng kết (0: Kém; 1: Yếu; 2: TB; 3: Khá; 4: Tốt; 5: Xuất sắc)' }
+    behavior: { type: tinyint(2), comment: 'Tổng kết (0: Kém; 1: Yếu; 2: TB; 3: Khá; 4: Tốt; 5: Xuất sắc)' }
+    attendance: { type: tinyint(2), comment: 'Đi học đầy đủ (0: Ít đi học; 1: Đầy đủ; 2: Chăm chỉ)' }
+    description: { type: string(255), comment: 'Nhận xét chung' }
+  relations:
+    TblMember: { class: TblMember, local: member_id }
+
+TblNotification:
+  tableName: tbl_notification
+  actAs:
+    Timestampable:
+      updated:
+        disabled: true
+  columns:
+    sender_id: { type: string(16), comment: 'ID của người gửi thông báo' }
+    receiver_id: { type: integer(8), comment: 'ID của người nhận thông báo' }
+    receiver_phone: { type: string(16), comment: 'SĐT của người nhận thông báo' }
+    content: { type: string(1024), comment: 'Nội dung thông báo' }
+    type: { type: tinyint(2), default: 0, comment: 'Loại thông báo (0 - Notification; 1 - Notification + SMS)' }
+    article_id: { type: integer(8), comment: 'ID bài viết' }
+  relations:
+    Sender: { class: TblUser, local: sender_id }
+    Receiver: { class: TblUser, local: receiver_id }
+    TblArticle: { class: TblArticle, local: article_id }
+
+TblNotificationHis:
+  tableName: tbl_notification_his
+  actAs:
+    Timestampable:
+      updated:
+        disabled: true
+  columns:
+    sender_id: { type: string(16), comment: 'ID của người gửi thông báo' }
+    receiver_id: { type: integer(8), comment: 'ID của người nhận thông báo' }
+    receiver_phone: { type: string(16), comment: 'SĐT của người nhận thông báo' }
+    content: { type: string(1024), comment: 'Nội dung thông báo' }
+    type: { type: tinyint(2), default: 0, comment: 'Loại thông báo (0 - Notification; 1 - Notification + SMS)' }
+    article_id: { type: integer(8), comment: 'ID bài viết' }
+    status: { type: integer(2), comment: 'Trạng thái push notification (0 - Không có registration_ids; 1 - Thành công; 2 - Thất bại)' }
+    response: { type: string(1024), comment: 'Response của server' }
+  relations:
+    Sender: { class: TblUser, local: sender_id }
+    Receiver: { class: TblUser, local: receiver_id }
+    TblArticle: { class: TblArticle, local: article_id }

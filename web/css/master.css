@@ -1,0 +1,71 @@
+body {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #000000;
+    font-family: Helvetica,Arial,sans-serif;
+    font-size: 0.8em;
+    line-height: 1.5;
+}
+pre.listing {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border: 1px solid #CCCCCC;
+    margin: 0.3em auto;
+    padding: 0.1em 0.3em;
+    width: 90%;
+}
+pre.listing b {
+    color: #FF0000;
+}
+table {
+    border: 1px solid #888888;
+    border-collapse: collapse;
+    line-height: 1;
+    margin: 1em auto;
+    width: 90%;
+}
+table caption {
+    font-size: 0.9em;
+    font-weight: bold;
+}
+table thead {
+    background: url("../images/bg-table-thead.png") repeat-x scroll left top #AAAAAA;
+    font-size: 0.9em;
+}
+table thead tr th {
+    border: 1px solid #888888;
+    font-weight: normal;
+    padding: 0.3em 1.67em 0.1em;
+    text-align: left;
+}
+table tbody tr td {
+    cursor: default;
+    padding: 0.3em 1.5em;
+}
+table tbody tr.even {
+    background: none repeat scroll 0 0 #F3F3F3;
+}
+table tbody tr.odd {
+    background: none repeat scroll 0 0 #FFFFFF;
+}
+table span {
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding: 0.2em 0 0.2em 1.5em;
+}
+table span.file {
+    background-image: url("../images/page_white_text.png");
+}
+
+table span.folder {
+    background-image: url("../images/folder.png");
+}
+table td.pathleftChild{
+    padding-left: 35px;
+}
+
+table td.pathleftDescent{
+    padding-left: 57px;
+}
+
+table tr{
+    margin-left:10px;
+}

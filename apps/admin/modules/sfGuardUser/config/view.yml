@@ -1,0 +1,9 @@
+indexSuccess:
+  metas:
+    title: Quản lý người dùng
+newSuccess:
+  metas:
+    title: Thêm mới người dùng
+editSuccess:
+  metas:
+    title: Chỉnh sửa người dùng

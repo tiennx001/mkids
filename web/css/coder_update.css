@@ -1,0 +1,164 @@
+/*#blanket {*/
+    /*background:url(../images/smas_21.png) repeat scroll 0 0 transparent;*/
+    /*position:absolute;*/
+    /*left:0;*/
+    /*top:0;*/
+    /*width:100%;*/
+    /*height:100%;*/
+    /*z-index:3;*/
+/*}*/
+#popUpDiv {
+    position:absolute;
+    width:520px;
+    height:1300px;
+    z-index: 9002;
+}
+.text-area{
+    width: 423px !important;
+}
+#myRoundabout{
+    top: 102px !important;
+}
+.roundabout-holder{
+    padding: 0;
+    margin: 0 auto;
+    height: 215px;
+    width: 540px;
+}
+.roundabout-moveable-item{
+    height: 400px;
+    width: 320px;
+    cursor: pointer;
+    border: 1px solid #000000;
+    display: block;
+}
+.roundabout-moveable-item img{
+    height: 100%;
+    width: 100%;
+}
+.roundabout-in-focus{
+    cursor: auto;
+}
+#content .next{
+    display: inline !important;
+}
+#content .previous{
+    display: inline !important;
+}
+.play{
+    display: none !important;
+}
+.slide{
+    left: 4px;
+}
+.captcha{
+    vertical-align: top;
+    margin-right: 5px;
+}
+.left-body .video-clip .content{
+    line-height: 16px;
+    padding: 5px 5px 5px;
+    text-align: center;
+    width: 188px !important;
+}
+.error_list {
+    list-style: none;
+    margin: 0;
+    color: red;
+}
+.module-contact .rows-form .text-area {
+    width: 400px !important;
+}
+/*style giam sat camera*/
+.list-camera{
+    border: 1px solid #dddddd;
+    border-collapse: separate;
+    *border-collapse: collapsed;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.widget-footer{
+    padding: 0.5em 0;
+    background: #FFF;
+    border: 1px solid #D5D5D5;
+    border-top: none;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+.camera-item-max,.camera-item-medium,.camera-item-min {
+    float: left;
+    margin: 2% 1%;
+}
+.camera-item-min{
+    width: 23% !important;
+    text-align: center;
+}
+.camera-item-medium{
+    width: 31% !important;
+    text-align: center;
+}
+.camera-item-max{
+    width: 48% !important;
+    text-align: center;
+}
+
+.camera_screen{
+    width: 100% !important;
+}
+
+.camera-item-max .sf_admin_boolean,.camera-item-medium .sf_admin_boolean,.camera-item-min .sf_admin_boolean {
+    text-align: left;
+}
+
+.control-move {
+    width: 70px;
+}
+.camera_monitor{
+    float: left;
+    margin-left: 2%;
+    padding: 2%;
+    /*background: -moz-linear-gradient(center top , #FAFAFA 0%, #E9E9E9 100%) repeat scroll 0 0 transparent*/
+}
+.camera-background{
+    background: #E9E9E9;
+    background:-moz-linear-gradient(top, #FAFAFA 0%, #E9E9E9 100%); /* FF3.6+ */
+    background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#FAFAFA), color-stop(100%,#E9E9E9)); /* Chrome,Safari4+ */
+    background:-webkit-linear-gradient(top, #FAFAFA 0%,#E9E9E9 100%); /* Chrome10+,Safari5.1+ */
+    background:-o-linear-gradient(top, #FAFAFA 0%,#E9E9E9 100%); /* Opera11.10+ */
+    background:-ms-linear-gradient(top, #FAFAFA 0%,#E9E9E9 100%); /* IE10+ */
+    background:linear-gradient(top, #FAFAFA 0%,#E9E9E9 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E9E9E9');
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#FAFAFA', endColorstr='#E9E9E9')";
+}
+.camera_control{
+    float: right;
+    /*width: 40%;*/
+    padding: 124px 5%;
+    margin-right: 3%;
+    /*background: -moz-linear-gradient(center top , #FAFAFA 0%, #E9E9E9 100%) repeat scroll 0 0 transparent*/
+}
+
+#camera-error{
+    padding-top: 10px;
+}
+
+table.table_control{
+    width: 230px;
+}
+table.table_control tr td{
+    padding: 4px;
+}
+.btn-right {
+    float: right;
+}
+.btn-link{
+    margin-left: 25%;
+}
+.btn-icon {
+    float: right;
+    margin-right: 25%;
+    padding: 6px 10px;
+}
+/*end style giam sat camera*/

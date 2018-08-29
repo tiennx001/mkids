@@ -1,0 +1,10 @@
+attributes:
+  game_recommend: {value: 1, alias: "Game mới"}                  #0
+  app_recommend:  {value: 2, alias: "Game mới"}                  #1
+
+  game_hot:    {value: 4, alias: "Game Hot"}                  #2
+  game_new:    {value: 8, alias: "Game mới"}                  #3
+
+  app_hot:    {value: 16, alias: "Ứng dụng Hot"}                  #4
+  app_new:    {value: 32, alias: "Ứng dụng mới"}                  #5
+

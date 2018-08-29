@@ -1,0 +1,31 @@
+generator:
+  class: tmcTwitterBootstrapDoctrineGenerator
+  param:
+    model_class:           TldIntroduction
+    theme:                 tmcTwitterBootstrap
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          tld_introduction_intro
+    with_doctrine_route:   true
+    actions_base_class:    sfActions
+
+    config:
+      actions: ~
+      fields:  ~
+      list: ~
+
+      filter:  ~
+      form:
+        display:
+          '': [body]
+          class: TldIntroductionAdminForm
+      edit:    ~
+      new:
+
+        display:
+          '': [body]
+          class: TldIntroductionAdminForm
+      show:    ~
+      revert:  ~

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+    <file source-language="EN" target-language="en" datatype="plaintext" original="messages" date="2012-11-15T22:59:56Z"
+          product-name="messages">
+        <header/>
+        <body>
+            <trans-unit id="1">
+                <source>Lưu</source>
+                <target>Save</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Hủy</source>
+                <target>Cancel</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source>OK</source>
+                <target>OK</target>
+            </trans-unit>
+            <trans-unit id="4">
+                <source>Mật khẩu của bạn phải có ít nhất 8 ký tự, bao gồm chữ số và ký tự đặc biệt.</source>
+                <target>Your password must have at least 8 characters, include number and special characters.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

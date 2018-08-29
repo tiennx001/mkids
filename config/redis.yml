@@ -1,0 +1,8 @@
+all:
+  connections:
+    default:
+      host: localhost
+      port: 19111
+    cache:
+      host: localhost
+      port: 19111

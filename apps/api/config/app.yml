@@ -1,0 +1,10 @@
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/11-App
+
+# default values
+all:
+  token_expired: 86400
+  otp_expired: 3600
+  strong_password_pattern: /^.*(?=.{8,})(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[a-zA-Z]).*$/
+  cache_lifetime: 120
+  administrator_email: icontact.vvn@gmail.com
