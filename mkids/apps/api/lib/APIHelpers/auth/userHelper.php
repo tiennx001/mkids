@@ -12,7 +12,7 @@ class userHelper
   /**
    * Thực hiện generate token và keyRefresh theo username hoặc số điện thoại
    * @param $username
-   * @return cặp token và keyrefresh nếu lưu token sess.ion thành công
+   * @return array
    * @author NghiaLD <nghiald@viettel.com>
    * @modifier Tiennx6
    * @created_at: 4/14/14 8:26 AM

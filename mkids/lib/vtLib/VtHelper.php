@@ -1393,8 +1393,9 @@ class VtHelper
     return $ipaddress;
   }
 
-  public static function writeLogValue($content, $fileName = 'portal.log')
+  public static function writeLogValue($content, $fileName = 'default.log')
   {
+    $fileName = $fileName . "." . date("Y-m-d");
     $logger = new sfFileLogger(new sfEventDispatcher(), array('file' => sfConfig::get('sf_log_dir') . '/' . $fileName));
     $logger->log($content, sfFileLogger::INFO);
   }

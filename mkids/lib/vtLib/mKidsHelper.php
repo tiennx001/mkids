@@ -7,7 +7,7 @@
  * Time: 4:56 PM
  * To change this template use File | Settings | File Templates.
  */
-class IContactHelper
+class mKidsHelper
 {
 
   const MOBILE_SIMPLE = '09x';

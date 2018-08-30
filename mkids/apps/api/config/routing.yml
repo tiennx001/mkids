@@ -1,8 +1,8 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
-signout:
-  url: /signout
-  param: { module: user, action: signout }
+login:
+  url: /login
+  param: { module: user, action: login }
 
 receive_password:
   url: /receivePassword
@@ -27,34 +27,6 @@ register:
 validateToken:
   url: /validateToken
   param: { module: user, action: validateToken }
-
-updateContacts:
-  url: /updateContacts
-  param: { module: contact, action: updateContacts }
-
-updateAdditionalPhone:
-  url: /updateAdditionalPhone
-  param: { module: contact, action: updateAdditionalPhone }
-
-getAdditionalPhones:
-  url: /getAdditionalPhones
-  param: { module: contact, action: getAdditionalPhones }
-
-deleteAdditionalPhone:
-  url: /deleteAdditionalPhone
-  param: { module: contact, action: deleteAdditionalPhone }
-
-updateStatus:
-  url: /updateStatus
-  param: { module: user, action: updateStatus }
-
-deleteStatus:
-  url: /deleteStatus
-  param: { module: user, action: deleteStatus }
-
-getStatus:
-  url: /getStatus
-  param: { module: user, action: getStatus }
 
 getInformation:
   url: /dieukhoan
