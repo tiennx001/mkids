@@ -16,4 +16,19 @@ class TblGroupTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblGroup');
     }
+
+    public function getActiveGroupBySchoolId($schoolId){
+      return self::getInstance()->createQuery()
+        ->where('status = 1')
+        ->andWhere('school_id = ?', $schoolId)
+        ->fetchArray();
+    }
+
+    public static function getActiveGroupByIdAndSchoolId($id,$schoolId){
+      return self::getInstance()->createQuery()
+        ->where('status = 1')
+        ->andWhere('id = ?', $id)
+        ->andWhere('school_id = ?', $schoolId)
+        ->fetchArray();
+    }
 }

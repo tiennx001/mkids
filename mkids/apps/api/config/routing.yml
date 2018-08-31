@@ -31,7 +31,21 @@ validateToken:
 getInformation:
   url: /dieukhoan
   param: { module: about, action: index }
+############ Quan ly thong tin #############
+getSchoolInfo:
+  url: /getSchoolInfo
+  param: { module: management, action: getSchoolInfo }
+updateSchoolInfo:
+  url: /updateSchoolInfo
+  param: { module: management, action: updateSchoolInfo }
+getGroupList:
+  url: /getGroupList
+  param: { module: management, action: getGroupList }
+updateGroup:
+  url: /updateGroup
+  param: { module: management, action: updateGroup }
 
+############ Quan ly thong tin #############
 # default rules
 homepage:
   url:   /

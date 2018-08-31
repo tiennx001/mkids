@@ -16,4 +16,21 @@ class TblSchoolTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblSchool');
     }
+
+    public function getActiveSchoolByUserId($userId){
+      return self::getInstance()->createQuery('s')
+        ->innerJoin('s.TblUserSchoolRef r')
+        ->where('r.user_id = ?', $userId)
+        ->andWhere('s.status = 1')
+        ->fetchOne();
+    }
+
+    public function getActiveSchoolByIdAndUserId($id,$userId){
+      return self::getInstance()->createQuery('s')
+        ->innerJoin('s.TblUserSchoolRef r')
+        ->where('r.user_id = ?', $userId)
+        ->andWhere('s.id = ?', $id)
+        ->andWhere('s.status = 1')
+        ->fetchOne();
+    }
 }
