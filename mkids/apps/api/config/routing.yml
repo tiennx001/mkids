@@ -44,6 +44,18 @@ getGroupList:
 updateGroup:
   url: /updateGroup
   param: { module: management, action: updateGroup }
+getClassList:
+  url: /getClassList
+  param: { module: management, action: getClassList }
+updateClass:
+  url: /updateClass
+  param: { module: management, action: updateClass }
+getTeacherList:
+  url: /getTeacherList
+  param: { module: management, action: getTeacherList }
+updateTeacher:
+  url: /updateTeacher
+  param: { module: management, action: updateTeacher }
 
 ############ Quan ly thong tin #############
 # default rules

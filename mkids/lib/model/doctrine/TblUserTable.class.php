@@ -67,4 +67,33 @@ class TblUserTable extends Doctrine_Table
       ->andWhere('a.status = 1')
       ->fetchOne();
   }
+
+  public function getListUserByTypeQuery($schoolId,$classId = null,$type = null,$keyword = null,$page = 1,$pageSize = -1){
+    $query = $this->createQuery('t')
+      ->innerJoin('t.TblClass c')
+      ->innerJoin('c.TblGroup g')
+      ->where('g.school_id = ?', $schoolId);
+    if($classId)
+      $query->andWhere('c.id = ?', $classId);
+    if($keyword)
+      $query->andWhere('(t.name like ? OR t.description like ?)', ['%'.VtHelper::translateQuery($keyword).'%','%'.VtHelper::translateQuery($keyword).'%']);
+    if($type)
+      $query->andWhere('type = ?', $type);
+    if($pageSize > 0){
+      $query->limit($pageSize)
+        ->offset(($page-1)*$pageSize);
+    }
+    return $query;
+  }
+
+  public function getListUserByType($schoolId,$classId,$type,$keyword,$page,$pageSize){
+
+    return $this->getListUserByTypeQuery($schoolId,$classId,$type,$keyword,$page,$pageSize)->fetchArray();
+  }
+
+  public function getUserById($id,$schoolId,$type){
+    $query = $this->getListUserByTypeQuery($schoolId,null,$type)
+      ->addWhere('t.id = ?', $id)
+      ->fetchOne();
+  }
 }
