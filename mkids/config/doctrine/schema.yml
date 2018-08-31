@@ -41,6 +41,7 @@ TblTokenSession:
     expired_time: { type: timestamp, notnull: true, comment: 'Thoi gian token co hien luc'}
     key_refresh: { type: string(255), notnull: true, comment: 'Key refresh phuc vu lay lai token' }
     os_type: { type: integer(3), default: 0, comment: 'Loại HĐH (0: Android; 1: iOS)' }
+    user_type: { type: tinyint(2), comment: 'Loại user (0: Hiệu trưởng - 1: Giáo viên - 2: Phụ huynh' }
   relations:
     TblUser: { class: TblUser, local: user_id, type: one, foreignAlias: TblTokenSession }
 
@@ -216,6 +217,7 @@ TblNotificationProgram:
   actAs:
     Timestampable: ~
   columns:
+    name: { type: string(255), notnull: true, comment: 'Tiêu đề' }
     type: { type: tinyint(2), notnull: true, default: 0, comment: 'Phạm vi thông báo (0 - Toàn trường; 1 - Theo khối; 2 - Theo lớp; 3 - Từng cá nhân)' }
     content: { type: string(1024), notnull: true, comment: 'Nội dung thông báo' }
     article_id: { type: integer(8), comment: 'Gắn thông báo vào bài viết' }

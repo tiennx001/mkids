@@ -16,4 +16,11 @@ class TblNotificationProgramRefTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblNotificationProgramRef');
     }
+
+    public function deleteOldData($progId) {
+        return $this->createQuery('a')
+          ->delete()
+          ->where('a.program_id = ?', $progId)
+          ->execute();
+  }
 }

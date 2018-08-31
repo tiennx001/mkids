@@ -5,9 +5,9 @@ all:
   doctrine:
     class: sfDoctrineDatabase
     param:
-      dsn:      mysql:host=125.212.225.193:3366;dbname=icontact
-      username: icontactuser
-      password: 1AFaSoz7ma72
+      dsn:      mysql:host=127.0.0.1;dbname=mkids
+      username: root
+      password:
       attributes:
         default_table_charset: utf8
         default_table_collate: utf8_general_ci

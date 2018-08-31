@@ -16,6 +16,7 @@ abstract class BaseTblNotificationProgramForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'              => new sfWidgetFormInputHidden(),
+      'name'            => new sfWidgetFormInputText(),
       'type'            => new sfWidgetFormInputText(),
       'content'         => new sfWidgetFormTextarea(),
       'article_id'      => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblArticle'), 'add_empty' => true)),
@@ -31,6 +32,7 @@ abstract class BaseTblNotificationProgramForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'              => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'name'            => new sfValidatorString(array('max_length' => 255)),
       'type'            => new sfValidatorPass(array('required' => false)),
       'content'         => new sfValidatorString(array('max_length' => 1024)),
       'article_id'      => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblArticle'), 'required' => false)),

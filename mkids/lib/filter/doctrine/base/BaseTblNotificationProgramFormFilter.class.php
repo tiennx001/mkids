@@ -13,6 +13,7 @@ abstract class BaseTblNotificationProgramFormFilter extends BaseFormFilterDoctri
   public function setup()
   {
     $this->setWidgets(array(
+      'name'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'type'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'content'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'article_id'      => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblArticle'), 'add_empty' => true)),
@@ -27,6 +28,7 @@ abstract class BaseTblNotificationProgramFormFilter extends BaseFormFilterDoctri
     ));
 
     $this->setValidators(array(
+      'name'            => new sfValidatorPass(array('required' => false)),
       'type'            => new sfValidatorPass(array('required' => false)),
       'content'         => new sfValidatorPass(array('required' => false)),
       'article_id'      => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblArticle'), 'column' => 'id')),
@@ -50,9 +52,9 @@ abstract class BaseTblNotificationProgramFormFilter extends BaseFormFilterDoctri
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblGroupListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
@@ -72,9 +74,9 @@ TblGroupListColumnQuery(Doctrine_Query $query, $field, $values)
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblClassListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
@@ -94,9 +96,9 @@ TblClassListColumnQuery(Doctrine_Query $query, $field, $values)
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblMemberListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
@@ -124,6 +126,7 @@ TblMemberListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     return array(
       'id'              => 'Number',
+      'name'            => 'Text',
       'type'            => 'Text',
       'content'         => 'Text',
       'article_id'      => 'ForeignKey',

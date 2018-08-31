@@ -10,7 +10,7 @@
 class jsonObject
 {
 
-  public function __construct($errorCode, $message, $token = null, $data = null, $additional_phone = null, $is_update = null, $type = null)
+  public function __construct($errorCode, $message, $token = null, $data = null)
   {
     $this->errorCode = $errorCode;
     $this->message = $message;
@@ -19,15 +19,6 @@ class jsonObject
     }
     if ($data !== null) {
       $this->data = $data;
-    }
-    if ($additional_phone !== null) {
-      $this->additional_phone = $additional_phone;
-    }
-    if ($is_update !== null) {
-      $this->is_update = $is_update;
-    }
-    if ($type !== null) {
-      $this->type = $type;
     }
   }
 

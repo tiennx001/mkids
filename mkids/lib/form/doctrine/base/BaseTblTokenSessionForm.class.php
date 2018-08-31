@@ -23,6 +23,7 @@ abstract class BaseTblTokenSessionForm extends BaseFormDoctrine
       'expired_time' => new sfWidgetFormDateTime(),
       'key_refresh'  => new sfWidgetFormInputText(),
       'os_type'      => new sfWidgetFormInputText(),
+      'user_type'    => new sfWidgetFormInputText(),
       'created_at'   => new sfWidgetFormDateTime(),
       'updated_at'   => new sfWidgetFormDateTime(),
     ));
@@ -36,6 +37,7 @@ abstract class BaseTblTokenSessionForm extends BaseFormDoctrine
       'expired_time' => new sfValidatorDateTime(),
       'key_refresh'  => new sfValidatorString(array('max_length' => 255)),
       'os_type'      => new sfValidatorInteger(array('required' => false)),
+      'user_type'    => new sfValidatorPass(array('required' => false)),
       'created_at'   => new sfValidatorDateTime(),
       'updated_at'   => new sfValidatorDateTime(),
     ));

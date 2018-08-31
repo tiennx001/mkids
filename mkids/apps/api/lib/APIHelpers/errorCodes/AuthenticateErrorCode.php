@@ -3,7 +3,6 @@
 class AuthenticateErrorCode extends defaultErrorCode
 {
   //danh sách mã lỗi
-
   const AUTHENTICATE_SUCCESS = 0;
   const AUTHENTICATE_FAIL = 1;
   const MISSING_PARAMETERS = 2;

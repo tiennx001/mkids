@@ -14,6 +14,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblTokenSession', 'doctrine');
  * @property timestamp $expired_time
  * @property string $key_refresh
  * @property integer $os_type
+ * @property tinyint $user_type
  * @property TblUser $TblUser
  * 
  * @method integer         getUserId()       Returns the current record's "user_id" value
@@ -23,6 +24,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblTokenSession', 'doctrine');
  * @method timestamp       getExpiredTime()  Returns the current record's "expired_time" value
  * @method string          getKeyRefresh()   Returns the current record's "key_refresh" value
  * @method integer         getOsType()       Returns the current record's "os_type" value
+ * @method tinyint         getUserType()     Returns the current record's "user_type" value
  * @method TblUser         getTblUser()      Returns the current record's "TblUser" value
  * @method TblTokenSession setUserId()       Sets the current record's "user_id" value
  * @method TblTokenSession setAccount()      Sets the current record's "account" value
@@ -31,6 +33,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblTokenSession', 'doctrine');
  * @method TblTokenSession setExpiredTime()  Sets the current record's "expired_time" value
  * @method TblTokenSession setKeyRefresh()   Sets the current record's "key_refresh" value
  * @method TblTokenSession setOsType()       Sets the current record's "os_type" value
+ * @method TblTokenSession setUserType()     Sets the current record's "user_type" value
  * @method TblTokenSession setTblUser()      Sets the current record's "TblUser" value
  * 
  * @package    xcode
@@ -85,6 +88,11 @@ abstract class BaseTblTokenSession extends sfDoctrineRecord
              'default' => 0,
              'comment' => 'Loại HĐH (0: Android; 1: iOS)',
              'length' => 3,
+             ));
+        $this->hasColumn('user_type', 'tinyint', 2, array(
+             'type' => 'tinyint',
+             'comment' => 'Loại user (0: Hiệu trưởng - 1: Giáo viên - 2: Phụ huynh',
+             'length' => 2,
              ));
     }
 
