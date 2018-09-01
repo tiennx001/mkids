@@ -7,4 +7,9 @@ class myUser extends sfGuardSecurityUser
     $vtUser = new VtUser();
     return $vtUser;
   }
+
+  public function getUserId(){
+    $userInfo = $this->getAttribute('userInfo');
+    return $userInfo ? $userInfo->getUserId() : null;
+  }
 }

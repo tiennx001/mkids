@@ -17,7 +17,7 @@ abstract class NotificationProgTypeEnum {
       self::TO_ALL => 'T?t c?',
       self::TO_GROUP => 'Theo kh?i',
       self::TO_CLASS => 'Theo l?p',
-      self::TO_MEMBER => 'T?ng cá nhân',
+      self::TO_MEMBER => 'T?ng cï¿½ nhï¿½n',
     );
   }
 }
@@ -30,10 +30,24 @@ abstract class NotificationProgStatusEnum {
 
   public static function getArr() {
     return array(
-      self::DRAFT => 'Nháp',
-      self::WAITING => 'Ch? phê duy?t',
-      self::APPROVE => '?ã phê duy?t',
-      self::COMPLETE => '?ã g?i',
+      self::DRAFT => 'Nhï¿½p',
+      self::WAITING => 'Ch? phï¿½ duy?t',
+      self::APPROVE => '?ï¿½ phï¿½ duy?t',
+      self::COMPLETE => '?ï¿½ g?i',
+    );
+  }
+}
+
+abstract class UserTypeEnum {
+  const PRINCIPAL = 0;
+  const TEACHER = 1;
+  const PARENTS = 2;
+
+  public static function getArr() {
+    return array(
+      self::PRINCIPAL => 'Hiá»‡u trÆ°á»Ÿng',
+      self::TEACHER => 'GiÃ¡o viÃªn',
+      self::PARENTS => 'Phá»¥ huynh',
     );
   }
 }
