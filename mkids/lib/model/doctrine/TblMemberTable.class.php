@@ -16,4 +16,31 @@ class TblMemberTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblMember');
     }
+
+  public function getListMemberQuery($schoolId,$classId = null,$keyword = null,$page = 1,$pageSize = -1){
+    $query = $this->createQuery('m')
+      ->innerJoin('m.TblClass c')
+      ->innerJoin('c.TblGroup g')
+      ->where('g.school_id = ?', $schoolId);
+    if($classId)
+      $query->andWhere('m.class_id = ?', $classId);
+    if($keyword)
+      $query->andWhere('(m.name like ? OR m.description like ?)', ['%'.VtHelper::translateQuery($keyword).'%','%'.VtHelper::translateQuery($keyword).'%']);
+    if($pageSize > 0 && $page > 0){
+      $query->limit($pageSize)
+        ->offset(($page-1)*$pageSize);
+    }
+    return $query;
+  }
+
+  public function getListMember($schoolId,$classId,$keyword,$page,$pageSize){
+
+    return $this->getListMemberQuery($schoolId,$classId,$keyword,$page,$pageSize)->fetchArray();
+  }
+
+  public function getMemberById($id,$schoolId){
+    return $this->getListMemberQuery($schoolId)
+      ->addWhere('m.id = ?', $id)
+      ->fetchOne();
+  }
 }

@@ -404,4 +404,175 @@ class managementActions extends sfActions
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }
+
+  public function executeGetMemberList(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $classId = trim($request->getPostParameter('classId'));
+    $keyword = trim($request->getPostParameter('kw'));
+    $page = trim(intval($request->getPostParameter('page',1)));
+    $pageSize = trim(intval($request->getPostParameter('pageSize',10)));
+
+    $listStudent = TblMemberTable::getInstance()->getListMember($school['id'],$classId,$keyword,$page,$pageSize);
+    if(!count($listStudent)){
+      $errorCode = UserErrorCode::NO_RESULTS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+    foreach ($listStudent as $student){
+      $data[] = [
+        'id' => $student['id'],
+        'name' => $student['name'],
+        'description' => $student['description'],
+        'imagePath' => $student['image_path'],
+        'classId' => $student['class_id'],
+        'className' => $student['TblClass']['name'],
+      ];
+    }
+
+    $errorCode = 0;
+    $message = 'success';
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeUpdateMember(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+    $formValues = $request->getPostParameters();
+    $formValues['tbl_user_list'] = !empty($formValues['image']) ? explode(',',trim($formValues['parentId'])) : '';
+    $formValues['image_path'] = !empty($formValues['image']) ? $formValues['image'] : '';
+    $formValues['class_id'] = !empty($formValues['classId']) ? $formValues['classId'] : '';
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(empty($formValues['id'])){
+      //truong hop khong truyen id --> them moi
+      $form = new TblMemberApiForm();
+      $formValues['status'] = 1;
+    }else{
+      //truong hop truyen id --> thuc hien cap nhat
+      //lay thong tin hoc sinh
+      $student = TblMemberTable::getInstance()->getMemberById($formValues['id'],$school['id']);
+      if(!$student){
+        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message, null, $data);
+        return $this->renderText($jsonObj->toJson());
+      }
+      $form = new TblMemberApiForm($student);
+      $formValues['status'] = $student->getStatus();
+    }
+
+    unset($formValues['token']);
+    unset($formValues['image']);
+    unset($formValues['classId']);
+    unset($formValues['parentId']);
+
+    $form->bind($formValues);
+    if($form->isValid()) {
+      try{
+        $message = $form->isNew() ? 'Create student success' : 'Update student success';
+        $form->save();
+        $errorCode = 0;
+      }catch (Exception $e){
+        $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
+        $message = UserErrorCode::getMessage($errorCode);
+        VtHelper::writeLogValue(sprintf('[management][executeUpdateMember]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
+      }
+    }else{
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $f) {
+        if ($f->hasError()) {
+          $message = VtHelper::strip_html_tags($f->getError());
+        }
+      }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeUpdateMenuByDate(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+    $formValues = $request->getPostParameters();
+    $formValues['tbl_user_list'] = !empty($formValues['image']) ? explode(',',trim($formValues['parentId'])) : '';
+    $formValues['image_path'] = !empty($formValues['image']) ? $formValues['image'] : '';
+    $formValues['class_id'] = !empty($formValues['classId']) ? $formValues['classId'] : '';
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(empty($formValues['id'])){
+      //truong hop khong truyen id --> them moi
+      $form = new TblMemberApiForm();
+      $formValues['status'] = 1;
+    }else{
+      //truong hop truyen id --> thuc hien cap nhat
+      //lay thong tin hoc sinh
+      $student = TblMemberTable::getInstance()->getMemberById($formValues['id'],$school['id']);
+      if(!$student){
+        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message, null, $data);
+        return $this->renderText($jsonObj->toJson());
+      }
+      $form = new TblMemberApiForm($student);
+      $formValues['status'] = $student->getStatus();
+    }
+
+    unset($formValues['token']);
+    unset($formValues['image']);
+    unset($formValues['classId']);
+    unset($formValues['parentId']);
+
+    $form->bind($formValues);
+    if($form->isValid()) {
+      try{
+        $message = $form->isNew() ? 'Create student success' : 'Update student success';
+        $form->save();
+        $errorCode = 0;
+      }catch (Exception $e){
+        $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
+        $message = UserErrorCode::getMessage($errorCode);
+        VtHelper::writeLogValue(sprintf('[management][executeUpdateMember]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
+      }
+    }else{
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $f) {
+        if ($f->hasError()) {
+          $message = VtHelper::strip_html_tags($f->getError());
+        }
+      }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
 }

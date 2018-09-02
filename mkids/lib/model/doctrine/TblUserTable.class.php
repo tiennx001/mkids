@@ -92,8 +92,14 @@ class TblUserTable extends Doctrine_Table
   }
 
   public function getUserById($id,$schoolId,$type){
-    $query = $this->getListUserByTypeQuery($schoolId,null,$type)
-      ->addWhere('t.id = ?', $id)
+    return $this->getListUserByTypeQuery($schoolId,null,$type)
+      ->andWhere('t.id = ?', $id)
       ->fetchOne();
+  }
+
+  public function getListParent(){
+    return $this->createQuery()
+      ->where('status = 1')
+      ->andWhere('type = ?', UserTypeEnum::PARENTS);
   }
 }

@@ -56,6 +56,18 @@ getTeacherList:
 updateTeacher:
   url: /updateTeacher
   param: { module: management, action: updateTeacher }
+getMemberList:
+  url: /getMemberList
+  param: { module: management, action: getMemberList }
+updateMember:
+  url: /updateMember
+  param: { module: management, action: updateMember }
+getMenuListByDate:
+  url: /getMenuListByDate
+  param: { module: management, action: getMenuListByDate }
+updateMenuByDate:
+  url: /updateMenuByDate
+  param: { module: management, action: updateMenuByDate }
 
 ############ Quan ly thong tin #############
 # default rules
