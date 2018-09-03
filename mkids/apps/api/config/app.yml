@@ -8,3 +8,7 @@ all:
   strong_password_pattern: /^.*(?=.{8,})(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[a-zA-Z]).*$/
   cache_lifetime: 120
   administrator_email: icontact.vvn@gmail.com
+  .array:
+    function_roles:
+      'notification:updateNotificationProgram': [PRINCIPAL, TEACHER]
+      'notification:getNotificationProgramList': [PRINCIPAL, TEACHER]

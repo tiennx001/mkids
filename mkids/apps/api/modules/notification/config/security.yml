@@ -1,0 +1,5 @@
+updateNotificationProgram:
+  is_secure: true
+
+getNotificationProgramList:
+  is_secure: true

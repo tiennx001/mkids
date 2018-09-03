@@ -12,10 +12,6 @@ change_password:
   url: /changePassword
   param: { module: user, action: changePassword }
 
-signin:
-  url: /signin
-  param: { module: user, action: signin }
-
 otp_verification:
   url: /otpVerification
   param: { module: user, action: otpVerification }
@@ -68,8 +64,44 @@ getMenuListByDate:
 updateMenuByDate:
   url: /updateMenuByDate
   param: { module: management, action: updateMenuByDate }
-
 ############ Quan ly thong tin #############
+
+############ Thong bao ############
+updateNotificationProgram:
+  url: /updateNotificationProgram
+  param: { module: notification, action: updateNotificationProgram }
+getNotificationProgramList:
+  url: /getNotificationProgramList
+  param: { module: notification, action: getNotificationProgramList }
+############ END Thong bao ############
+
+############ Bang tin ############
+updateArticle:
+  url: /updateArticle
+  param: { module: article, action: updateArticle }
+getArticleList:
+  url: /getArticleList
+  param: { module: article, action: getArticleList }
+############ END Bang tin ############
+
+############ Binh luan ############
+replyComment:
+  url: /replyComment
+  param: { module: comment, action: replyComment }
+getCommentList:
+  url: /getCommentList
+  param: { module: comment, action: getCommentList }
+############ END Binh luan ############
+
+############ Theo doi hoc sinh ############
+getAttendanceByClass:
+  url: /getAttendanceByClass
+  param: { module: member, action: getAttendanceByClass }
+getMemberActivity:
+  url: /getMemberActivity
+  param: { module: member, action: getMemberActivity }
+############ END Theo doi hoc sinh ############
+
 # default rules
 homepage:
   url:   /

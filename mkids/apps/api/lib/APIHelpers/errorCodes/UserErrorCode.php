@@ -17,6 +17,7 @@ class UserErrorCode extends defaultErrorCode
   const HAVE_REACHED_THE_LIMIT = 10;
   const STRING_MAX_LENGTH = 13;
   const NO_MESSAGE = 14;
+  const ROLES_CONFIG_ERROR = 15;
 
   //danh sách message tương ứng
   public static $extMessages = array(
@@ -33,6 +34,7 @@ class UserErrorCode extends defaultErrorCode
     10 => "You have reached the limit per hour",
     13 => "Max length is %max_length%",
     14 => "No message available",
+    15 => "Roles config error",
   );
 
   public static function getMessage($errorCode, $replacement = array())
