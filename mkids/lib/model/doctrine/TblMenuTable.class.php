@@ -16,4 +16,23 @@ class TblMenuTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblMenu');
     }
+
+    public function getMenuByIdAndSchoolId($id, $schoolId){
+      return $this->createQuery()
+        ->where('school_id = ?', $schoolId)
+        ->andWhere('id = ?', $id)
+        ->fetchOne();
+    }
+
+    public function getListMenu($schoolId, $date = null){
+      $query = $this->createQuery('m')
+        ->leftJoin('m.TblMember')
+        ->leftJoin('m.TblGroup')
+        ->leftJoin('m.TblClass')
+        ->where('m.school_id = ?', $schoolId);
+      if($date){
+        $query->andWhere('m.publish_date = ?', $date);
+      }
+      return $query->fetchArray();
+    }
 }

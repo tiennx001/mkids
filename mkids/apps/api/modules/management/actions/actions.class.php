@@ -451,7 +451,7 @@ class managementActions extends sfActions
     $data = [];
     $userId = $this->getUser()->getUserId();
     $formValues = $request->getPostParameters();
-    $formValues['tbl_user_list'] = !empty($formValues['image']) ? explode(',',trim($formValues['parentId'])) : '';
+    $formValues['tbl_user_list'] = !empty($formValues['parentId']) ? explode(',',trim($formValues['parentId'])) : '';
     $formValues['image_path'] = !empty($formValues['image']) ? $formValues['image'] : '';
     $formValues['class_id'] = !empty($formValues['classId']) ? $formValues['classId'] : '';
 
@@ -511,14 +511,92 @@ class managementActions extends sfActions
     return $this->renderText($jsonObj->toJson());
   }
 
+  public function executeGetMenuListByDate(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $date = trim($request->getPostParameter('date'));
+    $dateArr = explode('-',$date);
+    if(count($dateArr) != 3 || !checkdate($dateArr[1],$dateArr[2],$dateArr[0])){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $listMenu = TblMenuTable::getInstance()->getListMenu($school['id'],$date);
+    if(!count($listMenu)){
+      $errorCode = UserErrorCode::NO_RESULTS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+    foreach ($listMenu as $menu){
+       $temp = [
+        'id' => $menu['id'],
+        'title' => $menu['title'],
+        'description' => $menu['description'],
+        'imagePath' => $menu['image_path'],
+      ];
+
+      if(count($menu['TblGroup'])){
+        foreach ($menu['TblGroup'] as $group){
+          $temp['groups'][] = [
+            'id' => $group['id'],
+            'name' => $group['name']
+          ];
+        }
+      }
+
+      if(count($menu['TblClass'])){
+        foreach ($menu['TblClass'] as $class){
+          $temp['classes'][] = [
+            'id' => $class['id'],
+            'name' => $class['name']
+          ];
+        }
+      }
+
+      if(count($menu['TblMember'])){
+        foreach ($menu['TblMember'] as $member){
+          $temp['members'][] = [
+            'id' => $member['id'],
+            'name' => $member['name']
+          ];
+        }
+      }
+
+      $data[] = $temp;
+    }
+
+    $errorCode = 0;
+    $message = 'success';
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
   public function executeUpdateMenuByDate(sfWebRequest $request)
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues = $request->getPostParameters();
-    $formValues['tbl_user_list'] = !empty($formValues['image']) ? explode(',',trim($formValues['parentId'])) : '';
-    $formValues['image_path'] = !empty($formValues['image']) ? $formValues['image'] : '';
-    $formValues['class_id'] = !empty($formValues['classId']) ? $formValues['classId'] : '';
+    $formValues['tbl_group_list'] = ($groupId = $request->getPostParameter('groupId')) ? json_decode($groupId, true) : [];
+    $formValues['tbl_class_list'] = ($classId = $request->getPostParameter('classId')) ? json_decode($classId, true) : [];
+    $formValues['tbl_member_list'] = ($memberId = $request->getPostParameter('memberId')) ? json_decode($memberId, true) : [];
+    $formValues['image_path'] = $request->getPostParameter('image');
+    $formValues['publish_date'] = $request->getPostParameter('date');
+    $formValues['title'] = $request->getPostParameter('title');
+    $formValues['description'] = $request->getPostParameter('description');
+    $formValues['status'] = $request->getPostParameter('status');
+    $formValues['type'] = $request->getPostParameter('type');
+    $formValues['id'] = $request->getPostParameter('id');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -531,37 +609,32 @@ class managementActions extends sfActions
 
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi
-      $form = new TblMemberApiForm();
-      $formValues['status'] = 1;
+      $form = new TblMenuApiForm(null, ['school_id' => $school['id']]);
+      $formValues['school_id'] = $school['id'];
     }else{
       //truong hop truyen id --> thuc hien cap nhat
-      //lay thong tin hoc sinh
-      $student = TblMemberTable::getInstance()->getMemberById($formValues['id'],$school['id']);
-      if(!$student){
+      //lay thong tin menu
+      $menu = TblMenuTable::getInstance()->getMenuByIdAndSchoolId($formValues['id'],$school['id']);
+      if(!$menu){
         $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
         $message = UserErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
-      $form = new TblMemberApiForm($student);
-      $formValues['status'] = $student->getStatus();
+      $form = new TblMenuApiForm($menu, ['school_id' => $school['id']]);
+      $formValues['school_id'] = $menu->getSchoolId();
     }
-
-    unset($formValues['token']);
-    unset($formValues['image']);
-    unset($formValues['classId']);
-    unset($formValues['parentId']);
 
     $form->bind($formValues);
     if($form->isValid()) {
       try{
-        $message = $form->isNew() ? 'Create student success' : 'Update student success';
+        $message = $form->isNew() ? 'Create menu success' : 'Update menu success';
         $form->save();
         $errorCode = 0;
       }catch (Exception $e){
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
         $message = UserErrorCode::getMessage($errorCode);
-        VtHelper::writeLogValue(sprintf('[management][executeUpdateMember]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
+        VtHelper::writeLogValue(sprintf('[management][executeUpdateMenuByDate]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
       }
     }else{
       $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;

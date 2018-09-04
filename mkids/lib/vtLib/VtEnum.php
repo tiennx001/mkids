@@ -66,3 +66,27 @@ abstract class UserTypeEnum {
     );
   }
 }
+abstract class MenuTypeEnum {
+  const BREAKFAST = 0;
+  const LUNCH = 1;
+  const DINNER = 2;
+
+  public static function getArr() {
+    return array(
+      self::BREAKFAST => 'Bữa sáng',
+      self::LUNCH => 'Bữa trưa',
+      self::DINNER => 'Bữa chiều',
+    );
+  }
+}
+abstract class StatusEnum {
+  const INACTIVE = 0;
+  const ACTIVE = 1;
+
+  public static function getArr() {
+    return array(
+      self::INACTIVE => 'Bị khóa',
+      self::ACTIVE => 'Kích hoạt',
+    );
+  }
+}

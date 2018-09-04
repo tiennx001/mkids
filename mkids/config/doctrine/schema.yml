@@ -193,10 +193,13 @@ TblMenu:
     image_path: { type: string(255), comment: 'Ảnh minh họa' }
     type: { type: tinyint(2), comment: 'Loại thực đơn (0: Sáng - 1: Trưa - 2: Chiều)' }
     status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+    publish_date: { type: date, notnull: true, comment: 'Ngày áp dụng thực đơn' }
+    school_id: { type: integer(8), notnull: true, comment: 'ID trường' }
   relations:
     TblGroup: { class: TblGroup, refClass: TblMenuRef, local: menu_id, foreign: group_id }
     TblClass: { class: TblClass, refClass: TblMenuRef, local: menu_id, foreign: class_id }
     TblMember: { class: TblMember, refClass: TblMenuRef, local: menu_id, foreign: member_id }
+    TblSchool: { class: TblSchool, local: school_id }
 
 TblMenuRef:
   tableName: tbl_menu_ref

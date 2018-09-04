@@ -12,26 +12,35 @@ Doctrine_Manager::getInstance()->bindComponent('TblMenu', 'doctrine');
  * @property string $image_path
  * @property tinyint $type
  * @property boolean $status
+ * @property date $publish_date
+ * @property integer $school_id
  * @property Doctrine_Collection $TblGroup
  * @property Doctrine_Collection $TblClass
  * @property Doctrine_Collection $TblMember
+ * @property TblSchool $TblSchool
  * 
- * @method string              getTitle()       Returns the current record's "title" value
- * @method string              getDescription() Returns the current record's "description" value
- * @method string              getImagePath()   Returns the current record's "image_path" value
- * @method tinyint             getType()        Returns the current record's "type" value
- * @method boolean             getStatus()      Returns the current record's "status" value
- * @method Doctrine_Collection getTblGroup()    Returns the current record's "TblGroup" collection
- * @method Doctrine_Collection getTblClass()    Returns the current record's "TblClass" collection
- * @method Doctrine_Collection getTblMember()   Returns the current record's "TblMember" collection
- * @method TblMenu             setTitle()       Sets the current record's "title" value
- * @method TblMenu             setDescription() Sets the current record's "description" value
- * @method TblMenu             setImagePath()   Sets the current record's "image_path" value
- * @method TblMenu             setType()        Sets the current record's "type" value
- * @method TblMenu             setStatus()      Sets the current record's "status" value
- * @method TblMenu             setTblGroup()    Sets the current record's "TblGroup" collection
- * @method TblMenu             setTblClass()    Sets the current record's "TblClass" collection
- * @method TblMenu             setTblMember()   Sets the current record's "TblMember" collection
+ * @method string              getTiTle()        Returns the current record's "title" value
+ * @method string              getDescription()  Returns the current record's "description" value
+ * @method string              getImage_path()   Returns the current record's "image_path" value
+ * @method tinyint             getType()         Returns the current record's "type" value
+ * @method boolean             getStatuS()       Returns the current record's "status" value
+ * @method date                getPublish_date() Returns the current record's "publish_date" value
+ * @method integer             getSchool_id()    Returns the current record's "school_id" value
+ * @method Doctrine_Collection getTblGroup()     Returns the current record's "TblGroup" collection
+ * @method Doctrine_Collection getTblClass()     Returns the current record's "TblClass" collection
+ * @method Doctrine_Collection getTblMember()    Returns the current record's "TblMember" collection
+ * @method TblSchool           getTblSchool()    Returns the current record's "TblSchool" value
+ * @method TblMenu             setTiTle()        Sets the current record's "title" value
+ * @method TblMenu             setDescription()  Sets the current record's "description" value
+ * @method TblMenu             setImage_path()   Sets the current record's "image_path" value
+ * @method TblMenu             setType()         Sets the current record's "type" value
+ * @method TblMenu             setStatuS()       Sets the current record's "status" value
+ * @method TblMenu             setPublish_date() Sets the current record's "publish_date" value
+ * @method TblMenu             setSchool_id()    Sets the current record's "school_id" value
+ * @method TblMenu             setTblGroup()     Sets the current record's "TblGroup" collection
+ * @method TblMenu             setTblClass()     Sets the current record's "TblClass" collection
+ * @method TblMenu             setTblMember()    Sets the current record's "TblMember" collection
+ * @method TblMenu             setTblSchool()    Sets the current record's "TblSchool" value
  * 
  * @package    xcode
  * @subpackage model
@@ -71,6 +80,17 @@ abstract class BaseTblMenu extends sfDoctrineRecord
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
              ));
+        $this->hasColumn('publish_date', 'date', null, array(
+             'type' => 'date',
+             'notnull' => true,
+             'comment' => 'Ngày áp dụng thực đơn',
+             ));
+        $this->hasColumn('school_id', 'integer', 8, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'comment' => 'ID trường',
+             'length' => 8,
+             ));
     }
 
     public function setUp()
@@ -90,6 +110,10 @@ abstract class BaseTblMenu extends sfDoctrineRecord
              'refClass' => 'TblMenuRef',
              'local' => 'menu_id',
              'foreign' => 'member_id'));
+
+        $this->hasOne('TblSchool', array(
+             'local' => 'school_id',
+             'foreign' => 'id'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();
         $this->actAs($timestampable0);
