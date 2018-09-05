@@ -13,6 +13,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @property tinyint $type
  * @property integer $user_id
  * @property boolean $status
+ * @property boolean $is_delete
  * @property TblUser $TblUser
  * @property Doctrine_Collection $TblGroup
  * @property Doctrine_Collection $TblClass
@@ -27,6 +28,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method tinyint             getType()                   Returns the current record's "type" value
  * @method integer             getUserId()                 Returns the current record's "user_id" value
  * @method boolean             getStatus()                 Returns the current record's "status" value
+ * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblUser             getTblUser()                Returns the current record's "TblUser" value
  * @method Doctrine_Collection getTblGroup()               Returns the current record's "TblGroup" collection
  * @method Doctrine_Collection getTblClass()               Returns the current record's "TblClass" collection
@@ -40,6 +42,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method TblArticle          setType()                   Sets the current record's "type" value
  * @method TblArticle          setUserId()                 Sets the current record's "user_id" value
  * @method TblArticle          setStatus()                 Sets the current record's "status" value
+ * @method TblArticle          setIsDelete()               Sets the current record's "is_delete" value
  * @method TblArticle          setTblUser()                Sets the current record's "TblUser" value
  * @method TblArticle          setTblGroup()               Sets the current record's "TblGroup" collection
  * @method TblArticle          setTblClass()               Sets the current record's "TblClass" collection
@@ -93,6 +96,11 @@ abstract class BaseTblArticle extends sfDoctrineRecord
              'notnull' => true,
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

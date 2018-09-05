@@ -20,6 +20,7 @@ abstract class BaseTblCommentForm extends BaseFormDoctrine
       'content'    => new sfWidgetFormTextarea(),
       'parent_id'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblComment'), 'add_empty' => true)),
       'status'     => new sfWidgetFormInputCheckbox(),
+      'is_delete'  => new sfWidgetFormInputCheckbox(),
       'created_at' => new sfWidgetFormDateTime(),
       'updated_at' => new sfWidgetFormDateTime(),
     ));
@@ -30,6 +31,7 @@ abstract class BaseTblCommentForm extends BaseFormDoctrine
       'content'    => new sfValidatorString(array('max_length' => 1023)),
       'parent_id'  => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblComment'), 'required' => false)),
       'status'     => new sfValidatorBoolean(array('required' => false)),
+      'is_delete'  => new sfValidatorBoolean(array('required' => false)),
       'created_at' => new sfValidatorDateTime(),
       'updated_at' => new sfValidatorDateTime(),
     ));

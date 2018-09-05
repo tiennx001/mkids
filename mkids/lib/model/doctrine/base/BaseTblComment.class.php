@@ -11,6 +11,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblComment', 'doctrine');
  * @property string $content
  * @property integer $parent_id
  * @property boolean $status
+ * @property boolean $is_delete
  * @property TblUser $TblUser
  * @property TblComment $TblComment
  * 
@@ -18,12 +19,14 @@ Doctrine_Manager::getInstance()->bindComponent('TblComment', 'doctrine');
  * @method string     getContent()    Returns the current record's "content" value
  * @method integer    getParentId()   Returns the current record's "parent_id" value
  * @method boolean    getStatus()     Returns the current record's "status" value
+ * @method boolean    getIsDelete()   Returns the current record's "is_delete" value
  * @method TblUser    getTblUser()    Returns the current record's "TblUser" value
  * @method TblComment getTblComment() Returns the current record's "TblComment" value
  * @method TblComment setUserId()     Sets the current record's "user_id" value
  * @method TblComment setContent()    Sets the current record's "content" value
  * @method TblComment setParentId()   Sets the current record's "parent_id" value
  * @method TblComment setStatus()     Sets the current record's "status" value
+ * @method TblComment setIsDelete()   Sets the current record's "is_delete" value
  * @method TblComment setTblUser()    Sets the current record's "TblUser" value
  * @method TblComment setTblComment() Sets the current record's "TblComment" value
  * 
@@ -59,6 +62,11 @@ abstract class BaseTblComment extends sfDoctrineRecord
              'notnull' => true,
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

@@ -22,6 +22,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @property boolean $is_lock
  * @property integer $lock_time
  * @property tinyint $type
+ * @property boolean $is_delete
  * @property Doctrine_Collection $TblTokenSession
  * @property Doctrine_Collection $TblSchool
  * @property Doctrine_Collection $TblClass
@@ -47,6 +48,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method boolean             getIsLock()                 Returns the current record's "is_lock" value
  * @method integer             getLockTime()               Returns the current record's "lock_time" value
  * @method tinyint             getType()                   Returns the current record's "type" value
+ * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method Doctrine_Collection getTblTokenSession()        Returns the current record's "TblTokenSession" collection
  * @method Doctrine_Collection getTblSchool()              Returns the current record's "TblSchool" collection
  * @method Doctrine_Collection getTblClass()               Returns the current record's "TblClass" collection
@@ -71,6 +73,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method TblUser             setIsLock()                 Sets the current record's "is_lock" value
  * @method TblUser             setLockTime()               Sets the current record's "lock_time" value
  * @method TblUser             setType()                   Sets the current record's "type" value
+ * @method TblUser             setIsDelete()               Sets the current record's "is_delete" value
  * @method TblUser             setTblTokenSession()        Sets the current record's "TblTokenSession" collection
  * @method TblUser             setTblSchool()              Sets the current record's "TblSchool" collection
  * @method TblUser             setTblClass()               Sets the current record's "TblClass" collection
@@ -170,6 +173,11 @@ abstract class BaseTblUser extends sfDoctrineRecord
              'type' => 'tinyint',
              'comment' => 'Loại user (0: Hiệu trưởng - 1: Giáo viên - 2: Phụ huynh',
              'length' => 2,
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

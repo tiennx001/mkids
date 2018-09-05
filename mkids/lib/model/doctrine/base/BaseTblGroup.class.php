@@ -11,6 +11,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblGroup', 'doctrine');
  * @property string $description
  * @property integer $school_id
  * @property boolean $status
+ * @property boolean $is_delete
  * @property TblSchool $TblSchool
  * @property Doctrine_Collection $TblClass
  * @property Doctrine_Collection $TblMenu
@@ -21,6 +22,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblGroup', 'doctrine');
  * @method string              getDescription()            Returns the current record's "description" value
  * @method integer             getSchoolId()               Returns the current record's "school_id" value
  * @method boolean             getStatus()                 Returns the current record's "status" value
+ * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblSchool           getTblSchool()              Returns the current record's "TblSchool" value
  * @method Doctrine_Collection getTblClass()               Returns the current record's "TblClass" collection
  * @method Doctrine_Collection getTblMenu()                Returns the current record's "TblMenu" collection
@@ -30,6 +32,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblGroup', 'doctrine');
  * @method TblGroup            setDescription()            Sets the current record's "description" value
  * @method TblGroup            setSchoolId()               Sets the current record's "school_id" value
  * @method TblGroup            setStatus()                 Sets the current record's "status" value
+ * @method TblGroup            setIsDelete()               Sets the current record's "is_delete" value
  * @method TblGroup            setTblSchool()              Sets the current record's "TblSchool" value
  * @method TblGroup            setTblClass()               Sets the current record's "TblClass" collection
  * @method TblGroup            setTblMenu()                Sets the current record's "TblMenu" collection
@@ -68,6 +71,11 @@ abstract class BaseTblGroup extends sfDoctrineRecord
              'notnull' => true,
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

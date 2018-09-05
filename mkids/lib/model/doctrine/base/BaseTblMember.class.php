@@ -15,6 +15,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @property string $image_path
  * @property integer $class_id
  * @property boolean $status
+ * @property boolean $is_delete
  * @property TblClass $TblClass
  * @property Doctrine_Collection $TblUser
  * @property Doctrine_Collection $TblMenu
@@ -31,6 +32,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method string              getImagePath()              Returns the current record's "image_path" value
  * @method integer             getClassId()                Returns the current record's "class_id" value
  * @method boolean             getStatus()                 Returns the current record's "status" value
+ * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblClass            getTblClass()               Returns the current record's "TblClass" value
  * @method Doctrine_Collection getTblUser()                Returns the current record's "TblUser" collection
  * @method Doctrine_Collection getTblMenu()                Returns the current record's "TblMenu" collection
@@ -46,6 +48,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method TblMember           setImagePath()              Sets the current record's "image_path" value
  * @method TblMember           setClassId()                Sets the current record's "class_id" value
  * @method TblMember           setStatus()                 Sets the current record's "status" value
+ * @method TblMember           setIsDelete()               Sets the current record's "is_delete" value
  * @method TblMember           setTblClass()               Sets the current record's "TblClass" value
  * @method TblMember           setTblUser()                Sets the current record's "TblUser" collection
  * @method TblMember           setTblMenu()                Sets the current record's "TblMenu" collection
@@ -106,6 +109,11 @@ abstract class BaseTblMember extends sfDoctrineRecord
              'notnull' => true,
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

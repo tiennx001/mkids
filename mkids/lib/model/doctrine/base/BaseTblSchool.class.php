@@ -16,6 +16,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblSchool', 'doctrine');
  * @property boolean $status
  * @property Doctrine_Collection $TblUser
  * @property Doctrine_Collection $TblGroup
+ * @property Doctrine_Collection $TblMenu
  * 
  * @method string              getName()        Returns the current record's "name" value
  * @method string              getPhone()       Returns the current record's "phone" value
@@ -26,6 +27,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblSchool', 'doctrine');
  * @method boolean             getStatus()      Returns the current record's "status" value
  * @method Doctrine_Collection getTblUser()     Returns the current record's "TblUser" collection
  * @method Doctrine_Collection getTblGroup()    Returns the current record's "TblGroup" collection
+ * @method Doctrine_Collection getTblMenu()     Returns the current record's "TblMenu" collection
  * @method TblSchool           setName()        Sets the current record's "name" value
  * @method TblSchool           setPhone()       Sets the current record's "phone" value
  * @method TblSchool           setEmail()       Sets the current record's "email" value
@@ -35,6 +37,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblSchool', 'doctrine');
  * @method TblSchool           setStatus()      Sets the current record's "status" value
  * @method TblSchool           setTblUser()     Sets the current record's "TblUser" collection
  * @method TblSchool           setTblGroup()    Sets the current record's "TblGroup" collection
+ * @method TblSchool           setTblMenu()     Sets the current record's "TblMenu" collection
  * 
  * @package    xcode
  * @subpackage model
@@ -94,6 +97,10 @@ abstract class BaseTblSchool extends sfDoctrineRecord
              'foreign' => 'user_id'));
 
         $this->hasMany('TblGroup', array(
+             'local' => 'id',
+             'foreign' => 'school_id'));
+
+        $this->hasMany('TblMenu', array(
              'local' => 'id',
              'foreign' => 'school_id'));
 

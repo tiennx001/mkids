@@ -11,6 +11,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblClass', 'doctrine');
  * @property string $description
  * @property integer $group_id
  * @property boolean $status
+ * @property boolean $is_delete
  * @property TblGroup $TblGroup
  * @property Doctrine_Collection $TblUser
  * @property Doctrine_Collection $TblMember
@@ -22,6 +23,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblClass', 'doctrine');
  * @method string              getDescription()            Returns the current record's "description" value
  * @method integer             getGroupId()                Returns the current record's "group_id" value
  * @method boolean             getStatus()                 Returns the current record's "status" value
+ * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblGroup            getTblGroup()               Returns the current record's "TblGroup" value
  * @method Doctrine_Collection getTblUser()                Returns the current record's "TblUser" collection
  * @method Doctrine_Collection getTblMember()              Returns the current record's "TblMember" collection
@@ -32,6 +34,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblClass', 'doctrine');
  * @method TblClass            setDescription()            Sets the current record's "description" value
  * @method TblClass            setGroupId()                Sets the current record's "group_id" value
  * @method TblClass            setStatus()                 Sets the current record's "status" value
+ * @method TblClass            setIsDelete()               Sets the current record's "is_delete" value
  * @method TblClass            setTblGroup()               Sets the current record's "TblGroup" value
  * @method TblClass            setTblUser()                Sets the current record's "TblUser" collection
  * @method TblClass            setTblMember()              Sets the current record's "TblMember" collection
@@ -71,6 +74,11 @@ abstract class BaseTblClass extends sfDoctrineRecord
              'notnull' => true,
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 
