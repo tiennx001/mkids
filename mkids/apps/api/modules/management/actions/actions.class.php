@@ -113,6 +113,7 @@ class managementActions extends sfActions
         'id' => $group['id'],
         'name' => $group['name'],
         'description' => $group['description'],
+        'status' => (int)$group['status'],
       ];
     }
 
@@ -126,7 +127,10 @@ class managementActions extends sfActions
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues = $request->getPostParameters();
+    $formValues['id'] = $request->getPostParameter('id');
+    $formValues['name'] = $request->getPostParameter('name');
+    $formValues['description'] = $request->getPostParameter('description');
+    $formValues['status'] = $request->getPostParameter('status');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -140,7 +144,6 @@ class managementActions extends sfActions
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi group
       $form = new TblGroupApiForm();
-      $formValues['status'] = 1;
     }else{
       //truong hop truyen id --> thuc hien cap nhat group
       //lay thong tin khoi thuoc truong
@@ -152,11 +155,9 @@ class managementActions extends sfActions
         return $this->renderText($jsonObj->toJson());
       }
       $form = new TblGroupApiForm($group);
-      $formValues['status'] = $group->getStatus();
     }
 
     $formValues['school_id'] = $school['id'];
-    unset($formValues['token']);
 
     $form->bind($formValues);
     if($form->isValid()) {
@@ -179,6 +180,57 @@ class managementActions extends sfActions
           $message = VtHelper::strip_html_tags($f->getError());
         }
       }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeRemoveGroup(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!($id = $request->getPostParameter('id'))){
+      $errorCode = GroupErrorCode::MISSING_PARAMETERS;
+      $message = GroupErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $group = TblGroupTable::getInstance()->getActiveGroupByIdAndSchoolId($id, $school['id']);
+    if(!$group){
+      $errorCode = GroupErrorCode::GROUP_NOT_EXIST;
+      $message = GroupErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $classInGroup = TblClassTable::getInstance()->getClassInGroupQuery($id,$school['id'])->count();
+    if($classInGroup){
+      $errorCode = GroupErrorCode::GROUP_CANNOT_DELETE_CONTAINING_CLASS;
+      $message = GroupErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+    try {
+      $group->setIsDelete(1);
+      $group->save();
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveGroup]|userId = %s|params:%s', $userId,json_encode($request->getPostParameters())),'logAction.log');
+    }catch (Exception $e){
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveGroup]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
     }
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
@@ -257,7 +309,7 @@ class managementActions extends sfActions
     }else{
       //truong hop truyen id --> thuc hien cap nhat group
       //lay thong tin khoi thuoc truong
-      $class = TblClassTable::getInstance()->getActiveClassByIdAndGroupId($formValues['id'],$formValues['group_id'],$school['id']);
+      $class = TblClassTable::getInstance()->getClassByIdAndGroupId($formValues['id'],$formValues['group_id'],$school['id']);
       if(!$class){
         $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
         $message = UserErrorCode::getMessage($errorCode);
@@ -292,6 +344,58 @@ class managementActions extends sfActions
           $message = VtHelper::strip_html_tags($f->getError());
         }
       }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeRemoveClass(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!($id = $request->getPostParameter('id'))){
+      $errorCode = GroupErrorCode::MISSING_PARAMETERS;
+      $message = GroupErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $class = TblClassTable::getInstance()->getClassById($id,$school['id']);
+    if(!$class){
+      $errorCode = ClassErrorCode::CLASS_NOT_EXIST;
+      $message = ClassErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $hasMember = TblClassTable::getInstance()->checkMemberInClass($class);
+    if($hasMember){
+      $errorCode = ClassErrorCode::CANNOT_DELETE_CLASS;
+      $message = ClassErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      $class->setIsDelete(1);
+      $class->save();
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveGroup]|userId = %s|params:%s', $userId,json_encode($request->getPostParameters())),'logAction.log');
+    }catch (Exception $e){
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveGroup]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
     }
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
@@ -526,8 +630,15 @@ class managementActions extends sfActions
     $date = trim($request->getPostParameter('date'));
     $dateArr = explode('-',$date);
     if(count($dateArr) != 3 || !checkdate($dateArr[1],$dateArr[2],$dateArr[0])){
-      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-      $message = UserErrorCode::getMessage($errorCode);
+      $errorCode = MenuErrorCode::DATE_INVALID;
+      $message = MenuErrorCode::getMessage($errorCode, ['%format%' => 'yyyy-MM-dd']);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if($date < date('Y-m-d')){
+      $errorCode = MenuErrorCode::DATE_LESS_THAN_NOW;
+      $message = MenuErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message, null, $data);
       return $this->renderText($jsonObj->toJson());
     }

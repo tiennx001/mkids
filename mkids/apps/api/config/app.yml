@@ -12,3 +12,7 @@ all:
     function_roles:
       'notification:updateNotificationProgram': [PRINCIPAL, TEACHER]
       'notification:getNotificationProgramList': [PRINCIPAL, TEACHER]
+      'management:updateSchoolInfo': [PRINCIPAL]
+      'management:updateGroup': [PRINCIPAL]
+      'management:updateClass': [PRINCIPAL]
+      'management:updateTeacher': [PRINCIPAL]

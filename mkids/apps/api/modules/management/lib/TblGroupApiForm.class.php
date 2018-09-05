@@ -20,5 +20,13 @@ class TblGroupApiForm extends BaseTblGroupForm
     $this->validatorSchema['name']->setOption('required',true);
 
     $this->validatorSchema['description']->setMessage('max_length','Mô tả quá dài (tối đa %max_length% ký tự)');
+
+    $this->validatorSchema['status'] = new sfValidatorChoice([
+      'choices' => array_keys(StatusEnum::getArr()),
+      'required' => true
+    ],[
+      'invalid' => 'Trạng thái không hợp lệ',
+      'required' => 'Trạng thái không được để trống'
+    ]);
   }
 }

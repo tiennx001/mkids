@@ -17,11 +17,11 @@ class TblClassTable extends Doctrine_Table
         return Doctrine_Core::getTable('TblClass');
     }
 
-    public function getActiveClassInGroupQuery($groupId,$schoolId){
+    public function getClassInGroupQuery($groupId,$schoolId){
       $query = $this->createQuery('c')
-        ->select('c.id id, c.name name, c.description description, c.group_id group_id, g.name group_name')
-        ->innerJoin('c.TblGroup g')
-        ->where('c.status = 1')
+        ->select('c.id id, c.name name, c.description description, c.group_id group_id, c.status status, g.name group_name')
+        ->leftJoin('c.TblGroup g')
+        ->where('c.is_delete = 0')
         ->andWhere('g.school_id = ?', $schoolId);
       if($groupId)
         $query->andWhere('c.group_id = ?', $groupId);
@@ -29,14 +29,49 @@ class TblClassTable extends Doctrine_Table
       return $query;
     }
 
+  public function getActiveClassInGroupQuery($groupId,$schoolId){
+      return $this->getClassInGroupQuery($groupId,$schoolId)
+        ->andWhere('c.status = 1');
+  }
+
   public function getActiveClassInGroup($groupId,$schoolId){
     $query = $this->getActiveClassInGroupQuery($groupId,$schoolId);
     return $query->fetchArray();
   }
-  public function getActiveClassByIdAndGroupId($id,$groupId,$schoolId){
-    $query = $this->getActiveClassInGroupQuery($groupId,$schoolId)
+  public function getClassByIdAndGroupId($id,$groupId,$schoolId){
+    $query = $this->getClassInGroupQuery($groupId,$schoolId)
       ->addWhere('c.id = ?', $id);
 
     return $query->fetchOne();
+  }
+
+  public function getClassById($id, $schoolId){
+      return $this->getClassInGroupQuery(null,$schoolId)
+        ->andWhere('c.id = ?', $id)
+        ->fetchOne();
+  }
+
+  /**
+   * Ham kiem tra xem lop co ton tai giao vien hoac hoc sinh khong
+   * @param $classObj
+   * @return bool
+   */
+  public function checkMemberInClass($classObj){
+    $listMember = $classObj['TblMember'];
+    if(count($listMember)){
+      foreach ($listMember as $member){
+        if($member['is_delete'] == 0)
+          return true;
+      }
+    }
+
+    $listTeacher = $classObj['TblUser'];
+    if(count($listTeacher)){
+      foreach ($listTeacher as $teacher){
+        if($teacher['is_delete'] == 0)
+          return true;
+      }
+    }
+    return false;
   }
 }

@@ -17,18 +17,20 @@ class TblGroupTable extends Doctrine_Table
         return Doctrine_Core::getTable('TblGroup');
     }
 
+    public function getActiveGroupBySchoolIdQuery($schoolId){
+      return $this->createQuery()
+        ->where('is_delete = 0')
+        ->andWhere('school_id = ?', $schoolId);
+    }
+
     public function getActiveGroupBySchoolId($schoolId){
-      return self::getInstance()->createQuery()
-        ->where('status = 1')
-        ->andWhere('school_id = ?', $schoolId)
+      return $this->getActiveGroupBySchoolIdQuery($schoolId)
         ->fetchArray();
     }
 
-    public static function getActiveGroupByIdAndSchoolId($id,$schoolId){
-      return self::getInstance()->createQuery()
-        ->where('status = 1')
+    public function getActiveGroupByIdAndSchoolId($id,$schoolId){
+      return $this->getActiveGroupBySchoolIdQuery($schoolId)
         ->andWhere('id = ?', $id)
-        ->andWhere('school_id = ?', $schoolId)
-        ->fetchArray();
+        ->fetchOne();
     }
 }

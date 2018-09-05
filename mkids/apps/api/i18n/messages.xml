@@ -153,6 +153,30 @@
                 <source>No message available</source>
                 <target>Chưa tạo thông điệp</target>
             </trans-unit>
+            <trans-unit>
+                <source>The date must be equal or greater than now.</source>
+                <target>Ngày phải lớn hơn hoặc bằng ngày hiện tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Date invalid (please enter format %format%).</source>
+                <target>Ngày không hợp lệ (vui lòng nhập đúng định dạng %format%)</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Group not exist.</source>
+                <target>Khối không tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Can not delete group containing class.</source>
+                <target>Không thể xoá khối có chứa lớp</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Class not exist.</source>
+                <target>Lớp không tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Can not delete class containing student or teacher.</source>
+                <target>Không thể xoá lớp có chứa học sinh hoặc giáo viên</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
