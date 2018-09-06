@@ -1,24 +1,16 @@
 <?php
 
-class MenuErrorCode extends defaultErrorCode
+class TeacherErrorCode extends defaultErrorCode
 {
   //danh sách mã lỗi
 
-  const SUCCESS = 0;
-  const NO_RESULTS = 1;
-  const MISSING_PARAMETERS = 2;
-  const DATE_INVALID = 3;
-  const DATE_LESS_THAN_NOW = 4;
-  const MENU_NOT_EXIST = 5;
+  const TEACHER_NOT_EXIST = 2;
+  const MISSING_PARAMETERS = 3;
 
   //danh sách message tương ứng
   public static $extMessages = array(
-    0 => "Success",
-    1 => "No Results",
-    2 => "Missing Parameters",
-    3 => "The date must be equal or greater than now.",
-    4 => "Date invalid (please enter format %format%).",
-    5 => "Menu not exist.",
+    2 => "Teacher not exist.",
+    3 => "Missing Parameters",
   );
 
   public static function getMessage($errorCode, $replacement = array())

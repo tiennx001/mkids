@@ -72,7 +72,8 @@ class TblUserTable extends Doctrine_Table
     $query = $this->createQuery('t')
       ->innerJoin('t.TblClass c')
       ->innerJoin('c.TblGroup g')
-      ->where('g.school_id = ?', $schoolId);
+      ->where('g.school_id = ?', $schoolId)
+      ->andWhere('t.is_delete = 0');
     if($classId)
       $query->andWhere('c.id = ?', $classId);
     if($keyword)
@@ -100,6 +101,7 @@ class TblUserTable extends Doctrine_Table
   public function getListParent(){
     return $this->createQuery()
       ->where('status = 1')
+      ->andWhere('is_delete = 0')
       ->andWhere('type = ?', UserTypeEnum::PARENTS);
   }
 }

@@ -58,18 +58,27 @@ getTeacherList:
 updateTeacher:
   url: /updateTeacher
   param: { module: management, action: updateTeacher }
+removeTeacher:
+  url: /removeTeacher
+  param: { module: management, action: removeTeacher }
 getMemberList:
   url: /getMemberList
   param: { module: management, action: getMemberList }
 updateMember:
   url: /updateMember
   param: { module: management, action: updateMember }
+removeMember:
+  url: /removeMember
+  param: { module: management, action: removeMember }
 getMenuListByDate:
   url: /getMenuListByDate
   param: { module: management, action: getMenuListByDate }
 updateMenuByDate:
   url: /updateMenuByDate
   param: { module: management, action: updateMenuByDate }
+removeMenu:
+  url: /removeMenu
+  param: { module: management, action: removeMenu }
 ############ Quan ly thong tin #############
 
 ############ Thong bao ############

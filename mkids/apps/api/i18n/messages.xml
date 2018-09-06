@@ -177,6 +177,18 @@
                 <source>Can not delete class containing student or teacher.</source>
                 <target>Không thể xoá lớp có chứa học sinh hoặc giáo viên</target>
             </trans-unit>
+            <trans-unit>
+                <source>Teacher not exist.</source>
+                <target>Giáo viên không tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Student not exist.</source>
+                <target>Học sinh không tồn tại</target>
+            </trans-unit>
+            <trans-unit>
+                <source>Menu not exist.</source>
+                <target>Thực đơn không tồn tại</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

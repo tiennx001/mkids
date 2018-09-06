@@ -149,8 +149,8 @@ class managementActions extends sfActions
       //lay thong tin khoi thuoc truong
       $group = TblGroupTable::getInstance()->getActiveGroupByIdAndSchoolId($formValues['id'],$school['id']);
       if(!$group){
-        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-        $message = UserErrorCode::getMessage($errorCode);
+        $errorCode = GroupErrorCode::GROUP_NOT_EXIST;
+        $message = GroupErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
@@ -283,8 +283,10 @@ class managementActions extends sfActions
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues = $request->getPostParameters();
-    $formValues['group_id'] = trim($formValues['groupId']);
+    $formValues['group_id'] = trim($request->getPostParameter('groupId'));
+    $formValues['id'] = $request->getPostParameter('id');
+    $formValues['name'] = $request->getPostParameter('name');
+    $formValues['description'] = $request->getPostParameter('description');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -311,17 +313,14 @@ class managementActions extends sfActions
       //lay thong tin khoi thuoc truong
       $class = TblClassTable::getInstance()->getClassByIdAndGroupId($formValues['id'],$formValues['group_id'],$school['id']);
       if(!$class){
-        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-        $message = UserErrorCode::getMessage($errorCode);
+        $errorCode = ClassErrorCode::CLASS_NOT_EXIST;
+        $message = ClassErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
       $form = new TblClassApiForm($class);
       $formValues['status'] = $class->getStatus();
     }
-
-    unset($formValues['token']);
-    unset($formValues['groupId']);
 
     $form->bind($formValues);
     if($form->isValid()) {
@@ -449,10 +448,13 @@ class managementActions extends sfActions
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues = $request->getPostParameters();
-    $formValues['tbl_class_list'] = explode(',',trim($formValues['classId']));
+    $formValues['tbl_class_list'] = explode(',',trim($request->getPostParameter('classId')));
     $formValues['type'] = UserTypeEnum::TEACHER;
-    $formValues['image_path'] = !empty($formValues['image']) ? $formValues['image'] : '';
+    $formValues['id'] = $request->getPostParameter('id');
+    $formValues['image_path'] = $request->getPostParameter('image');
+    $formValues['description'] = $request->getPostParameter('description');
+    $formValues['password'] = $request->getPostParameter('password');
+    $formValues['name'] = $request->getPostParameter('name');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -466,24 +468,18 @@ class managementActions extends sfActions
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi
       $form = new TblUserApiForm();
-      $formValues['status'] = 1;
     }else{
       //truong hop truyen id --> thuc hien cap nhat
       //lay thong tin khoi thuoc truong
       $teacher = TblUserTable::getInstance()->getUserById($formValues['id'],$school['id'],UserTypeEnum::TEACHER);
       if(!$teacher){
-        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-        $message = UserErrorCode::getMessage($errorCode);
+        $errorCode = TeacherErrorCode::TEACHER_NOT_EXIST;
+        $message = TeacherErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
       $form = new TblUserApiForm($teacher);
-      $formValues['status'] = $teacher->getStatus();
     }
-
-    unset($formValues['token']);
-    unset($formValues['image']);
-    unset($formValues['classId']);
 
     $form->bind($formValues);
     if($form->isValid()) {
@@ -492,8 +488,8 @@ class managementActions extends sfActions
         $form->save();
         $errorCode = 0;
       }catch (Exception $e){
-        $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
-        $message = UserErrorCode::getMessage($errorCode);
+        $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+        $message = defaultErrorCode::getMessage($errorCode);
         VtHelper::writeLogValue(sprintf('[management][executeUpdateClass]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
       }
     }else{
@@ -504,6 +500,50 @@ class managementActions extends sfActions
           $message = VtHelper::strip_html_tags($f->getError());
         }
       }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeRemoveTeacher(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!($id = $request->getPostParameter('id'))){
+      $errorCode = TeacherErrorCode::MISSING_PARAMETERS;
+      $message = TeacherErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $teacher = TblUserTable::getInstance()->getUserById($id,$school['id'],UserTypeEnum::TEACHER);
+    if(!$teacher){
+      $errorCode = TeacherErrorCode::TEACHER_NOT_EXIST;
+      $message = TeacherErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      $teacher->setIsDelete(1);
+      $teacher->save();
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveTeacher]|userId = %s|params:%s', $userId,json_encode($request->getPostParameters())),'logAction.log');
+    }catch (Exception $e){
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveTeacher]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
     }
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
@@ -555,9 +595,13 @@ class managementActions extends sfActions
     $data = [];
     $userId = $this->getUser()->getUserId();
     $formValues = $request->getPostParameters();
-    $formValues['tbl_user_list'] = !empty($formValues['parentId']) ? explode(',',trim($formValues['parentId'])) : '';
-    $formValues['image_path'] = !empty($formValues['image']) ? $formValues['image'] : '';
-    $formValues['class_id'] = !empty($formValues['classId']) ? $formValues['classId'] : '';
+    $formValues['tbl_user_list'] = explode(',',trim($request->getPostParameter('parentId')));
+    $formValues['class_id'] = $request->getPostParameter('classId');
+    $formValues['image_path'] = $request->getPostParameter('image');
+    $formValues['id'] = $request->getPostParameter('id');
+    $formValues['name'] = $request->getPostParameter('name');
+    $formValues['birthday'] = $request->getPostParameter('birthday');
+    $formValues['description'] = $request->getPostParameter('description');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -577,19 +621,14 @@ class managementActions extends sfActions
       //lay thong tin hoc sinh
       $student = TblMemberTable::getInstance()->getMemberById($formValues['id'],$school['id']);
       if(!$student){
-        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-        $message = UserErrorCode::getMessage($errorCode);
+        $errorCode = MemberErrorCode::STUDENT_NOT_EXIST;
+        $message = MemberErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
       $form = new TblMemberApiForm($student);
       $formValues['status'] = $student->getStatus();
     }
-
-    unset($formValues['token']);
-    unset($formValues['image']);
-    unset($formValues['classId']);
-    unset($formValues['parentId']);
 
     $form->bind($formValues);
     if($form->isValid()) {
@@ -610,6 +649,50 @@ class managementActions extends sfActions
           $message = VtHelper::strip_html_tags($f->getError());
         }
       }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeRemoveMember(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!($id = $request->getPostParameter('id'))){
+      $errorCode = MemberErrorCode::MISSING_PARAMETERS;
+      $message = MemberErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $member = TblMemberTable::getInstance()->getMemberById($id,$school['id']);
+    if(!$member){
+      $errorCode = MemberErrorCode::STUDENT_NOT_EXIST;
+      $message = MemberErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      $member->setIsDelete(1);
+      $member->save();
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveMember]|userId = %s|params:%s', $userId,json_encode($request->getPostParameters())),'logAction.log');
+    }catch (Exception $e){
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveMember]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
     }
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
@@ -727,8 +810,8 @@ class managementActions extends sfActions
       //lay thong tin menu
       $menu = TblMenuTable::getInstance()->getMenuByIdAndSchoolId($formValues['id'],$school['id']);
       if(!$menu){
-        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-        $message = UserErrorCode::getMessage($errorCode);
+        $errorCode = MenuErrorCode::MENU_NOT_EXIST;
+        $message = MenuErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
@@ -755,6 +838,50 @@ class managementActions extends sfActions
           $message = VtHelper::strip_html_tags($f->getError());
         }
       }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeRemoveMenu(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!($id = $request->getPostParameter('id'))){
+      $errorCode = MenuErrorCode::MISSING_PARAMETERS;
+      $message = MemberErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $menu = TblMenuTable::getInstance()->getMenuByIdAndSchoolId($id,$school['id']);
+    if(!$menu){
+      $errorCode = MenuErrorCode::MENU_NOT_EXIST;
+      $message = MenuErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      $menu->setIsDelete(1);
+      $menu->save();
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveMenu]|userId = %s|params:%s', $userId,json_encode($request->getPostParameters())),'logAction.log');
+    }catch (Exception $e){
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveMenu]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
     }
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());

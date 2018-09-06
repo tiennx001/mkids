@@ -21,7 +21,8 @@ class TblMemberTable extends Doctrine_Table
     $query = $this->createQuery('m')
       ->innerJoin('m.TblClass c')
       ->innerJoin('c.TblGroup g')
-      ->where('g.school_id = ?', $schoolId);
+      ->where('g.school_id = ?', $schoolId)
+      ->andWhere('m.is_delete = 0');
     if($classId)
       $query->andWhere('m.class_id = ?', $classId);
     if($keyword)

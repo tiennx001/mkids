@@ -21,6 +21,7 @@ class TblMenuTable extends Doctrine_Table
       return $this->createQuery()
         ->where('school_id = ?', $schoolId)
         ->andWhere('id = ?', $id)
+        ->andWhere('is_delete = 0')
         ->fetchOne();
     }
 
@@ -29,7 +30,8 @@ class TblMenuTable extends Doctrine_Table
         ->leftJoin('m.TblMember')
         ->leftJoin('m.TblGroup')
         ->leftJoin('m.TblClass')
-        ->where('m.school_id = ?', $schoolId);
+        ->where('m.school_id = ?', $schoolId)
+        ->where('m.is_delete = 0');
       if($date){
         $query->andWhere('m.publish_date = ?', $date);
       }
