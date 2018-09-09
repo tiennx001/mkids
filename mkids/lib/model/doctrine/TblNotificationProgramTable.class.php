@@ -17,18 +17,23 @@ class TblNotificationProgramTable extends Doctrine_Table
     return Doctrine_Core::getTable('TblNotificationProgram');
   }
 
-  public function getProgByUserId($id, $userId)
-  {
+  public function getActiveQuery($alias) {
     return $this->createQuery('a')
-      ->where('a.id = ?', $id)
+      ->where($alias . '.status = 1');
+  }
+
+  public function getProgByIdAndUserId($id, $userId)
+  {
+    return $this->getActiveQuery('a')
+      ->andWhere('a.id = ?', $id)
       ->andWhere('a.user_id = ?', $userId)
       ->fetchOne();
   }
 
   public function getListNotificationProgs($kw, $offset, $limit, $userId)
   {
-    $q = $this->createQuery('a')
-      ->where('a.user_id = ?', $userId);
+    $q = $this->getActiveQuery('a')
+      ->andWhere('a.user_id = ?', $userId);
     if ($kw) {
       $q->andWhere('a.name LIKE ?', '%' . $kw . '%');
     }

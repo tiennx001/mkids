@@ -16,4 +16,12 @@ class TblArticleRefTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblArticleRef');
     }
+
+    public function deleteOldData($articleId)
+    {
+        return $this->createQuery('a')
+          ->delete()
+          ->where('a.article_id = ?', $articleId)
+          ->execute();
+    }
 }

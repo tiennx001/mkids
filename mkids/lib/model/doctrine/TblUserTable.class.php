@@ -104,4 +104,16 @@ class TblUserTable extends Doctrine_Table
       ->andWhere('is_delete = 0')
       ->andWhere('type = ?', UserTypeEnum::PARENTS);
   }
+
+  public function getActiveQuery($alias)
+  {
+    return $this->createQuery('a')
+      ->where($alias . '.status = 1')
+      ->andWhere($alias . '.is_delete = 0');
+  }
+
+  public function getActiveUserById($id) {
+    return $this->getActiveQuery('a')
+      ->andWhere('a.id = ?', $id);
+  }
 }

@@ -18,6 +18,10 @@ class UserErrorCode extends defaultErrorCode
   const STRING_MAX_LENGTH = 13;
   const NO_MESSAGE = 14;
   const ROLES_CONFIG_ERROR = 15;
+  const INVALID_UPLOADED_IMAGE = 16;
+  const FILTER_DATE_COULD_NOT_GREATER_THAN_NOW = 17;
+  const FROM_DATE_MUST_LESS_THAN_TO_DATE = 18;
+  const INVALID_DATE_FORMAT = 19;
 
   //danh sách message tương ứng
   public static $extMessages = array(
@@ -35,6 +39,10 @@ class UserErrorCode extends defaultErrorCode
     13 => "Max length is %max_length%",
     14 => "No message available",
     15 => "Roles config error",
+    16 => "Invalid uploaded image",
+    17 => "Invalid date format",
+    18 => "Filter date could not greater than now",
+    19 => "From date must less than to date",
   );
 
   public static function getMessage($errorCode, $replacement = array())

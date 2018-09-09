@@ -252,7 +252,7 @@ class userActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
 
-    $email = $request->getPostParameter('email', null);
+    $email = $request->getPostParameter('username', null);
     $password = $request->getPostParameter('password', null);
     $osType = $request->getPostParameter('os_type', 0);
 

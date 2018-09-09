@@ -39,7 +39,7 @@ class notificationActions extends sfActions
       $notifProg = new TblNotificationProgram();
     } else {
       $isNew = false;
-      $notifProg = TblNotificationProgramTable::getInstance()->getProgByUserId(intval($id), $info['user_id']);
+      $notifProg = TblNotificationProgramTable::getInstance()->getProgByIdAndUserId(intval($id), $info['user_id']);
       if (!$notifProg) {
         $errorCode = defaultErrorCode::NOT_FOUND;
         $message = defaultErrorCode::getMessage($errorCode);
@@ -170,7 +170,7 @@ class notificationActions extends sfActions
 
     $kw = $request->getPostParameter('kw', null);
     $page = (int)$request->getPostParameter('page', 1);
-    $pageSize = (int)$request->getPostParameter('page', 10);
+    $pageSize = (int)$request->getPostParameter('pageSize', 10);
 
     if ($page < 1 || $pageSize < 1) {
       $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;

@@ -90,3 +90,18 @@ abstract class StatusEnum {
     );
   }
 }
+abstract class ActivityTypeEnum {
+  const ATTENDANCE = 0;
+  const ABSENCE = 1;
+  const PICNIC = 2;
+  const MOVEMENT = 3;
+  const OPENING = 4;
+  const CLOSING = 5;
+  const BEGIN = 6;
+  const STOP = 7;
+
+  public static function getAttendanceArr() {
+    return array(self::ATTENDANCE, self::PICNIC, self::MOVEMENT, self::OPENING, self::CLOSING, self::BEGIN);
+  }
+}
+

@@ -1,0 +1,8 @@
+updateArticle:
+  is_secure: true
+
+getArticleList:
+  is_secure: true
+
+removeArticle:
+  is_secure: true
