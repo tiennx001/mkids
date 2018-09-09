@@ -36,20 +36,30 @@ class TblMemberActivityTable extends Doctrine_Table
     return $q->fetchOne();
   }
 
-  public function getMemberHistory($classId, $classIds = null, $memberIds = null)
+  public function getMemberHistory($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $limit)
   {
     $q = $this->getActiveQuery('a')
-      ->andWhere('a.class_id = ?', $classId);
+      ->andWhere('a.member_id = ?', $memberId);
 
     if ($classIds) {
       $q->leftJoin('a.TblClass c')
         ->andWhereIn('c.id', $classIds);
     }
 
-    if ($classIds) {
+    if ($memberIds) {
       $q->andWhereIn('a.member_id', $memberIds);
     }
 
-    return $q->fetchOne();
+    if ($fromDate) {
+      $q->andWhere('a.created_at >= ?', $fromDate);
+    }
+
+    if ($toDate) {
+      $q->andWhere('a.created_at <= ?', $toDate);
+    }
+
+    return $q->offset($offset)
+      ->limit($limit)
+      ->execute();
   }
 }

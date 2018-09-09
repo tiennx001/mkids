@@ -110,7 +110,7 @@ class memberActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
 
-    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fromDate) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $toDate)) {
+    if (($fromDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fromDate)) || ($toDate && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $toDate))) {
       $errorCode = UserErrorCode::INVALID_DATE_FORMAT;
       $message = UserErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message);
@@ -144,13 +144,26 @@ class memberActions extends sfActions
         $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
       }
 
-      $classId = (int)$request->getPostParameter('classId', null);
-      $listActivities = TblMemberActivityTable::getInstance()->getMemberHistory($classId, $classIds, $memberIds);
+      $listActivities = TblMemberActivityTable::getInstance()->getMemberHistory($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $pageSize);
       if (!$listActivities) {
         $errorCode = defaultErrorCode::NOT_FOUND;
         $message = defaultErrorCode::getMessage($errorCode);
         $jsonObj = new jsonObject($errorCode, $message);
         return $this->renderText($jsonObj->toJson());
+      }
+
+      foreach ($listActivities as $activity) {
+        $actObj = new stdClass();
+        $actObj->id = $activity->getId();
+        $actObj->name = $activity->getName();
+        $actObj->imagePath = $activity->getImagePath();
+        $actObj->type = $activity->getType();
+        $actObj->description= $activity->getDescription();
+        $actObj->health = $activity->getHealth();
+        $actObj->height = $activity->getHeight();
+        $actObj->weight = $activity->getWeight();
+        $actObj->date = $activity->getDate();
+        $data[] = $actObj;
       }
 
       $errorCode = UserErrorCode::SUCCESS;
