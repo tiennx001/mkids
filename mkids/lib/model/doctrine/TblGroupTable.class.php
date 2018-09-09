@@ -17,7 +17,7 @@ class TblGroupTable extends Doctrine_Table
         return Doctrine_Core::getTable('TblGroup');
     }
 
-    public function getActiveGroupBySchoolIdQuery($schoolId){
+    public function getActGroupBySchoolIdQuery($schoolId){
       return $this->createQuery()
         ->where('is_delete = 0')
         ->andWhere('school_id = ?', $schoolId);

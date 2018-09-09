@@ -43,7 +43,15 @@ class managementActions extends sfActions
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues = $request->getPostParameters();
+    $formValues['tbl_user_list'] = [$userId];
+    $formValues['status'] = $request->getPostParameter('status');
+    $formValues['id'] = $request->getPostParameter('id');
+    $formValues['name'] = $request->getPostParameter('name');
+    $formValues['phone'] = $request->getPostParameter('phone');
+    $formValues['email'] = $request->getPostParameter('email');
+    $formValues['website'] = $request->getPostParameter('website');
+    $formValues['address'] = $request->getPostParameter('address');
+    $formValues['description'] = $request->getPostParameter('description');
 
     if(empty($formValues['id'])){
       $errorCode = UserErrorCode::MISSING_PARAMETERS;
@@ -61,9 +69,7 @@ class managementActions extends sfActions
     }
 
     $form = new TblSchoolApiForm($school);
-    $formValues['tbl_user_list'] = [$userId];
-    $formValues['status'] = $school->getStatus();
-    unset($formValues['token']);
+
     $form->bind($formValues);
     if($form->isValid()) {
       try{
@@ -287,6 +293,7 @@ class managementActions extends sfActions
     $formValues['id'] = $request->getPostParameter('id');
     $formValues['name'] = $request->getPostParameter('name');
     $formValues['description'] = $request->getPostParameter('description');
+    $formValues['status'] = $request->getPostParameter('status');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -307,7 +314,6 @@ class managementActions extends sfActions
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi group
       $form = new TblClassApiForm();
-      $formValues['status'] = 1;
     }else{
       //truong hop truyen id --> thuc hien cap nhat group
       //lay thong tin khoi thuoc truong
@@ -319,7 +325,6 @@ class managementActions extends sfActions
         return $this->renderText($jsonObj->toJson());
       }
       $form = new TblClassApiForm($class);
-      $formValues['status'] = $class->getStatus();
     }
 
     $form->bind($formValues);
@@ -448,13 +453,15 @@ class managementActions extends sfActions
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues['tbl_class_list'] = explode(',',trim($request->getPostParameter('classId')));
+    $formValues['tbl_class_list'] = json_decode(trim($request->getPostParameter('classId')), true);
     $formValues['type'] = UserTypeEnum::TEACHER;
     $formValues['id'] = $request->getPostParameter('id');
     $formValues['image_path'] = $request->getPostParameter('image');
     $formValues['description'] = $request->getPostParameter('description');
     $formValues['password'] = $request->getPostParameter('password');
     $formValues['name'] = $request->getPostParameter('name');
+    $formValues['status'] = $request->getPostParameter('status');
+    $formValues['msisdn'] = $request->getPostParameter('msisdn');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -467,7 +474,7 @@ class managementActions extends sfActions
 
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi
-      $form = new TblUserApiForm();
+      $form = new TblUserApiForm(null, ['school_id' => $school['id'], 'type' => UserTypeEnum::TEACHER]);
     }else{
       //truong hop truyen id --> thuc hien cap nhat
       //lay thong tin khoi thuoc truong
@@ -478,14 +485,20 @@ class managementActions extends sfActions
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
-      $form = new TblUserApiForm($teacher);
+      $form = new TblUserApiForm($teacher, ['school_id' => $school['id'], 'type' => UserTypeEnum::TEACHER]);
     }
 
     $form->bind($formValues);
     if($form->isValid()) {
       try{
         $message = $form->isNew() ? 'Create teacher success' : 'Update teacher success';
-        $form->save();
+        $oldImage = $form->isNew() ? '' : $form->getObject()->getImagePath();
+        $image = $form->getValue('image_path');
+        $obj = $form->save();
+        if($image){
+          $uploadDir = sprintf('/uploads/images/teacher/%s/',$obj->getId());
+          VtHelper::uploadBase64Image($image, $uploadDir, $obj, $oldImage);
+        }
         $errorCode = 0;
       }catch (Exception $e){
         $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
@@ -594,7 +607,6 @@ class managementActions extends sfActions
   {
     $data = [];
     $userId = $this->getUser()->getUserId();
-    $formValues = $request->getPostParameters();
     $formValues['tbl_user_list'] = explode(',',trim($request->getPostParameter('parentId')));
     $formValues['class_id'] = $request->getPostParameter('classId');
     $formValues['image_path'] = $request->getPostParameter('image');
@@ -602,6 +614,7 @@ class managementActions extends sfActions
     $formValues['name'] = $request->getPostParameter('name');
     $formValues['birthday'] = $request->getPostParameter('birthday');
     $formValues['description'] = $request->getPostParameter('description');
+    $formValues['status'] = $request->getPostParameter('status');
 
     //lay thong tin truong thuoc user dang nhap
     $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
@@ -614,8 +627,7 @@ class managementActions extends sfActions
 
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi
-      $form = new TblMemberApiForm();
-      $formValues['status'] = 1;
+      $form = new TblMemberApiForm(null, ['school_id' => $school['id']]);
     }else{
       //truong hop truyen id --> thuc hien cap nhat
       //lay thong tin hoc sinh
@@ -626,15 +638,21 @@ class managementActions extends sfActions
         $jsonObj = new jsonObject($errorCode, $message, null, $data);
         return $this->renderText($jsonObj->toJson());
       }
-      $form = new TblMemberApiForm($student);
-      $formValues['status'] = $student->getStatus();
+      $form = new TblMemberApiForm($student, ['school_id' => $school['id']]);
     }
 
     $form->bind($formValues);
     if($form->isValid()) {
       try{
         $message = $form->isNew() ? 'Create student success' : 'Update student success';
-        $form->save();
+        $oldImage = $form->isNew() ? '' : $form->getObject()->getImagePath();
+        $image = $form->getValue('image_path');
+        $obj = $form->save();
+        if($image){
+          $uploadDir = sprintf('/uploads/images/student/%s/',$obj->getId());
+          VtHelper::uploadBase64Image($image, $uploadDir, $obj, $oldImage);
+        }
+
         $errorCode = 0;
       }catch (Exception $e){
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
@@ -715,13 +733,6 @@ class managementActions extends sfActions
     if(count($dateArr) != 3 || !checkdate($dateArr[1],$dateArr[2],$dateArr[0])){
       $errorCode = MenuErrorCode::DATE_INVALID;
       $message = MenuErrorCode::getMessage($errorCode, ['%format%' => 'yyyy-MM-dd']);
-      $jsonObj = new jsonObject($errorCode, $message, null, $data);
-      return $this->renderText($jsonObj->toJson());
-    }
-
-    if($date < date('Y-m-d')){
-      $errorCode = MenuErrorCode::DATE_LESS_THAN_NOW;
-      $message = MenuErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message, null, $data);
       return $this->renderText($jsonObj->toJson());
     }
@@ -823,7 +834,13 @@ class managementActions extends sfActions
     if($form->isValid()) {
       try{
         $message = $form->isNew() ? 'Create menu success' : 'Update menu success';
-        $form->save();
+        $oldImage = $form->isNew() ? '' : $form->getObject()->getImagePath();
+        $image = $form->getValue('image_path');
+        $obj = $form->save();
+        if($image){
+          $uploadDir = sprintf('/uploads/images/menu/%s/',$obj->getId());
+          VtHelper::uploadBase64Image($image, $uploadDir, $obj, $oldImage);
+        }
         $errorCode = 0;
       }catch (Exception $e){
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;

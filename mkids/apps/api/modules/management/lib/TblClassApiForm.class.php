@@ -15,6 +15,14 @@ class TblClassApiForm extends BaseTblClassForm
     $this->useFields(['name','description','group_id','status']);
     $this->disableCSRFProtection();
 
+    $this->validatorSchema['status'] = new sfValidatorChoice([
+      'choices' => array_keys(StatusEnum::getArr()),
+      'required' => true
+    ],[
+      'invalid' => 'Trạng thái không hợp lệ',
+      'required' => 'Trạng thái không được để trống'
+    ]);
+
     $this->validatorSchema['name']->setMessage('required','Vui lòng nhập tên');
     $this->validatorSchema['name']->setMessage('max_length','Tên quá dài (tối đa %max_length% ký tự)');
     $this->validatorSchema['name']->setOption('required',true);

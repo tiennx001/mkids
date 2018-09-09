@@ -16,8 +16,8 @@ class MenuErrorCode extends defaultErrorCode
     0 => "Success",
     1 => "No Results",
     2 => "Missing Parameters",
-    3 => "The date must be equal or greater than now.",
-    4 => "Date invalid (please enter format %format%).",
+    3 => "Date invalid (please enter format %format%).",
+    4 => "The date must be equal or greater than now.",
     5 => "Menu not exist.",
   );
 

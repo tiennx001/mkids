@@ -26,15 +26,21 @@ class TblSchoolApiForm extends BaseTblSchoolForm
     $this->validatorSchema['email']->setMessage('max_length','Email quá dài (tối đa %max_length% ký tự)');
     $this->validatorSchema['email']->setOption('required',true);
 
-//    $this->validatorSchema['website']->setMessage('required','Vui lòng nhập website');
     $this->validatorSchema['website']->setMessage('max_length','Website quá dài (tối đa %max_length% ký tự)');
 
     $this->validatorSchema['address']->setMessage('required','Vui lòng nhập địa chỉ');
     $this->validatorSchema['address']->setMessage('max_length','Địa chỉ quá dài (tối đa %max_length% ký tự)');
     $this->validatorSchema['address']->setOption('required',true);
 
-//    $this->validatorSchema['description']->setMessage('required','Vui lòng nhập mô tả');
     $this->validatorSchema['description']->setMessage('max_length','Mô tả quá dài (tối đa %max_length% ký tự)');
+
+    $this->validatorSchema['status'] = new sfValidatorChoice([
+      'choices' => array_keys(StatusEnum::getArr()),
+      'required' => true
+    ],[
+      'invalid' => 'Trạng thái không hợp lệ',
+      'required' => 'Trạng thái không được để trống'
+    ]);
 
   }
 }

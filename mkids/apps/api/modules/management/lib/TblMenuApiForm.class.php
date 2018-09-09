@@ -43,17 +43,21 @@ class TblMenuApiForm extends BaseTblMenuForm
       'max_size' => 1024*1024,
       'mime_types' => ['image/jpeg','image/png'],
       'required' => false
-    ));
+    ),[
+      'max_size' => 'Ảnh không được quá 1MB',
+      'mime_types' => 'Vui lòng upload ảnh định dạng png hoặc jpeg'
+    ]);
+
     $this->validatorSchema['tbl_group_list'] = new sfValidatorDoctrineChoice(array(
       'multiple' => true, 'model' => 'TblGroup', 'required' => false,
-      'query' => TblGroupTable::getInstance()->getActiveGroupBySchoolIdQuery($schoolId)
+      'query' => TblGroupTable::getInstance()->getActGroupBySchoolIdQuery($schoolId)
     ), array(
       'invalid' => 'Nhóm không hợp lệ'
     ));
 
     $this->validatorSchema['tbl_class_list'] = new sfValidatorDoctrineChoice(array(
       'multiple' => true, 'model' => 'TblClass', 'required' => false,
-      'query' => TblClassTable::getInstance()->getActiveClassInGroupQuery(null,$schoolId)
+      'query' => TblClassTable::getInstance()->getClassInGroupQuery(null,$schoolId)
     ), array(
       'invalid' => 'Lớp không hợp lệ'
     ));

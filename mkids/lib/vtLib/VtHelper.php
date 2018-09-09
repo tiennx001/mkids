@@ -1522,6 +1522,29 @@ class VtHelper
       }
     }
   }
+
+  public static function uploadBase64Image($base64Str, $uploadDir, $obj, $oldImage){
+    try {
+      $imgArr = explode(',', $base64Str);
+      $img = count($imgArr) == 1 ? $imgArr[0] : $imgArr[1];
+      $data = base64_decode($img);
+      $fileName = uniqid() . '.jpeg';
+      $file = sfConfig::get('sf_web_dir') . $uploadDir . $fileName;
+      if(!is_dir(sfConfig::get('sf_web_dir') . $uploadDir))
+        mkdir(sfConfig::get('sf_web_dir') . $uploadDir, 0777, true);
+      $success = file_put_contents($file, $data);
+      if ($success) {
+        $obj->setImagePath($uploadDir . $fileName);
+        $obj->save();
+        if (is_file(sfConfig::get('sf_web_dir') . $oldImage)) {
+          //xoa file cu khi upload file moi
+          unlink(sfConfig::get('sf_web_dir') . $oldImage);
+        }
+      }
+    }catch (Exception $e){
+      VtHelper::writeLogValue(sprintf('[uploadBase64Image]ERROR: %s|PATH: %s',$e->getMessage(),$uploadDir));
+    }
+  }
 }
 
 //@tungtd2

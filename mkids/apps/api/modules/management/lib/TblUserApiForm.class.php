@@ -14,6 +14,8 @@ class TblUserApiForm extends BaseTblUserForm
   {
     $this->useFields(['name','description','status','type','image_path','msisdn','password','tbl_class_list']);
     $this->disableCSRFProtection();
+    $schoolId = $this->getOption('school_id');
+    $type = $this->getOption('type');
 
     if($this->isNew()){
       $this->validatorSchema['password']->setOption('required',true);
@@ -24,13 +26,34 @@ class TblUserApiForm extends BaseTblUserForm
 
     $this->validatorSchema['msisdn']->setMessage('required','Vui lòng nhập SĐT');
     $this->validatorSchema['msisdn']->setMessage('max_length','SĐT quá dài (tối đa %max_length% ký tự)');
-    $this->validatorSchema['msisdn']->setOption('required',true);
+    $this->validatorSchema['msisdn']->setOption('required',$type == UserTypeEnum::PARENTS);
 
-    $this->validatorSchema['tbl_class_list']->setOption('required',true);
-    $this->validatorSchema['tbl_class_list']->setMessage('required','Lớp không được để trống');
-    $this->validatorSchema['tbl_class_list']->setMessage('invalid','Lớp không hợp lệ');
+    $this->validatorSchema['status'] = new sfValidatorChoice([
+      'choices' => array_keys(StatusEnum::getArr()),
+      'required' => true
+    ],[
+      'invalid' => 'Trạng thái không hợp lệ',
+      'required' => 'Trạng thái không được để trống'
+    ]);
+
+    $this->validatorSchema['tbl_class_list'] = new sfValidatorDoctrineChoice(array(
+      'multiple' => true, 'model' => 'TblClass', 'required' => true,
+      'query' => TblClassTable::getInstance()->getClassInGroupQuery(null,$schoolId)
+    ), array(
+      'invalid' => 'Lớp không hợp lệ',
+      'required' => 'Lớp không được để trống'
+    ));
 
     $this->validatorSchema['description']->setMessage('max_length','Mô tả quá dài (tối đa %max_length% ký tự)');
+
+    $this->validatorSchema['image_path'] = new sfValidatorBase64Image(array(
+      'max_size' => 1024*1024,
+      'mime_types' => ['image/jpeg','image/png'],
+      'required' => false
+    ),[
+      'max_size' => 'Ảnh không được quá 1MB',
+      'mime_types' => 'Vui lòng upload ảnh định dạng png hoặc jpeg'
+    ]);
   }
 
   public function processValues($values)
