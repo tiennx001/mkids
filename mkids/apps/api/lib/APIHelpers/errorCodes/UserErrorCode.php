@@ -40,9 +40,9 @@ class UserErrorCode extends defaultErrorCode
     14 => "No message available",
     15 => "Roles config error",
     16 => "Invalid uploaded image",
-    17 => "Invalid date format",
+    17 => "From date must less than to date",
     18 => "Filter date could not greater than now",
-    19 => "From date must less than to date",
+    19 => "Invalid date format",
   );
 
   public static function getMessage($errorCode, $replacement = array())

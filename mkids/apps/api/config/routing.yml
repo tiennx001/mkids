@@ -97,6 +97,9 @@ updateArticle:
 getArticleList:
   url: /getArticleList
   param: { module: article, action: getArticleList }
+removeArticle:
+  url: /removeArticle
+  param: { module: article, action: removeArticle }
 ############ END Bang tin ############
 
 ############ Binh luan ############
@@ -106,6 +109,12 @@ replyComment:
 getCommentList:
   url: /getCommentList
   param: { module: comment, action: getCommentList }
+removeComment:
+  url: /removeComment
+  param: { module: comment, action: removeComment }
+createComment:
+  url: /createComment
+  param: { module: comment, action: createComment }
 ############ END Binh luan ############
 
 ############ Theo doi hoc sinh ############

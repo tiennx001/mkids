@@ -34,7 +34,8 @@ class TblCommentTable extends Doctrine_Table
 
   public function getListComments($kw, $offset, $limit)
   {
-    $q = $this->getActiveQuery('a');
+    $q = $this->getActiveQuery('a')
+      ->andWhere('a.parent_id IS NULL');
     if ($kw) {
       $q->andWhere('a.content LIKE ?', '%' . $kw . '%');
     }

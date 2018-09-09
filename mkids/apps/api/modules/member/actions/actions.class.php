@@ -40,8 +40,30 @@ class memberActions extends sfActions
         $classIds = TblClassTable::getInstance()->getClassIdsByUserId($info['user_id']);
       }
 
+      $date = $request->getPostParameter('date', null);
+      if (!$date) {
+        $errorCode = UserErrorCode::MISSING_PARAMETERS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+        $errorCode = UserErrorCode::INVALID_DATE_FORMAT;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      if ($date > date('Y-m-d')) {
+        $errorCode = UserErrorCode::FILTER_DATE_COULD_NOT_GREATER_THAN_NOW;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
       $classId = (int)$request->getPostParameter('classId', null);
-      $listActivities = TblMemberActivityTable::getInstance()->getListActivities($classId, $classIds);
+      $listActivities = TblMemberActivityTable::getInstance()->getListActivities($classId, $date, $classIds);
       if (!$listActivities) {
         $errorCode = defaultErrorCode::NOT_FOUND;
         $message = defaultErrorCode::getMessage($errorCode);
@@ -51,7 +73,7 @@ class memberActions extends sfActions
 
       if (count($listActivities)) {
         foreach ($listActivities as $activity) {
-          $member = TblMemberTable::getInstance()->getMemberById($activity->getMemberId());
+          $member = TblMemberTable::getInstance()->getActiveMemberById($activity->getMemberId());
           if ($member) {
             $memberObj = new stdClass();
             $memberObj->id = $member->getId();
@@ -76,7 +98,7 @@ class memberActions extends sfActions
         return $this->renderText($jsonObj->toJson());
       }
     } catch (Exception $e) {
-      VtHelper::writeLogValue('executeGetArticleList|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
+      VtHelper::writeLogValue('executeGetAttendanceByClass|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
       $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
       $message = defaultErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message);

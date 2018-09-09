@@ -23,6 +23,8 @@ abstract class BaseTblMemberActivityForm extends BaseFormDoctrine
       'health'      => new sfWidgetFormInputText(),
       'height'      => new sfWidgetFormInputText(),
       'weight'      => new sfWidgetFormInputText(),
+      'status'      => new sfWidgetFormInputCheckbox(),
+      'is_delete'   => new sfWidgetFormInputCheckbox(),
       'created_at'  => new sfWidgetFormDateTime(),
       'updated_at'  => new sfWidgetFormDateTime(),
     ));
@@ -36,6 +38,8 @@ abstract class BaseTblMemberActivityForm extends BaseFormDoctrine
       'health'      => new sfValidatorPass(array('required' => false)),
       'height'      => new sfValidatorInteger(array('required' => false)),
       'weight'      => new sfValidatorInteger(array('required' => false)),
+      'status'      => new sfValidatorBoolean(array('required' => false)),
+      'is_delete'   => new sfValidatorBoolean(array('required' => false)),
       'created_at'  => new sfValidatorDateTime(),
       'updated_at'  => new sfValidatorDateTime(),
     ));

@@ -14,6 +14,8 @@ Doctrine_Manager::getInstance()->bindComponent('TblMemberActivity', 'doctrine');
  * @property tinyint $health
  * @property integer $height
  * @property integer $weight
+ * @property boolean $status
+ * @property boolean $is_delete
  * @property TblMember $TblMember
  * 
  * @method integer           getMemberId()    Returns the current record's "member_id" value
@@ -23,6 +25,8 @@ Doctrine_Manager::getInstance()->bindComponent('TblMemberActivity', 'doctrine');
  * @method tinyint           getHealth()      Returns the current record's "health" value
  * @method integer           getHeight()      Returns the current record's "height" value
  * @method integer           getWeight()      Returns the current record's "weight" value
+ * @method boolean           getStatus()      Returns the current record's "status" value
+ * @method boolean           getIsDelete()    Returns the current record's "is_delete" value
  * @method TblMember         getTblMember()   Returns the current record's "TblMember" value
  * @method TblMemberActivity setMemberId()    Sets the current record's "member_id" value
  * @method TblMemberActivity setDate()        Sets the current record's "date" value
@@ -31,6 +35,8 @@ Doctrine_Manager::getInstance()->bindComponent('TblMemberActivity', 'doctrine');
  * @method TblMemberActivity setHealth()      Sets the current record's "health" value
  * @method TblMemberActivity setHeight()      Sets the current record's "height" value
  * @method TblMemberActivity setWeight()      Sets the current record's "weight" value
+ * @method TblMemberActivity setStatus()      Sets the current record's "status" value
+ * @method TblMemberActivity setIsDelete()    Sets the current record's "is_delete" value
  * @method TblMemberActivity setTblMember()   Sets the current record's "TblMember" value
  * 
  * @package    xcode
@@ -81,6 +87,17 @@ abstract class BaseTblMemberActivity extends sfDoctrineRecord
              'type' => 'integer',
              'comment' => 'Cân nặng (kg)',
              'length' => 5,
+             ));
+        $this->hasColumn('status', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

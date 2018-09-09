@@ -44,4 +44,17 @@ class TblMemberTable extends Doctrine_Table
       ->addWhere('m.id = ?', $id)
       ->fetchOne();
   }
+
+  public function getActiveQuery($alias)
+  {
+    return $this->createQuery('a')
+      ->where($alias . '.status = 1')
+      ->andWhere($alias . '.is_delete = 0');
+  }
+
+  public function getActiveMemberById($id){
+    return $this->getActiveQuery('a')
+      ->addWhere('a.id = ?', $id)
+      ->fetchOne();
+  }
 }

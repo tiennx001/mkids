@@ -20,6 +20,8 @@ abstract class BaseTblMemberActivityFormFilter extends BaseFormFilterDoctrine
       'health'      => new sfWidgetFormFilterInput(),
       'height'      => new sfWidgetFormFilterInput(),
       'weight'      => new sfWidgetFormFilterInput(),
+      'status'      => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
+      'is_delete'   => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
       'created_at'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
       'updated_at'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
     ));
@@ -32,6 +34,8 @@ abstract class BaseTblMemberActivityFormFilter extends BaseFormFilterDoctrine
       'health'      => new sfValidatorPass(array('required' => false)),
       'height'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'weight'      => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
+      'status'      => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
+      'is_delete'   => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
       'created_at'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'updated_at'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
     ));
@@ -61,6 +65,8 @@ abstract class BaseTblMemberActivityFormFilter extends BaseFormFilterDoctrine
       'health'      => 'Text',
       'height'      => 'Number',
       'weight'      => 'Number',
+      'status'      => 'Boolean',
+      'is_delete'   => 'Boolean',
       'created_at'  => 'Date',
       'updated_at'  => 'Date',
     );

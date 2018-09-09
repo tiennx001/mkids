@@ -24,16 +24,18 @@ class TblMemberActivityTable extends Doctrine_Table
       ->andWhere($alias . '.is_delete = 0');
   }
 
-  public function getListActivities($classId, $classIds = null)
+  public function getListActivities($classId, $date, $classIds = null)
   {
     $q = $this->getActiveQuery('a')
-      ->andWhere('a.class_id = ?', $classId);
+      ->leftJoin('a.TblMember b')
+      ->andWhere('b.class_id = ?', $classId)
+      ->andWhere('a.date = ?', $date);
 
     if ($classIds) {
       $q->andWhereIn('a.class_id', $classIds);
     }
 
-    return $q->fetchOne();
+    return $q->execute();
   }
 
   public function getMemberHistory($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $limit)
