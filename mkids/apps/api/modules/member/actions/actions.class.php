@@ -10,6 +10,10 @@
  */
 class memberActions extends sfActions
 {
+  public function preExecute(){
+    $this->getResponse()->setContentType('application/json');
+    parent::preExecute();
+  }
   /**
    * Executes index action
    *
@@ -199,5 +203,60 @@ class memberActions extends sfActions
       $jsonObj = new jsonObject($errorCode, $message);
       return $this->renderText($jsonObj->toJson());
     }
+  }
+
+  public function executeUpdateMemberActivity(sfWebRequest $request){
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    $formValues['member_id'] = $request->getPostParameter('memberId');
+    $formValues['type'] = $request->getPostParameter('type');
+    $formValues['date'] = $request->getPostParameter('date');
+    $formValues['description'] = $request->getPostParameter('description');
+    $formValues['health'] = $request->getPostParameter('health');
+    $formValues['height'] = $request->getPostParameter('height');
+    $formValues['weight'] = $request->getPostParameter('weight');
+    $formValues['status'] = $request->getPostParameter('status');
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!empty($formValues['member_id']) && !empty($formValues['date'])){
+      $activity = TblMemberActivityTable::getInstance()->getActivityByMemberIdAndDate($formValues['member_id'],$formValues['date']);
+    }else{
+      $activity = null;
+    }
+    $form = new TblMemberActivityApiForm($activity, ['school_id' => $school['id']]);
+    if($formValues['status'] == '')
+      $form->useFields(['member_id','date','type','health','description','height','weight']);
+    $form->bind($formValues);
+    if($form->isValid()) {
+      try{
+        $message = $form->isNew() ? 'Create activity success' : 'Update activity success';
+        $form->save();
+
+        $errorCode = 0;
+      }catch (Exception $e){
+        $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
+        $message = UserErrorCode::getMessage($errorCode);
+        VtHelper::writeLogValue(sprintf('[management][executeUpdateMember]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
+      }
+    }else{
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $key => $f) {
+        if ($f->hasError()) {
+          $message = VtHelper::strip_html_tags($f->getError());
+        }
+      }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
   }
 }

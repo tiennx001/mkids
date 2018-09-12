@@ -79,6 +79,9 @@ updateMenuByDate:
 removeMenu:
   url: /removeMenu
   param: { module: management, action: removeMenu }
+updateMemberActivity:
+  url: /updateMemberActivity
+  param: { module: member, action: updateMemberActivity }
 ############ Quan ly thong tin #############
 
 ############ Thong bao ############
