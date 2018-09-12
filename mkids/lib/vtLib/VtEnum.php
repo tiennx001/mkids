@@ -103,5 +103,18 @@ abstract class ActivityTypeEnum {
   public static function getAttendanceArr() {
     return array(self::ATTENDANCE, self::PICNIC, self::MOVEMENT, self::OPENING, self::CLOSING, self::BEGIN);
   }
+
+  public static function getArr(){
+    return array(self::ATTENDANCE, self::ABSENCE, self::PICNIC, self::MOVEMENT, self::OPENING, self::CLOSING, self::BEGIN, self::STOP);
+  }
+}
+abstract class ActivityHealthEnum {
+  const SICK = 0;
+  const NORMAL = 1;
+  const STRONG = 2;
+
+  public static function getArr(){
+    return array(self::SICK, self::NORMAL, self::STRONG);
+  }
 }
 

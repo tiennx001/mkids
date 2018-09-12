@@ -19,7 +19,7 @@ class TblMemberActivityTable extends Doctrine_Table
 
   public function getActiveQuery($alias)
   {
-    return $this->createQuery('a')
+    return $this->createQuery($alias)
       ->where($alias . '.status = 1')
       ->andWhere($alias . '.is_delete = 0');
   }
@@ -63,5 +63,13 @@ class TblMemberActivityTable extends Doctrine_Table
     return $q->offset($offset)
       ->limit($limit)
       ->execute();
+  }
+
+  public function getActivityByMemberIdAndDate($memberId, $date){
+    return $this->createQuery()
+      ->where('is_delete = 0')
+      ->andWhere('member_id = ?', $memberId)
+      ->andWhere('date = ?', $date)
+      ->fetchOne();
   }
 }
