@@ -126,6 +126,15 @@ getMemberActivity:
   param: { module: member, action: getMemberActivity }
 ############ END Theo doi hoc sinh ############
 
+############ Tong ket ############
+updateSummary:
+  url: /updateSummary
+  param: { module: summary, action: updateSummary }
+getSummaryHistory:
+  url: /getSummaryHistory
+  param: { module: summary, action: getSummaryHistory }
+############ END Tong ket ############
+
 # default rules
 homepage:
   url:   /

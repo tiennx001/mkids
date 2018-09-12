@@ -329,6 +329,9 @@ TblSummary:
     behavior: { type: tinyint(2), comment: 'Tổng kết (0: Kém; 1: Yếu; 2: TB; 3: Khá; 4: Tốt; 5: Xuất sắc)' }
     attendance: { type: tinyint(2), comment: 'Đi học đầy đủ (0: Ít đi học; 1: Đầy đủ; 2: Chăm chỉ)' }
     description: { type: string(255), comment: 'Nhận xét chung' }
+    user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+    is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
   relations:
     TblMember: { class: TblMember, local: member_id }
 

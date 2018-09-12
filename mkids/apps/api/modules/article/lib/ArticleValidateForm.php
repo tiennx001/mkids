@@ -20,7 +20,7 @@ class ArticleValidateForm extends BaseTblArticleForm
       'max_length' => 255
     ), array(
       'required' => $i18n->__('Vui lòng nhập tiêu đề'),
-      'max_length' => $i18n->__('Độ tài tối đa %max_length% ký tự')
+      'max_length' => $i18n->__('Độ dài tiêu đề tối đa %max_length% ký tự')
     ));
 
     $this->validatorSchema['content'] = new sfValidatorString(array(
@@ -28,7 +28,7 @@ class ArticleValidateForm extends BaseTblArticleForm
       'max_length' => 65535
     ), array(
       'required' => $i18n->__('Vui lòng nhập nội dung'),
-      'max_length' => $i18n->__('Độ tài tối đa %max_length% ký tự')
+      'max_length' => $i18n->__('Độ dài nội dung tối đa %max_length% ký tự')
     ));
 
     $this->validatorSchema['image'] = new sfValidatorString(array(
@@ -36,7 +36,7 @@ class ArticleValidateForm extends BaseTblArticleForm
     'max_length' => 65535
   ), array(
     'required' => $i18n->__('Vui lòng chọn ảnh đại diện'),
-    'max_length' => $i18n->__('Độ tài tối đa %max_length% ký tự')
+    'max_length' => $i18n->__('Độ dài ảnh đại diện tối đa %max_length% ký tự')
   ));
 
     $this->widgetSchema['type'] = new sfWidgetFormChoice(array(

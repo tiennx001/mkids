@@ -25,4 +25,15 @@ class TblUserClassRefTable extends Doctrine_Table
       ->andWhere('b.status = 1 AND b.is_delete = 0')
       ->execute()->toKeyValueArray('b.id', 'b.name');
   }
+
+  public function getMemberIdsByUserId($userId)
+  {
+    return $this->createQuery('a')
+      ->leftJoin('a.TblClass b')
+      ->leftJoin('b.TblMember c')
+      ->where('a.user_id = ?', $userId)
+      ->andWhere('b.status = 1 AND b.is_delete = 0')
+      ->andWhere('c.status = 1 AND c.is_delete = 0')
+      ->execute()->toKeyValueArray('c.id', 'c.name');
+  }
 }

@@ -104,4 +104,16 @@ abstract class ActivityTypeEnum {
     return array(self::ATTENDANCE, self::PICNIC, self::MOVEMENT, self::OPENING, self::CLOSING, self::BEGIN);
   }
 }
+abstract class SummaryLevelEnum {
+  const POOR = 0;
+  const WEAK = 1;
+  const NORMAL = 2;
+  const PRETTY = 3;
+  const GOOD = 4;
+  const EXCELLENT = 5;
+
+  public static function getLevelArr() {
+    return array(self::POOR, self::WEAK, self::NORMAL, self::PRETTY, self::GOOD, self::EXCELLENT);
+  }
+}
 

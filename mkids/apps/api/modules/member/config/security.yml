@@ -1,0 +1,5 @@
+getAttendanceByClass:
+  is_secure: true
+
+getMemberActivity:
+  is_secure: true

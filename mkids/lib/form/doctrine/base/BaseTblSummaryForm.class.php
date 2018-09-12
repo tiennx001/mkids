@@ -24,6 +24,9 @@ abstract class BaseTblSummaryForm extends BaseFormDoctrine
       'behavior'    => new sfWidgetFormInputText(),
       'attendance'  => new sfWidgetFormInputText(),
       'description' => new sfWidgetFormInputText(),
+      'user_id'     => new sfWidgetFormInputText(),
+      'status'      => new sfWidgetFormInputCheckbox(),
+      'is_delete'   => new sfWidgetFormInputCheckbox(),
       'created_at'  => new sfWidgetFormDateTime(),
       'updated_at'  => new sfWidgetFormDateTime(),
     ));
@@ -38,6 +41,9 @@ abstract class BaseTblSummaryForm extends BaseFormDoctrine
       'behavior'    => new sfValidatorPass(array('required' => false)),
       'attendance'  => new sfValidatorPass(array('required' => false)),
       'description' => new sfValidatorString(array('max_length' => 255, 'required' => false)),
+      'user_id'     => new sfValidatorInteger(),
+      'status'      => new sfValidatorBoolean(array('required' => false)),
+      'is_delete'   => new sfValidatorBoolean(array('required' => false)),
       'created_at'  => new sfValidatorDateTime(),
       'updated_at'  => new sfValidatorDateTime(),
     ));

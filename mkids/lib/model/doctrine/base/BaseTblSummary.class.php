@@ -15,6 +15,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblSummary', 'doctrine');
  * @property tinyint $behavior
  * @property tinyint $attendance
  * @property string $description
+ * @property integer $user_id
+ * @property boolean $status
+ * @property boolean $is_delete
  * @property TblMember $TblMember
  * 
  * @method integer    getMemberId()    Returns the current record's "member_id" value
@@ -25,6 +28,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblSummary', 'doctrine');
  * @method tinyint    getBehavior()    Returns the current record's "behavior" value
  * @method tinyint    getAttendance()  Returns the current record's "attendance" value
  * @method string     getDescription() Returns the current record's "description" value
+ * @method integer    getUserId()      Returns the current record's "user_id" value
+ * @method boolean    getStatus()      Returns the current record's "status" value
+ * @method boolean    getIsDelete()    Returns the current record's "is_delete" value
  * @method TblMember  getTblMember()   Returns the current record's "TblMember" value
  * @method TblSummary setMemberId()    Sets the current record's "member_id" value
  * @method TblSummary setDate()        Sets the current record's "date" value
@@ -34,6 +40,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblSummary', 'doctrine');
  * @method TblSummary setBehavior()    Sets the current record's "behavior" value
  * @method TblSummary setAttendance()  Sets the current record's "attendance" value
  * @method TblSummary setDescription() Sets the current record's "description" value
+ * @method TblSummary setUserId()      Sets the current record's "user_id" value
+ * @method TblSummary setStatus()      Sets the current record's "status" value
+ * @method TblSummary setIsDelete()    Sets the current record's "is_delete" value
  * @method TblSummary setTblMember()   Sets the current record's "TblMember" value
  * 
  * @package    xcode
@@ -84,6 +93,23 @@ abstract class BaseTblSummary extends sfDoctrineRecord
              'type' => 'string',
              'comment' => 'Nhận xét chung',
              'length' => 255,
+             ));
+        $this->hasColumn('user_id', 'integer', 8, array(
+             'type' => 'integer',
+             'notnull' => true,
+             'comment' => 'ID người tạo',
+             'length' => 8,
+             ));
+        $this->hasColumn('status', 'boolean', null, array(
+             'type' => 'boolean',
+             'notnull' => true,
+             'default' => false,
+             'comment' => 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)',
+             ));
+        $this->hasColumn('is_delete', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)',
              ));
     }
 

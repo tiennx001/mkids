@@ -1,0 +1,5 @@
+updateSummary:
+  is_secure: true
+
+getSummaryHistory:
+  is_secure: true
