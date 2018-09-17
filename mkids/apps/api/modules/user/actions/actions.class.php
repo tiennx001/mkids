@@ -311,9 +311,16 @@ class userActions extends sfActions
             return $this->renderText($jsonObj->toJson());
           }
 
+          // Thuc hien cap nhat registration_ids
+          $tokenId = $request->getPostParameter('tokenId', null);
+          if ($tokenId && $tokenId != $vtUser->getTokenId()) {
+            $vtUser->setTokenId($tokenId);
+            $vtUser->save();
+          }
+
           $errorCode = AuthenticateErrorCode::AUTHENTICATE_SUCCESS;
           $message = AuthenticateErrorCode::getMessage($errorCode);
-          $jsonObj = new jsonObject($errorCode, $message, $token, array('phone' => $vtUser['msisdn']), null, $isUpdate, $updateType);
+          $jsonObj = new jsonObject($errorCode, $message, $token, null, null, $isUpdate, $updateType);
           return $this->renderText($jsonObj->toJson());
         }
 

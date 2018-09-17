@@ -15,7 +15,6 @@ abstract class BaseTblArticleFormFilter extends BaseFormFilterDoctrine
     $this->setWidgets(array(
       'title'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'content'         => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'image_path'      => new sfWidgetFormFilterInput(),
       'type'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'user_id'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblUser'), 'add_empty' => true)),
       'status'          => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
@@ -30,7 +29,6 @@ abstract class BaseTblArticleFormFilter extends BaseFormFilterDoctrine
     $this->setValidators(array(
       'title'           => new sfValidatorPass(array('required' => false)),
       'content'         => new sfValidatorPass(array('required' => false)),
-      'image_path'      => new sfValidatorPass(array('required' => false)),
       'type'            => new sfValidatorPass(array('required' => false)),
       'user_id'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblUser'), 'column' => 'id')),
       'status'          => new sfValidatorChoice(array('required' => false, 'choices' => array('', 1, 0))),
@@ -128,7 +126,6 @@ TblMemberListColumnQuery(Doctrine_Query $query, $field, $values)
       'id'              => 'Number',
       'title'           => 'Text',
       'content'         => 'Text',
-      'image_path'      => 'Text',
       'type'            => 'Text',
       'user_id'         => 'ForeignKey',
       'status'          => 'Boolean',

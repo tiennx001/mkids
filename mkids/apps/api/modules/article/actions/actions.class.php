@@ -52,9 +52,8 @@ class articleActions extends sfActions
     // Parameters
     $title = $request->getParameter('title');
     $content = $request->getParameter('content');
-    $image = $request->getParameter('image');
+//    $image = $request->getParameter('image');
     $type = $request->getParameter('type');
-    $status = $request->getParameter('status');
     $groupList = $request->getParameter('groupList');
     $classList = $request->getParameter('classList');
     $memberList = $request->getParameter('memberList');
@@ -66,9 +65,8 @@ class articleActions extends sfActions
     $values = array(
       'title' => $title,
       'content' => $content,
-      'image' => $image,
+//      'image' => $image,
       'type' => $type,
-      'status' => $status,
       'tbl_group_list' => $groupArr,
       'tbl_class_list' => $classArr,
       'tbl_member_list' => $memberArr
@@ -89,24 +87,24 @@ class articleActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
 
-    $path = VtHelper::generatePath(sfConfig::get('app_user_image_path', '/uploads/images/article'));
-    $fileName = md5($info['account'] . date('YmdHis')) . '.' . sfConfig::get('app_user_image_ext', 'jpg');
-    $avatarPath = $path . $fileName;
+//    $path = VtHelper::generatePath(sfConfig::get('app_user_image_path', '/uploads/images/article'));
+//    $fileName = md5($info['account'] . date('YmdHis')) . '.' . sfConfig::get('app_user_image_ext', 'jpg');
+//    $avatarPath = $path . $fileName;
     try {
-      // Convert and upload image
-      mKidsHelper::base64_to_jpeg($image, sfConfig::get('sf_web_dir') . $avatarPath);
-      if (!getimagesize(sfConfig::get('sf_web_dir') . $avatarPath)) {
-        $errorCode = UserErrorCode::INVALID_UPLOADED_IMAGE;
-        $message = UserErrorCode::getMessage($errorCode);
-        $jsonObj = new jsonObject($errorCode, $message);
-        return $this->renderText($jsonObj->toJson());
-      }
+//      // Convert and upload image
+//      mKidsHelper::base64_to_jpeg($image, sfConfig::get('sf_web_dir') . $avatarPath);
+//      if (!getimagesize(sfConfig::get('sf_web_dir') . $avatarPath)) {
+//        $errorCode = UserErrorCode::INVALID_UPLOADED_IMAGE;
+//        $message = UserErrorCode::getMessage($errorCode);
+//        $jsonObj = new jsonObject($errorCode, $message);
+//        return $this->renderText($jsonObj->toJson());
+//      }
 
       $article->setTitle($title);
       $article->setContent($content);
-      $article->setImagePath($avatarPath);
+//      $article->setImagePath($avatarPath);
       $article->setType($type);
-      $article->setStatus($status);
+      $article->setStatus(true);
       $article->setUserId($info['user_id']);
       if ($isNew) {
         $article->setCreatedAt(date("Y-m-d H:i:s"));
@@ -165,6 +163,130 @@ class articleActions extends sfActions
   }
 
   /**
+   * Ham them anh cho ban tin
+   *
+   * @author Tiennx6
+   * @since 05/09/2018
+   * @param sfWebRequest $request
+   * @return sfView
+   */
+  public function executeAddArticleImage(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    VtHelper::writeLogValue('executeAddArticleImage|Acc=' . $info['account'] . '|Starting request with params=' . json_encode($request));
+
+    $articleId = $request->getPostParameter('articleId', null);
+    $article = TblArticleTable::getInstance()->getArticleByIdAndUserId(intval($articleId), $info['user_id']);
+    if (!$article) {
+      $errorCode = defaultErrorCode::NOT_FOUND;
+      $message = defaultErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    // Parameters
+    $title = $request->getParameter('title');
+    $image = $request->getParameter('image');
+
+    $values = array(
+      'title' => $title,
+      'image' => $image,
+    );
+
+    $form = new ArticleValidateForm(array(), array('is_add_image' => true));
+    $form->bind($values);
+    if (!$form->isValid()) {
+      VtHelper::writeLogValue('executeAddArticleImage|Acc=' . $info['account'] . '|Request values are not valid');
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $widget) {
+        if ($widget->hasError()) {
+          $message = VtHelper::strip_html_tags($widget->getError());
+        }
+      }
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $path = VtHelper::generatePath(sfConfig::get('app_user_image_path', '/uploads/images/article'));
+    $fileName = md5($info['account'] . date('YmdHis')) . '.' . sfConfig::get('app_user_image_ext', 'jpg');
+    $avatarPath = $path . $fileName;
+    try {
+      // Convert and upload image
+      mKidsHelper::base64_to_jpeg($image, sfConfig::get('sf_web_dir') . $avatarPath);
+      if (!getimagesize(sfConfig::get('sf_web_dir') . $avatarPath)) {
+        $errorCode = UserErrorCode::INVALID_UPLOADED_IMAGE;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      $articleImage = new TblArticleImage();
+      $articleImage->setTitle($title);
+      $articleImage->setImagePath($avatarPath);
+      $articleImage->setArticleId($articleId);
+      $articleImage->setStatus(true);
+      $articleImage->setCreatedAt(date("Y-m-d H:i:s"));
+      $articleImage->setUpdatedAt(date("Y-m-d H:i:s"));
+      $articleImage->save();
+
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    } catch (Exception $e) {
+      VtHelper::writeLogValue('executeAddArticleImage|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+  }
+
+  /**
+   * Ham xoa anh ban tin
+   *
+   * @author Tiennx6
+   * @since 05/09/2018
+   * @param sfWebRequest $request
+   * @return sfView
+   */
+  public function executeRemoveArticleImage(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    VtHelper::writeLogValue('executeRemoveArticleImage|Acc=' . $info['account'] . '|Starting request with params=' . json_encode($request));
+
+    $id = $request->getPostParameter('id', null);
+    $image = TblArticleImageTable::getInstance()->getImageByIdAndUserId(intval($id), $info['user_id']);
+    if (!$image) {
+      VtHelper::writeLogValue('executeRemoveArticle|Acc=' . $info['account'] . '|Article image not found with ID=' . $id);
+      $errorCode = defaultErrorCode::NOT_FOUND;
+      $message = defaultErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      // Thuc hien cap nhat xoa anh ban tin
+      $image->setIsDelete(true);
+      $image->setUpdatedAt(date('Y-m-d H:i:s'));
+      $image->save();
+
+      VtHelper::writeLogValue('executeRemoveArticleImage|Acc=' . $info['account'] . '|Remove article image success with ID=' . $id);
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    } catch (Exception $e) {
+      VtHelper::writeLogValue('executeRemoveArticleImage|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+  }
+
+  /**
    * Ham lay danh sach bang tin
    *
    * @author Tiennx6
@@ -199,7 +321,15 @@ class articleActions extends sfActions
           $item->title = $article->title;
           $item->content = $article->content;
           $item->type = $article->type;
-          $item->imagePath = $article->image_path;
+          if ($article->getTblArticleImage() && count($article->getTblArticleImage())) {
+            foreach ($article->getTblArticleImage() as $image) {
+              $imageObj = new stdClass();
+              $imageObj->id = $image->getId();
+              $imageObj->title = $image->getTitle();
+              $imageObj->imagePath = $image->getImagePath();
+              $item->imageList[] = $imageObj;
+            }
+          }
           if ($article->getTblGroup() && count($article->getTblGroup())) {
             foreach ($article->getTblGroup() as $group) {
               $groupObj = new stdClass();

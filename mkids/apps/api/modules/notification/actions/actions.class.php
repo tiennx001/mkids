@@ -238,4 +238,174 @@ class notificationActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
   }
+
+  //ham lay so luong notification moi
+  public function executeGetNewNotifications(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    //lay last_update cua nguoi dung
+    $user = TblUserTable::getInstance()->getActiveUserById($info['user_id']);
+    if (!$user) {
+      $errorCode = UserErrorCode::NOT_FOUND;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    //Thuc hien lay so luong notification moi
+    $newNotification = TblNotificationHisTable::getInstance()->getNewNotification($info['user_id'], $user->getLastUpdate(), date('Y-m-d H:i:s'));
+    $data = array('number' => $newNotification);
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  //ham lay danh sach notification cu nguoi dung
+  public function executeGetNotifications(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    $pageId = trim($request->getPostParameter('page', 1));
+    $pageSize = trim($request->getPostParameter('pageSize', 10));
+
+    //lay last_update cua nguoi dung
+    $user = TblUserTable::getInstance()->getActiveUserById($info['user_id']);
+    if (!$user) {
+      $errorCode = UserErrorCode::NOT_FOUND;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if (!preg_match('/^([1-9][0-9]*)$/', $pageId) || !preg_match('/^([1-9][0-9]*)$/', $pageSize)) {
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if ($pageId == 1) {
+      $dateView = date('Y-m-d H:i:s');
+      $newNotification = TblNotificationHisTable::getInstance()->getNewNotification($info['user_id'], $user->getLastUpdate(), $dateView);
+      if ($newNotification) {
+        //thuc hien cap nhat last update cho nguoi dung thanh thoi gian hien tai
+        $user->setLastUpdate($dateView);
+        $user->save();
+      }
+
+      //lay danh sach notification
+      $listNotification = TblNotificationHisTable::getInstance()->getListNotification($info['user_id'], $pageSize);
+      if ($listNotification && count($listNotification)) {
+        $items = array();
+        foreach ($listNotification as $key => $notification) {
+//          $boldPos = array();
+//          if ($notification['avatar_name']) {
+//            if (strpos($notification['content'], $notification['avatar_name']) !== false) {
+//              $boldPos[] = array(
+//                'start' => mb_strpos($notification['content'], $notification['avatar_name'], null, 'UTF-8'),
+//                'length' => mb_strlen($notification['avatar_name'], 'UTF-8')
+//              );
+//            }
+//          }
+//          if ($notification['sender_phone']) {
+//            $senderPhone = mKidsHelper::getMobileNumber($notification['sender_phone'], mKidsHelper::MOBILE_SIMPLE);
+//            if (strpos($notification['content'], $senderPhone) !== false) {
+//              $boldPos[] = array(
+//                'start' => mb_strpos($notification['content'], $senderPhone, null, 'UTF-8'),
+//                'length' => mb_strlen($senderPhone, 'UTF-8')
+//              );
+//            }
+//          }
+
+          $items[] = array(
+            'id' => $notification['id'],
+            'description' => $notification['content'],
+            'time' => $notification['created_at'],
+//            'bold_position' => $boldPos,
+//            'clickable' => $notification['clickable'],
+            'articleId' => $notification['article_id'],
+          );
+        }
+
+        $data = array(
+          'numberNew' => $newNotification,
+          'dateView' => $dateView,
+          'items' => $items
+        );
+      } else {
+        $errorCode = UserErrorCode::NO_RESULTS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+    } else {
+      $dateGetNotify = trim($request->getPostParameter('maxDateTime'));
+      if (!$dateGetNotify) {
+        $errorCode = UserErrorCode::MISSING_PARAMETERS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      $dateTimeRegex = '/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/';
+      if (!preg_match($dateTimeRegex, $dateGetNotify)) {
+        $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      //lay danh sach notification
+      $offset = ($pageId - 1) * $pageSize;
+      $listNotification = TblNotificationHisTable::getInstance()->getListNotificationByDate($info['user_id'], $offset, $pageSize, $dateGetNotify);
+      if ($listNotification && count($listNotification)) {
+        $items = array();
+        foreach ($listNotification as $key => $notification) {
+//          $boldPos = array();
+//          if ($notification['avatar_name']) {
+//            if (strpos($notification['content'], $notification['avatar_name']) !== false) {
+//              $boldPos[] = array(
+//                'start' => mb_strpos($notification['content'], $notification['avatar_name'], null, 'UTF-8'),
+//                'length' => mb_strlen($notification['avatar_name'], 'UTF-8')
+//              );
+//            }
+//          }
+//          if ($notification['sender_phone']) {
+//            $senderPhone = mKidsHelper::getMobileNumber($notification['sender_phone'], mKidsHelper::MOBILE_SIMPLE);
+//            if (strpos($notification['content'], $senderPhone) !== false) {
+//              $boldPos[] = array(
+//                'start' => mb_strpos($notification['content'], $senderPhone, null, 'UTF-8'),
+//                'length' => mb_strlen($senderPhone, 'UTF-8')
+//              );
+//            }
+//          }
+
+          $items[] = array(
+            'id' => $notification['id'],
+            'description' => $notification['content'],
+            'time' => $notification['created_at'],
+//            'bold_position' => $boldPos,
+//            'clickable' => $notification['clickable'],
+            'articleId' => $notification['article_id'],
+          );
+        }
+
+        $data = array(
+          'numberNew' => null,
+          'dateView' => null,
+          'items' => $items
+        );
+      } else {
+        $errorCode = UserErrorCode::NO_RESULTS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+    }
+
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
 }

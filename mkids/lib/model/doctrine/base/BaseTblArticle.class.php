@@ -9,7 +9,6 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * 
  * @property string $title
  * @property string $content
- * @property string $image_path
  * @property tinyint $type
  * @property integer $user_id
  * @property boolean $status
@@ -19,12 +18,12 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @property Doctrine_Collection $TblClass
  * @property Doctrine_Collection $TblMember
  * @property Doctrine_Collection $TblNotificationProgram
+ * @property Doctrine_Collection $TblArticleImage
  * @property Doctrine_Collection $TblNotification
  * @property Doctrine_Collection $TblNotificationHis
  * 
  * @method string              getTitle()                  Returns the current record's "title" value
  * @method string              getContent()                Returns the current record's "content" value
- * @method string              getImagePath()              Returns the current record's "image_path" value
  * @method tinyint             getType()                   Returns the current record's "type" value
  * @method integer             getUserId()                 Returns the current record's "user_id" value
  * @method boolean             getStatus()                 Returns the current record's "status" value
@@ -34,11 +33,11 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method Doctrine_Collection getTblClass()               Returns the current record's "TblClass" collection
  * @method Doctrine_Collection getTblMember()              Returns the current record's "TblMember" collection
  * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
+ * @method Doctrine_Collection getTblArticleImage()        Returns the current record's "TblArticleImage" collection
  * @method Doctrine_Collection getTblNotification()        Returns the current record's "TblNotification" collection
  * @method Doctrine_Collection getTblNotificationHis()     Returns the current record's "TblNotificationHis" collection
  * @method TblArticle          setTitle()                  Sets the current record's "title" value
  * @method TblArticle          setContent()                Sets the current record's "content" value
- * @method TblArticle          setImagePath()              Sets the current record's "image_path" value
  * @method TblArticle          setType()                   Sets the current record's "type" value
  * @method TblArticle          setUserId()                 Sets the current record's "user_id" value
  * @method TblArticle          setStatus()                 Sets the current record's "status" value
@@ -48,6 +47,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method TblArticle          setTblClass()               Sets the current record's "TblClass" collection
  * @method TblArticle          setTblMember()              Sets the current record's "TblMember" collection
  * @method TblArticle          setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
+ * @method TblArticle          setTblArticleImage()        Sets the current record's "TblArticleImage" collection
  * @method TblArticle          setTblNotification()        Sets the current record's "TblNotification" collection
  * @method TblArticle          setTblNotificationHis()     Sets the current record's "TblNotificationHis" collection
  * 
@@ -72,11 +72,6 @@ abstract class BaseTblArticle extends sfDoctrineRecord
              'notnull' => true,
              'comment' => 'Nội dung bài viết',
              'length' => 65535,
-             ));
-        $this->hasColumn('image_path', 'string', 255, array(
-             'type' => 'string',
-             'comment' => 'Ảnh minh họa',
-             'length' => 255,
              ));
         $this->hasColumn('type', 'tinyint', 2, array(
              'type' => 'tinyint',
@@ -127,6 +122,10 @@ abstract class BaseTblArticle extends sfDoctrineRecord
              'foreign' => 'member_id'));
 
         $this->hasMany('TblNotificationProgram', array(
+             'local' => 'id',
+             'foreign' => 'article_id'));
+
+        $this->hasMany('TblArticleImage', array(
              'local' => 'id',
              'foreign' => 'article_id'));
 

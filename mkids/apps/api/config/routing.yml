@@ -91,12 +91,24 @@ updateNotificationProgram:
 getNotificationProgramList:
   url: /getNotificationProgramList
   param: { module: notification, action: getNotificationProgramList }
+getNewNotifications:
+  url: /getNewNotifications
+  param: { module: notification, action: getNewNotifications }
+getNotifications:
+  url: /getNotifications
+  param: { module: notification, action: getNotifications }
 ############ END Thong bao ############
 
 ############ Bang tin ############
 updateArticle:
   url: /updateArticle
   param: { module: article, action: updateArticle }
+addArticleImage:
+  url: /addArticleImage
+  param: { module: article, action: addArticleImage }
+removeArticleImage:
+  url: /removeArticleImage
+  param: { module: article, action: removeArticleImage }
 getArticleList:
   url: /getArticleList
   param: { module: article, action: getArticleList }

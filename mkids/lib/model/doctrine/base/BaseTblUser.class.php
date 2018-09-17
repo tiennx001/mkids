@@ -18,6 +18,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @property string $password
  * @property string $salt
  * @property boolean $status
+ * @property string $token_id
  * @property timestamp $last_update
  * @property boolean $is_lock
  * @property integer $lock_time
@@ -44,6 +45,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method string              getPassword()               Returns the current record's "password" value
  * @method string              getSalt()                   Returns the current record's "salt" value
  * @method boolean             getStatus()                 Returns the current record's "status" value
+ * @method string              getTokenId()                Returns the current record's "token_id" value
  * @method timestamp           getLastUpdate()             Returns the current record's "last_update" value
  * @method boolean             getIsLock()                 Returns the current record's "is_lock" value
  * @method integer             getLockTime()               Returns the current record's "lock_time" value
@@ -69,6 +71,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method TblUser             setPassword()               Sets the current record's "password" value
  * @method TblUser             setSalt()                   Sets the current record's "salt" value
  * @method TblUser             setStatus()                 Sets the current record's "status" value
+ * @method TblUser             setTokenId()                Sets the current record's "token_id" value
  * @method TblUser             setLastUpdate()             Sets the current record's "last_update" value
  * @method TblUser             setIsLock()                 Sets the current record's "is_lock" value
  * @method TblUser             setLockTime()               Sets the current record's "lock_time" value
@@ -154,6 +157,11 @@ abstract class BaseTblUser extends sfDoctrineRecord
              'notnull' => true,
              'default' => false,
              'comment' => 'Trạng thái kích hoạt (0: bị khóa; 1: kích hoạt)',
+             ));
+        $this->hasColumn('token_id', 'string', 255, array(
+             'type' => 'string',
+             'comment' => 'registration_ids để gửi notification',
+             'length' => 255,
              ));
         $this->hasColumn('last_update', 'timestamp', null, array(
              'type' => 'timestamp',

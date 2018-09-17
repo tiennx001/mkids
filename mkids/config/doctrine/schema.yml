@@ -24,6 +24,7 @@ TblUser:
     password: { type: string(255), notnull: true, comment: 'Mật khẩu (đã được mã hóa)' }
     salt: { type: string(255), notnull: true, comment: 'Chuỗi mã hóa mật khẩu' }
     status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: bị khóa; 1: kích hoạt)' }
+    token_id: { type: string(255), comment: 'registration_ids để gửi notification' }
     last_update: {type: timestamp, comment: 'Thoi gian gan nhat nguoi dung xem notification'}
     is_lock: { type: boolean, default: false, comment: 'Đã khóa account hay chưa' }
     lock_time: { type: integer(20), comment: 'Thời gian khóa' }
@@ -260,7 +261,6 @@ TblArticle:
   columns:
     title: { type: string(255), notnull: true, comment: 'Tiêu đề' }
     content: { type: string(65535), notnull: true, comment: 'Nội dung bài viết' }
-    image_path: { type: string(255), comment: 'Ảnh minh họa' }
     type: { type: tinyint(2), notnull: true, default: 0, comment: 'Phạm vi tin tức (0 - Toàn trường; 1 - Theo khối; 2 - Theo lớp; 3 - Từng cá nhân)' }
     user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
     status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
@@ -270,6 +270,19 @@ TblArticle:
     TblGroup: { class: TblGroup, refClass: TblArticleRef, local: article_id, foreign: group_id }
     TblClass: { class: TblClass, refClass: TblArticleRef, local: article_id, foreign: class_id }
     TblMember: { class: TblMember, refClass: TblArticleRef, local: article_id, foreign: member_id }
+
+TblArticleImage:
+  tableName: tbl_article_image
+  actAs:
+    Timestampable: ~
+  columns:
+    title: { type: string(255), comment: 'Tiêu đề' }
+    image_path: { type: string(255), notnull: true, comment: 'Đường dẫn ảnh' }
+    article_id: { type: integer(8), notnull: true, comment: 'ID bài viết' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+    is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
+  relations:
+    TblArticle: { class: TblArticle, local: article_id }
 
 TblArticleRef:
   tableName: tbl_article_ref

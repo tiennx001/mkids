@@ -114,6 +114,7 @@ class TblUserTable extends Doctrine_Table
 
   public function getActiveUserById($id) {
     return $this->getActiveQuery('a')
-      ->andWhere('a.id = ?', $id);
+      ->andWhere('a.id = ?', $id)
+      ->fetchOne();
   }
 }
