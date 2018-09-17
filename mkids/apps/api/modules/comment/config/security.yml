@@ -1,11 +1,2 @@
-createComment:
-  is_secure: true
-
-getCommentList:
-  is_secure: true
-
-replyComment:
-  is_secure: true
-
-removeComment:
+default:
   is_secure: true

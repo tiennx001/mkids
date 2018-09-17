@@ -1,5 +1,2 @@
-getAttendanceByClass:
-  is_secure: true
-
-getMemberActivity:
+default:
   is_secure: true

@@ -1,5 +1,2 @@
-updateSummary:
-  is_secure: true
-
-getSummaryHistory:
+default:
   is_secure: true

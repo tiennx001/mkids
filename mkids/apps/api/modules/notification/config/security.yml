@@ -1,5 +1,2 @@
-updateNotificationProgram:
-  is_secure: true
-
-getNotificationProgramList:
+default:
   is_secure: true
