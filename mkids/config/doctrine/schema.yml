@@ -306,11 +306,13 @@ TblComment:
     user_id: { type: integer(8), notnull: true, comment: 'ID người bình luận' }
     content: { type: string(1023), notnull: true, comment: 'Nội dung bình luận' }
     parent_id: { type: integer(8), comment: 'ID bình luận gốc' }
+    article_id: { type: integer(8), comment: 'ID bài viết' }
     status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
     is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
   relations:
     TblUser: { class: TblUser, local: user_id }
     TblComment: { class: TblComment, local: parent_id }
+    TblArticle: { class: TblArticle, local: article_id }
 
 TblMemberActivity:
   tableName: tbl_member_activity

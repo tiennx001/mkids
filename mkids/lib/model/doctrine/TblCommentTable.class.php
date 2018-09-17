@@ -32,12 +32,15 @@ class TblCommentTable extends Doctrine_Table
       ->fetchOne();
   }
 
-  public function getListComments($kw, $offset, $limit)
+  public function getListComments($kw, $offset, $limit, $articleId)
   {
     $q = $this->getActiveQuery('a')
       ->andWhere('a.parent_id IS NULL');
     if ($kw) {
       $q->andWhere('a.content LIKE ?', '%' . $kw . '%');
+    }
+    if ($articleId) {
+      $q->andWhere('a.article_id = ?', $articleId);
     }
     return $q->offset($offset)
       ->limit($limit)

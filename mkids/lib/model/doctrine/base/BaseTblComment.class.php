@@ -10,25 +10,31 @@ Doctrine_Manager::getInstance()->bindComponent('TblComment', 'doctrine');
  * @property integer $user_id
  * @property string $content
  * @property integer $parent_id
+ * @property integer $article_id
  * @property boolean $status
  * @property boolean $is_delete
  * @property TblUser $TblUser
  * @property TblComment $TblComment
+ * @property TblArticle $TblArticle
  * 
  * @method integer    getUserId()     Returns the current record's "user_id" value
  * @method string     getContent()    Returns the current record's "content" value
  * @method integer    getParentId()   Returns the current record's "parent_id" value
+ * @method integer    getArticleId()  Returns the current record's "article_id" value
  * @method boolean    getStatus()     Returns the current record's "status" value
  * @method boolean    getIsDelete()   Returns the current record's "is_delete" value
  * @method TblUser    getTblUser()    Returns the current record's "TblUser" value
  * @method TblComment getTblComment() Returns the current record's "TblComment" value
+ * @method TblArticle getTblArticle() Returns the current record's "TblArticle" value
  * @method TblComment setUserId()     Sets the current record's "user_id" value
  * @method TblComment setContent()    Sets the current record's "content" value
  * @method TblComment setParentId()   Sets the current record's "parent_id" value
+ * @method TblComment setArticleId()  Sets the current record's "article_id" value
  * @method TblComment setStatus()     Sets the current record's "status" value
  * @method TblComment setIsDelete()   Sets the current record's "is_delete" value
  * @method TblComment setTblUser()    Sets the current record's "TblUser" value
  * @method TblComment setTblComment() Sets the current record's "TblComment" value
+ * @method TblComment setTblArticle() Sets the current record's "TblArticle" value
  * 
  * @package    xcode
  * @subpackage model
@@ -57,6 +63,11 @@ abstract class BaseTblComment extends sfDoctrineRecord
              'comment' => 'ID bình luận gốc',
              'length' => 8,
              ));
+        $this->hasColumn('article_id', 'integer', 8, array(
+             'type' => 'integer',
+             'comment' => 'ID bài viết',
+             'length' => 8,
+             ));
         $this->hasColumn('status', 'boolean', null, array(
              'type' => 'boolean',
              'notnull' => true,
@@ -79,6 +90,10 @@ abstract class BaseTblComment extends sfDoctrineRecord
 
         $this->hasOne('TblComment', array(
              'local' => 'parent_id',
+             'foreign' => 'id'));
+
+        $this->hasOne('TblArticle', array(
+             'local' => 'article_id',
              'foreign' => 'id'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();

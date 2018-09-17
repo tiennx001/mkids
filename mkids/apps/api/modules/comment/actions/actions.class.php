@@ -34,9 +34,11 @@ class commentActions extends sfActions
     VtHelper::writeLogValue('executeCreateComment|Acc=' . $info['account'] . '|Starting request with params=' . json_encode($request));
 
     $content = $request->getPostParameter('content', null);
-    VtHelper::writeLogValue('executeCreateComment|Acc=' . $info['account'] . '|Comment with content=' . $content);
+    $articleId = $request->getPostParameter('articleId', null);
+    VtHelper::writeLogValue('executeCreateComment|Acc=' . $info['account'] . '|Comment with content=' . $content . ', articleId=' . $articleId);
     $values = array(
-      'content' => $content
+      'content' => $content,
+      'article_id' => $articleId
     );
     $form = new CommentValidateForm();
     $form->bind($values);
@@ -59,6 +61,7 @@ class commentActions extends sfActions
       $comment->setContent($content);
       $comment->setStatus(true);
       $comment->setUserId($info['user_id']);
+      $comment->setArticleId($articleId);
       $comment->setCreatedAt(date("Y-m-d H:i:s"));
       $comment->setUpdatedAt(date("Y-m-d H:i:s"));
       $comment->save();
@@ -173,6 +176,7 @@ class commentActions extends sfActions
     $kw = $request->getPostParameter('kw', null);
     $page = (int)$request->getPostParameter('page', 1);
     $pageSize = (int)$request->getPostParameter('pageSize', 10);
+    $articleId = (int)$request->getPostParameter('articleId', null);
 
     if ($page < 1 || $pageSize < 1) {
       $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
@@ -184,7 +188,7 @@ class commentActions extends sfActions
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $listComments = TblCommentTable::getInstance()->getListComments($kw, $offset, $pageSize);
+      $listComments = TblCommentTable::getInstance()->getListComments($kw, $offset, $pageSize, $articleId);
       if (count($listComments)) {
         foreach ($listComments as $comment) {
           $item = new stdClass();

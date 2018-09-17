@@ -12,8 +12,15 @@ class CommentValidateForm extends BaseTblCommentForm
 {
   public function configure()
   {
-    $this->useFields(array('content'));
+    $this->useFields(array('content', 'article_id'));
     $i18n = sfContext::getInstance()->getI18N();
+
+    $this->validatorSchema['article_id'] = new sfValidatorDoctrineChoice(array(
+      'model' => $this->getRelatedModelName('TblArticle'),
+      'column' => 'id'
+    ), array(
+      'invalid' => 'Bài viết không hợp lệ'
+    ));
 
     $this->validatorSchema['content'] = new sfValidatorString(array(
       'required' => true,

@@ -19,6 +19,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @property Doctrine_Collection $TblMember
  * @property Doctrine_Collection $TblNotificationProgram
  * @property Doctrine_Collection $TblArticleImage
+ * @property Doctrine_Collection $TblComment
  * @property Doctrine_Collection $TblNotification
  * @property Doctrine_Collection $TblNotificationHis
  * 
@@ -34,6 +35,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method Doctrine_Collection getTblMember()              Returns the current record's "TblMember" collection
  * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
  * @method Doctrine_Collection getTblArticleImage()        Returns the current record's "TblArticleImage" collection
+ * @method Doctrine_Collection getTblComment()             Returns the current record's "TblComment" collection
  * @method Doctrine_Collection getTblNotification()        Returns the current record's "TblNotification" collection
  * @method Doctrine_Collection getTblNotificationHis()     Returns the current record's "TblNotificationHis" collection
  * @method TblArticle          setTitle()                  Sets the current record's "title" value
@@ -48,6 +50,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method TblArticle          setTblMember()              Sets the current record's "TblMember" collection
  * @method TblArticle          setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
  * @method TblArticle          setTblArticleImage()        Sets the current record's "TblArticleImage" collection
+ * @method TblArticle          setTblComment()             Sets the current record's "TblComment" collection
  * @method TblArticle          setTblNotification()        Sets the current record's "TblNotification" collection
  * @method TblArticle          setTblNotificationHis()     Sets the current record's "TblNotificationHis" collection
  * 
@@ -126,6 +129,10 @@ abstract class BaseTblArticle extends sfDoctrineRecord
              'foreign' => 'article_id'));
 
         $this->hasMany('TblArticleImage', array(
+             'local' => 'id',
+             'foreign' => 'article_id'));
+
+        $this->hasMany('TblComment', array(
              'local' => 'id',
              'foreign' => 'article_id'));
 
