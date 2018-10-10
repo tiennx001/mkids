@@ -123,7 +123,7 @@ class TblUserTable extends Doctrine_Table
     return $this->createQuery('a')
       ->update()
       ->set('a.is_lock', '?', false)
-      ->set('a.lock_time', '?', null)
+      ->set('a.lock_time', '?', array(null))
       ->where('a.email = ?', $account)
       ->execute();
   }
