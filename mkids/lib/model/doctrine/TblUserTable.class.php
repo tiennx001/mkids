@@ -117,4 +117,14 @@ class TblUserTable extends Doctrine_Table
       ->andWhere('a.id = ?', $id)
       ->fetchOne();
   }
+
+  public function setUnLockUser($account)
+  {
+    return $this->createQuery('a')
+      ->update()
+      ->set('a.is_lock', '?', false)
+      ->set('a.lock_time', '?', null)
+      ->where('a.email = ?', $account)
+      ->execute();
+  }
 }

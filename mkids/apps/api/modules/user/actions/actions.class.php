@@ -160,7 +160,7 @@ class userActions extends sfActions
               return $this->renderText($jsonObj->toJson());
             }
             // Unlock for user
-            TblOtpTable::getInstance()->setUnLockUser($email);
+            TblUserTable::getInstance()->setUnLockUser($email);
           }
 
           // Reset VtUserSigninLock
@@ -207,7 +207,7 @@ class userActions extends sfActions
               return $this->renderText($jsonObj->toJson());
             }
             // Unlock for user
-            TblOtpTable::getInstance()->setUnLockUser($number);
+            TblUserTable::getInstance()->setUnLockUser($number);
           }
 
           // Insert vao VtUserSigninLock
