@@ -111,6 +111,8 @@ abstract class BaseTblUser extends sfDoctrineRecord
              ));
         $this->hasColumn('email', 'string', 255, array(
              'type' => 'string',
+             'notnull' => true,
+             'unique' => true,
              'comment' => 'Email người dùng',
              'length' => 255,
              ));
@@ -135,8 +137,6 @@ abstract class BaseTblUser extends sfDoctrineRecord
              ));
         $this->hasColumn('msisdn', 'string', 18, array(
              'type' => 'string',
-             'notnull' => true,
-             'unique' => true,
              'comment' => 'Số điện thoại của người dùng',
              'length' => 18,
              ));

@@ -44,12 +44,12 @@ abstract class BaseTblUserForm extends BaseFormDoctrine
       'id'              => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'name'            => new sfValidatorString(array('max_length' => 255)),
       'gender'          => new sfValidatorPass(array('required' => false)),
-      'email'           => new sfValidatorString(array('max_length' => 255, 'required' => false)),
+      'email'           => new sfValidatorString(array('max_length' => 255)),
       'facebook'        => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'address'         => new sfValidatorString(array('max_length' => 255, 'required' => false)),
       'description'     => new sfValidatorString(array('required' => false)),
       'image_path'      => new sfValidatorString(array('max_length' => 255, 'required' => false)),
-      'msisdn'          => new sfValidatorString(array('max_length' => 18)),
+      'msisdn'          => new sfValidatorString(array('max_length' => 18, 'required' => false)),
       'password'        => new sfValidatorString(array('max_length' => 255)),
       'salt'            => new sfValidatorString(array('max_length' => 255)),
       'status'          => new sfValidatorBoolean(array('required' => false)),
@@ -67,7 +67,7 @@ abstract class BaseTblUserForm extends BaseFormDoctrine
     ));
 
     $this->validatorSchema->setPostValidator(
-      new sfValidatorDoctrineUnique(array('model' => 'TblUser', 'column' => array('msisdn')))
+      new sfValidatorDoctrineUnique(array('model' => 'TblUser', 'column' => array('email')))
     );
 
     $this->widgetSchema->setNameFormat('tbl_user[%s]');

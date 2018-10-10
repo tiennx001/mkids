@@ -40,6 +40,7 @@ class userHelper
       if ($user) {
         $tokenSession->setUserId($user['id']);
         $tokenSession->setMsisdn($user['msisdn']);
+        $tokenSession->setUserType($user['type']);
       }
 
       $tokenSession->setToken($tokenPair['token']);

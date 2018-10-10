@@ -15,12 +15,12 @@ TblUser:
   columns:
     name: { type: string(255), notnull: true, comment: 'Họ tên người dùng' }
     gender: { type: tinyint(1), default: 0, comment: 'Giới tính (0: Nữ; 1: Nam)' }
-    email: { type: string(255), comment: 'Email người dùng' }
+    email: { type: string(255), notnull: true, unique: true, comment: 'Email người dùng' }
     facebook: { type: string(255), comment: 'Địa chỉ facebook' }
     address: { type: string(255), comment: 'Địa điểm' }
     description: { type: clob, comment: 'Mô tả' }
     image_path: { type: string(255), comment: 'Ảnh đại diện cho người dùng' }
-    msisdn: { type: string(18), notnull: true, unique: true, comment: 'Số điện thoại của người dùng' }
+    msisdn: { type: string(18), comment: 'Số điện thoại của người dùng' }
     password: { type: string(255), notnull: true, comment: 'Mật khẩu (đã được mã hóa)' }
     salt: { type: string(255), notnull: true, comment: 'Chuỗi mã hóa mật khẩu' }
     status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: bị khóa; 1: kích hoạt)' }
@@ -38,7 +38,7 @@ TblTokenSession:
   columns:
     user_id: { type: integer(8), unique: true, comment: 'ID tai khoan dang ky su dung app' }
     account: { type: string(255), unique: true, notnull: true, comment: 'Tai khoan cua nguoi dung' }
-    msisdn: { type: string(15), unique: true, notnull: true, comment: 'So dien thoai cua nguoi dung' }
+    msisdn: { type: string(15), notnull: true, comment: 'So dien thoai cua nguoi dung' }
     token: { type: string(255), notnull: true, comment: 'Token xac thuc' }
     expired_time: { type: timestamp, notnull: true, comment: 'Thoi gian token co hien luc'}
     key_refresh: { type: string(255), notnull: true, comment: 'Key refresh phuc vu lay lai token' }

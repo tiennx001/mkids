@@ -61,7 +61,6 @@ abstract class BaseTblTokenSession extends sfDoctrineRecord
              ));
         $this->hasColumn('msisdn', 'string', 15, array(
              'type' => 'string',
-             'unique' => true,
              'notnull' => true,
              'comment' => 'So dien thoai cua nguoi dung',
              'length' => 15,

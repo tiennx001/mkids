@@ -15,12 +15,12 @@ abstract class BaseTblUserFormFilter extends BaseFormFilterDoctrine
     $this->setWidgets(array(
       'name'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'gender'          => new sfWidgetFormFilterInput(),
-      'email'           => new sfWidgetFormFilterInput(),
+      'email'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'facebook'        => new sfWidgetFormFilterInput(),
       'address'         => new sfWidgetFormFilterInput(),
       'description'     => new sfWidgetFormFilterInput(),
       'image_path'      => new sfWidgetFormFilterInput(),
-      'msisdn'          => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'msisdn'          => new sfWidgetFormFilterInput(),
       'password'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'salt'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'status'          => new sfWidgetFormChoice(array('choices' => array('' => 'yes or no', 1 => 'yes', 0 => 'no'))),
@@ -72,9 +72,9 @@ abstract class BaseTblUserFormFilter extends BaseFormFilterDoctrine
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblSchoolListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
@@ -94,9 +94,9 @@ TblSchoolListColumnQuery(Doctrine_Query $query, $field, $values)
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblClassListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
@@ -116,9 +116,9 @@ TblClassListColumnQuery(Doctrine_Query $query, $field, $values)
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblMemberListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
