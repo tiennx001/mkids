@@ -29,8 +29,8 @@ class managementActions extends sfActions
         'address' => $school['address'],
         'description' => $school['description'],
       ];
-      $errorCode = 0;
-      $message = 'success';
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
     }else{
       $errorCode = UserErrorCode::NO_RESULTS;
       $message = UserErrorCode::getMessage($errorCode);
@@ -74,9 +74,9 @@ class managementActions extends sfActions
     if($form->isValid()) {
       try{
         $form->save();
-        $errorCode = 0;
-        $message = 'Update school success';
-      }catch (Exception $e){
+        $errorCode = UserErrorCode::SUCCESS;
+        $message = UserErrorCode::getMessage($errorCode);
+      } catch (Exception $e) {
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
         $message = UserErrorCode::getMessage($errorCode);
         VtHelper::writeLogValue(sprintf('[management][executeUpdateSchoolInfo]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
@@ -123,8 +123,8 @@ class managementActions extends sfActions
       ];
     }
 
-    $errorCode = 0;
-    $message = 'success';
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }
@@ -273,8 +273,8 @@ class managementActions extends sfActions
       ];
     }
 
-    $errorCode = 0;
-    $message = 'success';
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }
@@ -443,8 +443,8 @@ class managementActions extends sfActions
       ];
     }
 
-    $errorCode = 0;
-    $message = 'success';
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }
@@ -597,8 +597,8 @@ class managementActions extends sfActions
       ];
     }
 
-    $errorCode = 0;
-    $message = 'success';
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }
@@ -782,8 +782,8 @@ class managementActions extends sfActions
       $data[] = $temp;
     }
 
-    $errorCode = 0;
-    $message = 'success';
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }

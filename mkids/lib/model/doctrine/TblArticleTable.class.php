@@ -17,7 +17,8 @@ class TblArticleTable extends Doctrine_Table
     return Doctrine_Core::getTable('TblArticle');
   }
 
-  public function getActiveQuery($alias) {
+  public function getActiveQuery($alias)
+  {
     return $this->createQuery('a')
       ->where($alias . '.status = 1')
       ->andWhere($alias . '.is_delete = 0');
@@ -41,5 +42,45 @@ class TblArticleTable extends Doctrine_Table
     return $q->offset($offset)
       ->limit($limit)
       ->execute();
+  }
+
+  public function checkArticleInSchool($schoolId, $userType = UserTypeEnum::PRINCIPAL)
+  {
+    if ($userType == UserTypeEnum::PRINCIPAL) {
+      return $this->getActiveQuery('a')
+        ->leftJoin('a.TblUser u')
+        ->leftJoin('a.TblUserSchoolRef r')
+        ->andWhere('r.id = ?', $schoolId)
+        ->count();
+    }
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblUser u')
+      ->leftJoin('u.TblClass c')
+      ->leftJoin('c.TblGroup g')
+      ->leftJoin('g.TblSchool s')
+      ->andWhere('s.id = ?', $schoolId)
+      ->count();
+  }
+
+  public function checkArticleCredentials($id, $articleType, $userId, $userType)
+  {
+    $q = $this->getActiveQuery('a')
+      ->andWhere('a.id = ?', $id);
+
+    switch ($articleType) {
+      case ArticleTypeEnum::ALL:
+        $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId, $userType);
+        if ($school) {
+          $this->checkArticleInSchool($school->getId());
+        }
+        return null;
+        break;
+      case ArticleTypeEnum::CLASSES:
+        break;
+      case ArticleTypeEnum::MEMBERS:
+        break;
+    }
+    ->
+    fetchOne();
   }
 }

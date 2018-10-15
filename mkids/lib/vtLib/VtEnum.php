@@ -129,4 +129,18 @@ abstract class SummaryLevelEnum {
     return array(self::POOR, self::WEAK, self::NORMAL, self::PRETTY, self::GOOD, self::EXCELLENT);
   }
 }
+abstract class ArticleTypeEnum {
+  const ALL = 0;
+  const CLASSES = 1;
+  const MEMBERS = 2;
+
+  public static function getArr() {
+    return array(
+      self::ALL => 'Tất cả',
+      self::CLASSES => 'Theo lớp',
+      self::MEMBERS => 'Theo thành viên',
+    );
+  }
+}
+
 
