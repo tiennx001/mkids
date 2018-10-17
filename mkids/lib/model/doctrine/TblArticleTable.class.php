@@ -46,6 +46,17 @@ class TblArticleTable extends Doctrine_Table
 
   public function checkArticleInSchool($schoolId, $userType = UserTypeEnum::PRINCIPAL)
   {
+    switch ($userType) {
+      case $userType = UserTypeEnum::TEACHER:
+        return $this->getActiveQuery('a')
+          ->leftJoin('a.TblUser u')
+          ->leftJoin('u.TblClass c')
+          ->leftJoin('c.TblGroup g')
+          ->leftJoin('g.TblSchool s')
+          ->andWhere('s.id = ?', $schoolId)
+          ->count();
+        break;
+    }
     if ($userType == UserTypeEnum::PRINCIPAL) {
       return $this->getActiveQuery('a')
         ->leftJoin('a.TblUser u')
@@ -53,13 +64,6 @@ class TblArticleTable extends Doctrine_Table
         ->andWhere('r.id = ?', $schoolId)
         ->count();
     }
-    return $this->getActiveQuery('a')
-      ->leftJoin('a.TblUser u')
-      ->leftJoin('u.TblClass c')
-      ->leftJoin('c.TblGroup g')
-      ->leftJoin('g.TblSchool s')
-      ->andWhere('s.id = ?', $schoolId)
-      ->count();
   }
 
   public function checkArticleCredentials($id, $articleType, $userId, $userType)
@@ -71,7 +75,8 @@ class TblArticleTable extends Doctrine_Table
       case ArticleTypeEnum::ALL:
         $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId, $userType);
         if ($school) {
-          $this->checkArticleInSchool($school->getId());
+          return $this->checkArticleInSchool($school->getId(), UserTypeEnum::PRINCIPAL) ||
+          $this->checkArticleInSchool($school->getId(), UserTypeEnum::TEACHER);
         }
         return null;
         break;
@@ -80,7 +85,7 @@ class TblArticleTable extends Doctrine_Table
       case ArticleTypeEnum::MEMBERS:
         break;
     }
-    ->
-    fetchOne();
+
+    $q->fetchOne();
   }
 }
