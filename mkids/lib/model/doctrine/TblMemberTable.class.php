@@ -57,4 +57,39 @@ class TblMemberTable extends Doctrine_Table
       ->addWhere('a.id = ?', $id)
       ->fetchOne();
   }
+
+  public function getActiveMemberIdsByUserId($userId, $userType) {
+    switch ($userType) {
+      case UserTypeEnum::TEACHER:
+        $arr = $this->getActiveQuery('m')
+          ->select('m.id mId, m.name mName')
+          ->innerJoin('m.TblClass c')
+          ->innerJoin('c.TblUserClassRef ucr')
+          ->andWhere('ucr.user_id = ?', $userId)
+          ->execute()
+          ->toKeyValueArray('mId', 'mName');
+        return array_keys($arr);
+        break;
+      case UserTypeEnum::PARENTS:
+        $arr = $this->getActiveQuery('m')
+          ->select('m.id mId, m.name mName')
+          ->innerJoin('m.TblMemberUserRef umr')
+          ->andWhere('umr.user_id = ?', $userId)
+          ->execute()
+          ->toKeyValueArray('mId', 'mName');
+        return array_keys($arr);
+        break;
+      default:
+        $arr = $this->getActiveQuery('m')
+          ->select('m.id mId, m.name mName')
+          ->innerJoin('m.TblClass c')
+          ->innerJoin('c.TblGroup g')
+          ->innerJoin('g.TblSchool s')
+          ->innerJoin('g.TblUserSchoolRef s')
+          ->andWhere('s.user_id = ?', $userId)
+          ->execute()
+          ->toKeyValueArray('mId', 'mName');
+        return array_keys($arr);
+    }
+  }
 }

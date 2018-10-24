@@ -127,4 +127,12 @@ class TblUserTable extends Doctrine_Table
       ->where('a.email = ?', $account)
       ->execute();
   }
+
+  public function checkUserCredentials($schoolIds)
+  {
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblUserSchoolRef r')
+      ->andWhereIn('r.id', $schoolIds)
+      ->count();
+  }
 }

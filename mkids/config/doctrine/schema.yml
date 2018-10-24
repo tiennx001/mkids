@@ -157,6 +157,9 @@ TblUserClassRef:
   columns:
     user_id: { type: integer(8), notnull: true, comment: 'ID user' }
     class_id: { type: integer(8), notnull: true, comment: 'ID lớp học' }
+  relations:
+    TblClass: { class: TblClass, local: class_id }
+    TblUser: { class: TblUser, local: user_id }
 
 TblMember:
   tableName: tbl_member
@@ -187,6 +190,9 @@ TblMemberUserRef:
   columns:
     member_id: { type: integer(8), comment: 'ID học sinh' }
     user_id: { type: integer(8), notnull: true, comment: 'ID phụ huynh' }
+  relations:
+    TblMember: { class: TblMember, local: member_id }
+    TblUser: { class: TblUser, local: user_id }
 
 TblMenu:
   tableName: tbl_menu

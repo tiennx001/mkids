@@ -18,6 +18,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @property boolean $is_delete
  * @property TblClass $TblClass
  * @property Doctrine_Collection $TblUser
+ * @property Doctrine_Collection $TblMemberUserRef
  * @property Doctrine_Collection $TblMenu
  * @property Doctrine_Collection $TblNotificationProgram
  * @property Doctrine_Collection $TblArticle
@@ -35,6 +36,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblClass            getTblClass()               Returns the current record's "TblClass" value
  * @method Doctrine_Collection getTblUser()                Returns the current record's "TblUser" collection
+ * @method Doctrine_Collection getTblMemberUserRef()       Returns the current record's "TblMemberUserRef" collection
  * @method Doctrine_Collection getTblMenu()                Returns the current record's "TblMenu" collection
  * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
  * @method Doctrine_Collection getTblArticle()             Returns the current record's "TblArticle" collection
@@ -51,6 +53,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method TblMember           setIsDelete()               Sets the current record's "is_delete" value
  * @method TblMember           setTblClass()               Sets the current record's "TblClass" value
  * @method TblMember           setTblUser()                Sets the current record's "TblUser" collection
+ * @method TblMember           setTblMemberUserRef()       Sets the current record's "TblMemberUserRef" collection
  * @method TblMember           setTblMenu()                Sets the current record's "TblMenu" collection
  * @method TblMember           setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
  * @method TblMember           setTblArticle()             Sets the current record's "TblArticle" collection
@@ -128,6 +131,10 @@ abstract class BaseTblMember extends sfDoctrineRecord
              'refClass' => 'TblMemberUserRef',
              'local' => 'member_id',
              'foreign' => 'user_id'));
+
+        $this->hasMany('TblMemberUserRef', array(
+             'local' => 'id',
+             'foreign' => 'member_id'));
 
         $this->hasMany('TblMenu', array(
              'refClass' => 'TblMenuRef',

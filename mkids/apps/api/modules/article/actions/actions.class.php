@@ -313,7 +313,7 @@ class articleActions extends sfActions
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $listArticles = TblArticleTable::getInstance()->getListArticles($kw, $offset, $pageSize, $info['user_id']);
+      $listArticles = TblArticleTable::getInstance()->getListArticles($kw, $offset, $pageSize, $info['user_id'], $info['user_type']);
       if (count($listArticles)) {
         foreach ($listArticles as $article) {
           $item = new stdClass();

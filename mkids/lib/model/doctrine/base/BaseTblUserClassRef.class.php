@@ -9,11 +9,17 @@ Doctrine_Manager::getInstance()->bindComponent('TblUserClassRef', 'doctrine');
  * 
  * @property integer $user_id
  * @property integer $class_id
+ * @property TblClass $TblClass
+ * @property TblUser $TblUser
  * 
  * @method integer         getUserId()   Returns the current record's "user_id" value
  * @method integer         getClassId()  Returns the current record's "class_id" value
+ * @method TblClass        getTblClass() Returns the current record's "TblClass" value
+ * @method TblUser         getTblUser()  Returns the current record's "TblUser" value
  * @method TblUserClassRef setUserId()   Sets the current record's "user_id" value
  * @method TblUserClassRef setClassId()  Sets the current record's "class_id" value
+ * @method TblUserClassRef setTblClass() Sets the current record's "TblClass" value
+ * @method TblUserClassRef setTblUser()  Sets the current record's "TblUser" value
  * 
  * @package    xcode
  * @subpackage model
@@ -42,6 +48,14 @@ abstract class BaseTblUserClassRef extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
+        $this->hasOne('TblClass', array(
+             'local' => 'class_id',
+             'foreign' => 'id'));
+
+        $this->hasOne('TblUser', array(
+             'local' => 'user_id',
+             'foreign' => 'id'));
+
         $timestampable0 = new Doctrine_Template_Timestampable(array(
              'created' => 
              array(

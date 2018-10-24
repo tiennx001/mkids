@@ -41,6 +41,7 @@ class TblMemberActivityTable extends Doctrine_Table
   public function getMemberHistory($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $limit)
   {
     $q = $this->getActiveQuery('a')
+      ->leftJoin('a.TblMember')
       ->andWhere('a.member_id = ?', $memberId);
 
     if ($classIds) {
@@ -53,11 +54,11 @@ class TblMemberActivityTable extends Doctrine_Table
     }
 
     if ($fromDate) {
-      $q->andWhere('a.created_at >= ?', $fromDate);
+      $q->andWhere('a.date >= ?', $fromDate);
     }
 
     if ($toDate) {
-      $q->andWhere('a.created_at <= ?', $toDate);
+      $q->andWhere('a.date <= ?', $toDate);
     }
 
     return $q->offset($offset)

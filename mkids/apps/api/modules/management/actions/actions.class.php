@@ -903,4 +903,5 @@ class managementActions extends sfActions
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());
   }
+
 }

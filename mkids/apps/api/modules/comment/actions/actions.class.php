@@ -40,7 +40,10 @@ class commentActions extends sfActions
       'content' => $content,
       'article_id' => $articleId
     );
-    $form = new CommentValidateForm();
+    $form = new CommentValidateForm(array(), array(
+      'user_id' => $info['user_id'],
+      'user_type' => $info['user_type']
+    ));
     $form->bind($values);
     if (!$form->isValid()) {
       VtHelper::writeLogValue('executeCreateComment|Acc=' . $info['account'] . '|Request values are not valid');
@@ -121,7 +124,11 @@ class commentActions extends sfActions
       'content' => $content
     );
 
-    $form = new CommentValidateForm();
+    $form = new CommentValidateForm(array(), array(
+      'parent_id' => $id,
+      'user_id' => $info['user_id'],
+      'user_type' => $info['user_type']
+    ));
     $form->bind($values);
     if (!$form->isValid()) {
       VtHelper::writeLogValue('executeReplyComment|Acc=' . $info['account'] . '|Request values are not valid');
@@ -185,10 +192,32 @@ class commentActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
 
+    if ($articleId) {
+      $article = TblArticleTable::getInstance()->getArticleById($articleId);
+      if (!$article) {
+        $errorCode = UserErrorCode::NO_RESULTS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      // Kiem tra quyen bai viet
+      $check = TblArticleTable::getInstance()->checkArticleCredentials($articleId, $article->getType(),
+        $info['user_id'], $info['user_type']);
+      if (!$check) {
+        $errorCode = UserErrorCode::FORBIDDEN;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+    }
+
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $listComments = TblCommentTable::getInstance()->getListComments($kw, $offset, $pageSize, $articleId);
+      // Kiem tra quyen chung
+      $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($info['user_id'], $info['user_type']);
+      $listComments = TblCommentTable::getInstance()->getListComments($kw, $offset, $pageSize, $articleId, $schoolIds);
       if (count($listComments)) {
         foreach ($listComments as $comment) {
           $item = new stdClass();

@@ -34,4 +34,47 @@ class TblSchoolTable extends Doctrine_Table
       ->andWhere('s.status = 1')
       ->fetchOne();
   }
+
+  public function getActiveQuery($alias)
+  {
+    return $this->createQuery('a')
+      ->where($alias . '.status = 1')
+      ->andWhere($alias . '.is_delete = 0');
+  }
+
+  public function getActiveSchoolIdsByUserId($userId, $userType = UserTypeEnum::PRINCIPAL) {
+    switch ($userType) {
+      case UserTypeEnum::TEACHER:
+        $arr =  $this->getActiveQuery('s')
+          ->select('s.id sId, s.name sName')
+          ->innerJoin('s.TblGroup g')
+          ->innerJoin('g.TblClass c')
+          ->innerJoin('c.TblUserClassRef ucr')
+          ->andWhere('ucr.user_id = ?', $userId)
+          ->execute()
+          ->toKeyValueArray('sId', 'sName');
+        return array_keys($arr);
+        break;
+      case UserTypeEnum::PARENTS:
+        $arr = $this->getActiveQuery('s')
+          ->select('s.id sId, s.name sName')
+          ->innerJoin('s.TblGroup g')
+          ->innerJoin('g.TblClass c')
+          ->innerJoin('c.TblMember m')
+          ->innerJoin('m.TblMemberUserRef mur')
+          ->andWhere('mur.user_id = ?', $userId)
+          ->execute()
+          ->toKeyValueArray('sId', 'sName');
+        return array_keys($arr);
+        break;
+      default:
+        $arr = $this->getActiveQuery('s')
+          ->select('s.id sId, s.name sName')
+          ->innerJoin('s.TblUserSchoolRef r')
+          ->andWhere('r.user_id = ?', $userId)
+          ->execute()
+          ->toKeyValueArray('sId', 'sName');
+        return array_keys($arr);
+    }
+  }
 }

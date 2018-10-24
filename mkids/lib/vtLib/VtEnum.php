@@ -131,12 +131,14 @@ abstract class SummaryLevelEnum {
 }
 abstract class ArticleTypeEnum {
   const ALL = 0;
-  const CLASSES = 1;
-  const MEMBERS = 2;
+  const GROUPS = 1;
+  const CLASSES = 2;
+  const MEMBERS = 3;
 
   public static function getArr() {
     return array(
       self::ALL => 'Tất cả',
+      self::GROUPS => 'Theo khối',
       self::CLASSES => 'Theo lớp',
       self::MEMBERS => 'Theo thành viên',
     );
