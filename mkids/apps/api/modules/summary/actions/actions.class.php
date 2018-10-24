@@ -169,13 +169,19 @@ class summaryActions extends sfActions
       $memberIds = null;
       if ($info['user_type'] == UserTypeEnum::TEACHER) {
         $memberIds = TblUserClassRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
+      } else if ($info['user_type'] == UserTypeEnum::PARENTS) {
+        $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
+        // Fix - Tam thoi - Phu huynh chi co 1 con hoc o truong
+        $memberId = $memberIds[0];
       }
 
       $listSummary = TblSummaryTable::getInstance()->getSummaryList($memberId, $date, $week, $offset, $pageSize, $memberIds);
       if (count($listSummary)) {
         foreach ($listSummary as $summaryRecord) {
           $item = new stdClass();
-          $item->id = $summaryRecord->id;
+          $item->id = $summaryRecord->TblMember->id;
+          $item->name = $summaryRecord->TblMember->name;
+          $item->imagePath = $summaryRecord->TblMember->image_path;
           $item->date = $summaryRecord->date;
           $item->week = $summaryRecord->week;
           $item->summary = $summaryRecord->summary;

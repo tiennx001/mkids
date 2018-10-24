@@ -17,8 +17,9 @@ class TblArticleTable extends Doctrine_Table
     return Doctrine_Core::getTable('TblArticle');
   }
 
-  public function getActiveQuery($alias) {
-    return $this->createQuery('a')
+  public function getActiveQuery($alias)
+  {
+    return $this->createQuery($alias)
       ->where($alias . '.status = 1')
       ->andWhere($alias . '.is_delete = 0');
   }
@@ -31,15 +32,103 @@ class TblArticleTable extends Doctrine_Table
       ->fetchOne();
   }
 
-  public function getListArticles($kw, $offset, $limit, $userId)
+  public function getListArticles($kw, $offset, $limit, $userId, $userType)
   {
     $q = $this->getActiveQuery('a')
       ->andWhere('a.user_id = ?', $userId);
+
     if ($kw) {
       $q->andWhere('a.title LIKE ?', '%' . $kw . '%');
     }
+
     return $q->offset($offset)
       ->limit($limit)
       ->execute();
+  }
+
+  public function getArticleById($id) {
+    return $this->getActiveQuery('a')
+      ->andWhere('a.id = ?', $id)
+      ->fetchOne();
+  }
+
+  public function checkArticleForSchool($id, $schoolIds, $userType = UserTypeEnum::PRINCIPAL)
+  {
+    if ($userType == UserTypeEnum::TEACHER) {
+      return $this->getActiveQuery('a')
+        ->leftJoin('a.TblUser u')
+        ->leftJoin('u.TblClass c')
+        ->leftJoin('c.TblGroup g')
+        ->leftJoin('g.TblSchool s')
+        ->andWhere('a.id = ?', $id)
+        ->andWhereIn('s.id', $schoolIds)
+        ->count();
+    } else {
+      return $this->getActiveQuery('a')
+        ->leftJoin('a.TblUser u')
+        ->leftJoin('u.TblUserSchoolRef r')
+        ->andWhere('a.id = ?', $id)
+        ->andWhereIn('r.id', $schoolIds)
+        ->count();
+    }
+  }
+
+  public function checkArticleForGroups($id, $groupIds)
+  {
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblArticleRef ar')
+      ->andWhere('a.id = ?', $id)
+      ->andWhereIn('ar.group_id', $groupIds)
+      ->count();
+  }
+
+  public function checkArticleForClasses($id, $classIds)
+  {
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblArticleRef ar')
+      ->andWhere('a.id = ?', $id)
+      ->andWhereIn('ar.class_id', $classIds)
+      ->count();
+  }
+
+  public function checkArticleForMembers($id, $memberIds)
+  {
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblArticleRef ar')
+      ->andWhere('a.id = ?', $id)
+      ->andWhereIn('ar.member_id', $memberIds)
+      ->count();
+  }
+
+  public function checkArticleCredentials($id, $articleType, $userId, $userType)
+  {
+    switch ($articleType) {
+      case ArticleTypeEnum::ALL:
+        $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($userId, $userType);
+        if ($schoolIds) {
+          return $this->checkArticleForSchool($id, $schoolIds, UserTypeEnum::PRINCIPAL) ||
+          $this->checkArticleForSchool($id, $schoolIds, UserTypeEnum::TEACHER);
+        }
+        break;
+      case ArticleTypeEnum::GROUPS:
+        $groupIds = TblGroupTable::getInstance()->getActiveGroupIdsByUserId($userId, $userType);
+        if ($groupIds && count($groupIds)) {
+          return $this->checkArticleForGroups($id, $groupIds);
+        }
+        break;
+      case ArticleTypeEnum::CLASSES:
+        $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($userId, $userType);
+        if ($classIds && count($classIds)) {
+          return $this->checkArticleForClasses($id, $classIds);
+        }
+        break;
+      case ArticleTypeEnum::MEMBERS:
+        $memberIds = TblMemberTable::getInstance()->getActiveMemberIdsByUserId($userId, $userType);
+        if ($memberIds && count($memberIds)) {
+          return $this->checkArticleForMembers($id, $memberIds);
+        }
+        break;
+    }
+    return false;
   }
 }

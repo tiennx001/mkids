@@ -19,7 +19,7 @@ class TblCommentTable extends Doctrine_Table
 
   public function getActiveQuery($alias)
   {
-    return $this->createQuery('a')
+    return $this->createQuery($alias)
       ->where($alias . '.status = 1')
       ->andWhere($alias . '.is_delete = 0');
   }
@@ -32,13 +32,24 @@ class TblCommentTable extends Doctrine_Table
       ->fetchOne();
   }
 
-  public function getListComments($kw, $offset, $limit)
+  public function getListComments($kw, $offset, $limit, $articleId, $schoolIds)
   {
     $q = $this->getActiveQuery('a')
+      ->leftJoin('a.TblUser u')
+      ->leftJoin('u.TblUserSchoolRef r')
+      ->andWhereIn('r.id', $schoolIds)
       ->andWhere('a.parent_id IS NULL');
+
     if ($kw) {
       $q->andWhere('a.content LIKE ?', '%' . $kw . '%');
     }
+
+    if ($articleId) {
+      $q->andWhere('a.article_id = ?', $articleId);
+    } else {
+      $q->andWhere('a.article_id IS NULL');
+    }
+
     return $q->offset($offset)
       ->limit($limit)
       ->execute();
@@ -61,5 +72,36 @@ class TblCommentTable extends Doctrine_Table
     }
 
     return $q->fetchOne();
+  }
+
+  public function checkArticleForSchool($id, $schoolIds, $userType = UserTypeEnum::PRINCIPAL)
+  {
+    if ($userType == UserTypeEnum::TEACHER) {
+      return $this->getActiveQuery('a')
+        ->leftJoin('a.TblUser u')
+        ->leftJoin('u.TblClass c')
+        ->leftJoin('c.TblGroup g')
+        ->leftJoin('g.TblSchool s')
+        ->andWhere('a.id = ?', $id)
+        ->andWhereIn('s.id', $schoolIds)
+        ->count();
+    } else {
+      return $this->getActiveQuery('a')
+        ->leftJoin('a.TblUser u')
+        ->leftJoin('u.TblUserSchoolRef r')
+        ->andWhere('a.id = ?', $id)
+        ->andWhereIn('r.id', $schoolIds)
+        ->count();
+    }
+  }
+
+  public function checkCommentCredentials($id, $userId, $userType)
+  {
+    $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($userId, $userType);
+    if ($schoolIds) {
+      return $this->checkArticleForSchool($id, $schoolIds, UserTypeEnum::PRINCIPAL) ||
+      $this->checkArticleForSchool($id, $schoolIds, UserTypeEnum::TEACHER);
+    }
+    return false;
   }
 }

@@ -16,6 +16,7 @@ class SummaryValidateForm extends BaseTblSummaryForm
     $i18n = sfContext::getInstance()->getI18N();
 
     $this->validatorSchema['member_id'] = new sfValidatorDoctrineChoice(array(
+      'required' => false,
       'model' => 'TblMember',
       'column' => 'id'
     ), array(

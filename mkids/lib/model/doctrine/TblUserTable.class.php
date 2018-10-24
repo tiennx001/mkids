@@ -107,7 +107,7 @@ class TblUserTable extends Doctrine_Table
 
   public function getActiveQuery($alias)
   {
-    return $this->createQuery('a')
+    return $this->createQuery($alias)
       ->where($alias . '.status = 1')
       ->andWhere($alias . '.is_delete = 0');
   }
@@ -150,5 +150,23 @@ class TblUserTable extends Doctrine_Table
   public function getListParentByParam($schoolId,$classId,$memberId,$keyword,$page,$pageSize){
 
     return $this->getListParentQuery($schoolId,$classId,$memberId,$keyword,$page,$pageSize)->fetchArray();
+  }
+
+  public function setUnLockUser($account)
+  {
+    return $this->createQuery('a')
+      ->update()
+      ->set('a.is_lock', '?', false)
+      ->set('a.lock_time', '?', array(null))
+      ->where('a.email = ?', $account)
+      ->execute();
+  }
+
+  public function checkUserCredentials($schoolIds)
+  {
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblUserSchoolRef r')
+      ->andWhereIn('r.id', $schoolIds)
+      ->count();
   }
 }

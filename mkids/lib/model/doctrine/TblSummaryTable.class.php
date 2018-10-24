@@ -19,7 +19,7 @@ class TblSummaryTable extends Doctrine_Table
 
   public function getActiveQuery($alias)
   {
-    return $this->createQuery('a')
+    return $this->createQuery($alias)
       ->where($alias . '.status = 1')
       ->andWhere($alias . '.is_delete = 0');
   }
@@ -35,6 +35,7 @@ class TblSummaryTable extends Doctrine_Table
   public function getSummaryList($memberId, $date, $week, $offset, $limit, $memberIds)
   {
     $q = $this->getActiveQuery('a')
+      ->leftJoin('a.TblMember')
       ->andWhere('a.member_id = ?', $memberId);
     if ($date) {
       $q->andWhere('a.date = ?', $date);

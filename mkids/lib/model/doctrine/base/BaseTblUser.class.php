@@ -27,7 +27,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @property Doctrine_Collection $TblTokenSession
  * @property Doctrine_Collection $TblSchool
  * @property Doctrine_Collection $TblClass
+ * @property Doctrine_Collection $TblUserClassRef
  * @property Doctrine_Collection $TblMember
+ * @property Doctrine_Collection $TblMemberUserRef
  * @property Doctrine_Collection $TblNotificationProgram
  * @property Doctrine_Collection $TblArticle
  * @property Doctrine_Collection $TblComment
@@ -54,7 +56,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method Doctrine_Collection getTblTokenSession()        Returns the current record's "TblTokenSession" collection
  * @method Doctrine_Collection getTblSchool()              Returns the current record's "TblSchool" collection
  * @method Doctrine_Collection getTblClass()               Returns the current record's "TblClass" collection
+ * @method Doctrine_Collection getTblUserClassRef()        Returns the current record's "TblUserClassRef" collection
  * @method Doctrine_Collection getTblMember()              Returns the current record's "TblMember" collection
+ * @method Doctrine_Collection getTblMemberUserRef()       Returns the current record's "TblMemberUserRef" collection
  * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
  * @method Doctrine_Collection getTblArticle()             Returns the current record's "TblArticle" collection
  * @method Doctrine_Collection getTblComment()             Returns the current record's "TblComment" collection
@@ -80,7 +84,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method TblUser             setTblTokenSession()        Sets the current record's "TblTokenSession" collection
  * @method TblUser             setTblSchool()              Sets the current record's "TblSchool" collection
  * @method TblUser             setTblClass()               Sets the current record's "TblClass" collection
+ * @method TblUser             setTblUserClassRef()        Sets the current record's "TblUserClassRef" collection
  * @method TblUser             setTblMember()              Sets the current record's "TblMember" collection
+ * @method TblUser             setTblMemberUserRef()       Sets the current record's "TblMemberUserRef" collection
  * @method TblUser             setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
  * @method TblUser             setTblArticle()             Sets the current record's "TblArticle" collection
  * @method TblUser             setTblComment()             Sets the current record's "TblComment" collection
@@ -111,6 +117,8 @@ abstract class BaseTblUser extends sfDoctrineRecord
              ));
         $this->hasColumn('email', 'string', 255, array(
              'type' => 'string',
+             'notnull' => true,
+             'unique' => true,
              'comment' => 'Email người dùng',
              'length' => 255,
              ));
@@ -135,8 +143,6 @@ abstract class BaseTblUser extends sfDoctrineRecord
              ));
         $this->hasColumn('msisdn', 'string', 18, array(
              'type' => 'string',
-             'notnull' => true,
-             'unique' => true,
              'comment' => 'Số điện thoại của người dùng',
              'length' => 18,
              ));
@@ -206,10 +212,18 @@ abstract class BaseTblUser extends sfDoctrineRecord
              'local' => 'user_id',
              'foreign' => 'class_id'));
 
+        $this->hasMany('TblUserClassRef', array(
+             'local' => 'id',
+             'foreign' => 'user_id'));
+
         $this->hasMany('TblMember', array(
              'refClass' => 'TblMemberUserRef',
              'local' => 'user_id',
              'foreign' => 'member_id'));
+
+        $this->hasMany('TblMemberUserRef', array(
+             'local' => 'id',
+             'foreign' => 'user_id'));
 
         $this->hasMany('TblNotificationProgram', array(
              'local' => 'id',

@@ -19,10 +19,13 @@ class TblMemberUserRefTable extends Doctrine_Table
 
     public function getMemberIdsByUserId($userId)
     {
-        return $this->createQuery('a')
+      $arr = $this->createQuery('a')
+          ->select('a.id, b.id mId, b.name mName')
           ->leftJoin('a.TblMember b')
           ->where('a.user_id = ?', $userId)
           ->andWhere('b.status = 1 AND b.is_delete = 0')
-          ->execute()->toKeyValueArray('b.id', 'b.name');
+          ->execute()
+          ->toKeyValueArray('mId', 'mName');
+      return array_keys($arr);
     }
 }

@@ -19,7 +19,7 @@ class TblNotificationHisTable extends Doctrine_Table
 
   public function getActiveQuery($alias)
   {
-    return $this->createQuery('a')
+    return $this->createQuery($alias)
       ->where($alias . '.status = 1');
   }
 

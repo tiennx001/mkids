@@ -17,13 +17,13 @@ abstract class BaseTblMemberUserRefForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'        => new sfWidgetFormInputHidden(),
       'member_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblMember'), 'add_empty' => true)),
-      'user_id'   => new sfWidgetFormInputText(),
+      'user_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblUser'), 'add_empty' => false)),
     ));
 
     $this->setValidators(array(
       'id'        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'member_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblMember'), 'required' => false)),
-      'user_id'   => new sfValidatorInteger(),
+      'user_id'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblUser'))),
     ));
 
     $this->widgetSchema->setNameFormat('tbl_member_user_ref[%s]');

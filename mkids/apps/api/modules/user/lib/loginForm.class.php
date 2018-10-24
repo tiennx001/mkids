@@ -45,6 +45,7 @@ class LoginForm extends TblUserForm
 //      'max_length' => $i18n->__("Password max length 30 char")
 //    ));
 
+    $this->validatorSchema->setPostValidator(new sfValidatorPass());
     $this->disableCSRFProtection();
   }
 

@@ -46,7 +46,6 @@ abstract class BaseTblTokenSessionForm extends BaseFormDoctrine
       new sfValidatorAnd(array(
         new sfValidatorDoctrineUnique(array('model' => 'TblTokenSession', 'column' => array('user_id'))),
         new sfValidatorDoctrineUnique(array('model' => 'TblTokenSession', 'column' => array('account'))),
-        new sfValidatorDoctrineUnique(array('model' => 'TblTokenSession', 'column' => array('msisdn'))),
       ))
     );
 

@@ -168,6 +168,8 @@ class memberActions extends sfActions
       $memberIds = null;
       if ($info['user_type'] == UserTypeEnum::PARENTS) {
         $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
+        // Fix - Tam thoi - Phu huynh chi co 1 con hoc o truong
+        $memberId = $memberIds[0];
       }
 
       $listActivities = TblMemberActivityTable::getInstance()->getMemberHistory($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $pageSize);
@@ -180,9 +182,9 @@ class memberActions extends sfActions
 
       foreach ($listActivities as $activity) {
         $actObj = new stdClass();
-        $actObj->id = $activity->getId();
-        $actObj->name = $activity->getName();
-        $actObj->imagePath = $activity->getImagePath();
+        $actObj->id = $activity->getTblMember()->getId();
+        $actObj->name = $activity->getTblMember()->getName();
+        $actObj->imagePath = $activity->getTblMember()->getImagePath();
         $actObj->type = $activity->getType();
         $actObj->description= $activity->getDescription();
         $actObj->health = $activity->getHealth();

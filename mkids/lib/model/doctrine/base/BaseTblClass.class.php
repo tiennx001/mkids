@@ -14,6 +14,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblClass', 'doctrine');
  * @property boolean $is_delete
  * @property TblGroup $TblGroup
  * @property Doctrine_Collection $TblUser
+ * @property Doctrine_Collection $TblUserClassRef
  * @property Doctrine_Collection $TblMember
  * @property Doctrine_Collection $TblMenu
  * @property Doctrine_Collection $TblNotificationProgram
@@ -26,6 +27,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblClass', 'doctrine');
  * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblGroup            getTblGroup()               Returns the current record's "TblGroup" value
  * @method Doctrine_Collection getTblUser()                Returns the current record's "TblUser" collection
+ * @method Doctrine_Collection getTblUserClassRef()        Returns the current record's "TblUserClassRef" collection
  * @method Doctrine_Collection getTblMember()              Returns the current record's "TblMember" collection
  * @method Doctrine_Collection getTblMenu()                Returns the current record's "TblMenu" collection
  * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
@@ -37,6 +39,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblClass', 'doctrine');
  * @method TblClass            setIsDelete()               Sets the current record's "is_delete" value
  * @method TblClass            setTblGroup()               Sets the current record's "TblGroup" value
  * @method TblClass            setTblUser()                Sets the current record's "TblUser" collection
+ * @method TblClass            setTblUserClassRef()        Sets the current record's "TblUserClassRef" collection
  * @method TblClass            setTblMember()              Sets the current record's "TblMember" collection
  * @method TblClass            setTblMenu()                Sets the current record's "TblMenu" collection
  * @method TblClass            setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
@@ -93,6 +96,10 @@ abstract class BaseTblClass extends sfDoctrineRecord
              'refClass' => 'TblUserClassRef',
              'local' => 'class_id',
              'foreign' => 'user_id'));
+
+        $this->hasMany('TblUserClassRef', array(
+             'local' => 'id',
+             'foreign' => 'class_id'));
 
         $this->hasMany('TblMember', array(
              'local' => 'id',
