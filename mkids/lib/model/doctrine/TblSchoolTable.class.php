@@ -37,9 +37,8 @@ class TblSchoolTable extends Doctrine_Table
 
   public function getActiveQuery($alias)
   {
-    return $this->createQuery('a')
-      ->where($alias . '.status = 1')
-      ->andWhere($alias . '.is_delete = 0');
+    return $this->createQuery($alias)
+      ->where($alias . '.status = 1');
   }
 
   public function getActiveSchoolIdsByUserId($userId, $userType = UserTypeEnum::PRINCIPAL) {
