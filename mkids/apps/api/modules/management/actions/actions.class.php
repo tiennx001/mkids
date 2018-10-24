@@ -471,6 +471,7 @@ class managementActions extends sfActions
       $jsonObj = new jsonObject($errorCode, $message, null, $data);
       return $this->renderText($jsonObj->toJson());
     }
+    $formValues['tbl_school_list'] = [$school['id']];
 
     if(empty($formValues['id'])){
       //truong hop khong truyen id --> them moi
@@ -899,6 +900,176 @@ class managementActions extends sfActions
       $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
       $message = defaultErrorCode::getMessage($errorCode);
       VtHelper::writeLogValue(sprintf('[management][executeRemoveMenu]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeUpdateParent(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+    $formValues['tbl_member_list'] = json_decode(trim($request->getPostParameter('memberId')), true);
+    $formValues['email'] = $request->getPostParameter('email');
+    $formValues['gender'] = $request->getPostParameter('gender');
+    $formValues['facebook'] = $request->getPostParameter('facebook');
+    $formValues['address'] = $request->getPostParameter('address');
+    $formValues['image_path'] = $request->getPostParameter('image');
+    $formValues['id'] = $request->getPostParameter('id');
+    $formValues['name'] = $request->getPostParameter('name');
+    $formValues['description'] = $request->getPostParameter('description');
+    $formValues['msisdn'] = $request->getPostParameter('msisdn');
+    $formValues['password'] = $request->getPostParameter('password');
+    $formValues['type'] = UserTypeEnum::PARENTS;
+    $formValues['status'] = $request->getPostParameter('status');
+
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+    $formValues['tbl_school_list'] = [$school['id']];
+
+    if(empty($formValues['id'])){
+      //truong hop khong truyen id --> them moi
+      $form = new TblParentApiForm(null, ['school_id' => $school['id']]);
+    }else{
+      //truong hop truyen id --> thuc hien cap nhat
+      //lay thong tin hoc sinh
+      $parent = TblUserTable::getInstance()->getParentInSchoolById($formValues['id'],$school['id']);
+      if(!$parent){
+        $errorCode = ParentErrorCode::PARENT_NOT_EXIST;
+        $message = ParentErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message, null, $data);
+        return $this->renderText($jsonObj->toJson());
+      }
+      $form = new TblParentApiForm($parent, ['school_id' => $school['id']]);
+    }
+
+    $form->bind($formValues);
+    if($form->isValid()) {
+      try{
+        $message = $form->isNew() ? 'Create parent success' : 'Update parent success';
+        $oldImage = $form->isNew() ? '' : $form->getObject()->getImagePath();
+        $image = $form->getValue('image_path');
+        $obj = $form->save();
+        if($image){
+          $uploadDir = sprintf('/uploads/images/parent/%s/',$obj->getId());
+          VtHelper::uploadBase64Image($image, $uploadDir, $obj, $oldImage);
+        }
+
+        $errorCode = 0;
+        VtHelper::writeLogValue(sprintf('[management][executeUpdateParent]user_id:%s|SUCCESS|params:%s',$userId, json_encode($formValues)));
+      }catch (Exception $e){
+        $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
+        $message = UserErrorCode::getMessage($errorCode);
+        VtHelper::writeLogValue(sprintf('[management][executeUpdateParent]user_id:%s|ERROR = %s|params:%s',$userId, $e->getMessage(),json_encode($formValues)));
+      }
+    }else{
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $f) {
+        if ($f->hasError()) {
+          $message = VtHelper::strip_html_tags($f->getError());
+        }
+      }
+    }
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeGetParentList(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $memberId = trim($request->getPostParameter('memberId'));
+    $classId = trim($request->getPostParameter('classId'));
+    $keyword = trim($request->getPostParameter('kw'));
+    $page = trim($request->getPostParameter('page'));
+    $pageSize = trim($request->getPostParameter('pageSize'));
+
+    $listParent = TblUserTable::getInstance()->getListParentByParam($school['id'],$classId,$memberId,$keyword,$page,$pageSize);
+    if(!count($listParent)){
+      $errorCode = UserErrorCode::NO_RESULTS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+    foreach ($listParent as $parent){
+      $temp = [];
+      foreach ($parent['TblMember'] as $member){
+        $temp[] = ['memberId' => $member['id'], 'memberName' => $member['name'], 'classId' => $member['class_id'], 'className' => $member['TblClass']['name']];
+      }
+      $data[] = [
+        'id' => $parent['id'],
+        'name' => $parent['name'],
+        'description' => $parent['description'],
+        'imagePath' => $parent['image_path'],
+        'gender' => $parent['gender'],
+        'email' => $parent['email'],
+        'facebook' => $parent['facebook'],
+        'address' => $parent['address'],
+        'children' => $temp,
+      ];
+    }
+
+    $errorCode = 0;
+    $message = 'success';
+    $jsonObj = new jsonObject($errorCode, $message, null, $data);
+    return $this->renderText($jsonObj->toJson());
+  }
+
+  public function executeRemoveParent(sfWebRequest $request)
+  {
+    $data = [];
+    $userId = $this->getUser()->getUserId();
+
+    //lay thong tin truong thuoc user dang nhap
+    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
+    if(!$school){
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if(!($id = $request->getPostParameter('id'))){
+      $errorCode = ParentErrorCode::MISSING_PARAMETERS;
+      $message = ParentErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $parent = TblUserTable::getInstance()->getParentInSchoolById($id,$school['id']);
+    if(!$parent){
+      $errorCode = ParentErrorCode::PARENT_NOT_EXIST;
+      $message = ParentErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message, null, $data);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      $parent->setIsDelete(1);
+      $parent->save();
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveParent]|userId = %s|params:%s', $userId,json_encode($request->getPostParameters())),'logAction.log');
+    }catch (Exception $e){
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      VtHelper::writeLogValue(sprintf('[management][executeRemoveParent]|ERROR = %s|params:%s', $e->getMessage(),json_encode($request->getPostParameters())));
     }
     $jsonObj = new jsonObject($errorCode, $message, null, $data);
     return $this->renderText($jsonObj->toJson());

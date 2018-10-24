@@ -129,4 +129,12 @@ abstract class SummaryLevelEnum {
     return array(self::POOR, self::WEAK, self::NORMAL, self::PRETTY, self::GOOD, self::EXCELLENT);
   }
 }
+abstract class GenderEnum {
+  const WOMEN = 0;
+  const MEN = 1;
+
+  public static function getArr() {
+    return array(self::WOMEN, self::MEN);
+  }
+}
 

@@ -8,14 +8,13 @@
  * @author     Your name here
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class TblUserApiForm extends BaseTblUserForm
+class TblParentApiForm extends BaseTblUserForm
 {
   public function configure()
   {
-    $this->useFields(['name','description','status','type','image_path','msisdn','password','tbl_class_list','tbl_school_list']);
+    $this->useFields(['name','description','status','type','image_path','msisdn','password','email','gender','facebook','address','tbl_member_list','tbl_school_list']);
     $this->disableCSRFProtection();
     $schoolId = $this->getOption('school_id');
-    $type = $this->getOption('type');
 
     if($this->isNew()){
       $this->validatorSchema['password']->setOption('required',true);
@@ -26,7 +25,15 @@ class TblUserApiForm extends BaseTblUserForm
 
     $this->validatorSchema['msisdn']->setMessage('required','Vui lòng nhập SĐT');
     $this->validatorSchema['msisdn']->setMessage('max_length','SĐT quá dài (tối đa %max_length% ký tự)');
-    $this->validatorSchema['msisdn']->setOption('required',$type == UserTypeEnum::PARENTS);
+    $this->validatorSchema['msisdn']->setOption('required',true);
+
+    $this->validatorSchema['gender'] = new sfValidatorChoice([
+      'choices' => GenderEnum::getArr(),
+      'required' => true
+    ],[
+      'invalid' => 'Giới tính không hợp lệ',
+      'required' => 'Giới tính không được để trống'
+    ]);
 
     $this->validatorSchema['status'] = new sfValidatorChoice([
       'choices' => array_keys(StatusEnum::getArr()),
@@ -36,15 +43,26 @@ class TblUserApiForm extends BaseTblUserForm
       'required' => 'Trạng thái không được để trống'
     ]);
 
-    $this->validatorSchema['tbl_class_list'] = new sfValidatorDoctrineChoice(array(
-      'multiple' => true, 'model' => 'TblClass', 'required' => true,
-      'query' => TblClassTable::getInstance()->getClassInGroupQuery(null,$schoolId)
+    $this->validatorSchema['tbl_member_list'] = new sfValidatorDoctrineChoice(array(
+      'multiple' => true, 'model' => 'TblMember', 'required' => true,
+      'query' => TblMemberTable::getInstance()->getListMemberQuery($schoolId)
     ), array(
-      'invalid' => 'Lớp không hợp lệ',
-      'required' => 'Lớp không được để trống'
+      'invalid' => 'Học sinh không hợp lệ',
+      'required' => 'Học sinh không được để trống'
+    ));
+
+    $this->validatorSchema['email'] = new sfValidatorEmail(array(
+      'max_length' => 255,
+      'required' => false
+    ), array(
+      'invalid' => 'Địa chỉ email không hợp lệ',
+      'max_length' => 'Email quá dài (tối đa %max_length% ký tự)'
     ));
 
     $this->validatorSchema['description']->setMessage('max_length','Mô tả quá dài (tối đa %max_length% ký tự)');
+    $this->validatorSchema['address']->setMessage('max_length','Địa chỉ quá dài (tối đa %max_length% ký tự)');
+    $this->validatorSchema['facebook']->setMessage('max_length','Địa chỉ facebook quá dài (tối đa %max_length% ký tự)');
+    $this->validatorSchema['password']->setMessage('max_length','Mật khẩu quá dài (tối đa %max_length% ký tự)');
 
     $this->validatorSchema['image_path'] = new sfValidatorBase64Image(array(
       'max_size' => 1024*1024,
@@ -62,6 +80,8 @@ class TblUserApiForm extends BaseTblUserForm
       if($this->isNew()){
         $values['salt'] = VtHelper::generateSalt();
         $values['password'] = sha1($values['salt'] . $values['password']);
+      }else{
+        $values['password'] = sha1($this->getObject()->getSalt() . $values['password']);
       }
     }
     if(!empty($values['msisdn']))

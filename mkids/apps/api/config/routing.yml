@@ -82,6 +82,15 @@ removeMenu:
 updateMemberActivity:
   url: /updateMemberActivity
   param: { module: member, action: updateMemberActivity }
+updateParent:
+  url: /updateParent
+  param: { module: management, action: updateParent }
+getParentList:
+  url: /getParentList
+  param: { module: management, action: getParentList }
+removeParent:
+  url: /removeParent
+  param: { module: management, action: removeParent }
 ############ Quan ly thong tin #############
 
 ############ Thong bao ############

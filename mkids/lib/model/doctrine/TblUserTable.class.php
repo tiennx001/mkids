@@ -70,8 +70,8 @@ class TblUserTable extends Doctrine_Table
 
   public function getListUserByTypeQuery($schoolId,$classId = null,$type = null,$keyword = null,$page = 1,$pageSize = -1){
     $query = $this->createQuery('t')
-      ->innerJoin('t.TblClass c')
-      ->innerJoin('c.TblGroup g')
+      ->leftJoin('t.TblClass c')
+      ->leftJoin('c.TblGroup g')
       ->where('g.school_id = ?', $schoolId)
       ->andWhere('t.is_delete = 0');
     if($classId)
@@ -99,7 +99,7 @@ class TblUserTable extends Doctrine_Table
   }
 
   public function getListParent(){
-    return $this->createQuery()
+    return $this->createQuery('u')
       ->where('status = 1')
       ->andWhere('is_delete = 0')
       ->andWhere('type = ?', UserTypeEnum::PARENTS);
@@ -116,5 +116,39 @@ class TblUserTable extends Doctrine_Table
     return $this->getActiveQuery('a')
       ->andWhere('a.id = ?', $id)
       ->fetchOne();
+  }
+
+  public function getParentInSchoolById($id,$schoolId){
+    return $this->getListParent()
+      ->innerJoin('u.TblUserSchoolRef r')
+      ->andWhere('r.school_id = ?', $schoolId)
+      ->andWhere('id = ?', $id)
+      ->fetchOne();
+  }
+
+  public function getListParentQuery($schoolId,$classId = null, $memberId = null, $keyword = null,$page = 1,$pageSize = -1){
+    $query = $this->createQuery('u')
+      ->innerJoin('u.TblUserSchoolRef r')
+      ->leftJoin('u.TblMember m')
+      ->leftJoin('m.TblClass c')
+      ->where('r.school_id = ?', $schoolId)
+      ->andWhere('u.is_delete = 0')
+      ->andWhere('type = ?', UserTypeEnum::PARENTS);
+    if($classId)
+      $query->andWhere('m.class_id = ?', $classId);
+    if($memberId)
+      $query->andWhere('m.id = ?', $memberId);
+    if($keyword)
+      $query->andWhere('(u.name like ? OR u.description like ?)', ['%'.VtHelper::translateQuery($keyword).'%','%'.VtHelper::translateQuery($keyword).'%']);
+    if($pageSize > 0 && $page > 0){
+      $query->limit($pageSize)
+        ->offset(($page-1)*$pageSize);
+    }
+    return $query;
+  }
+
+  public function getListParentByParam($schoolId,$classId,$memberId,$keyword,$page,$pageSize){
+
+    return $this->getListParentQuery($schoolId,$classId,$memberId,$keyword,$page,$pageSize)->fetchArray();
   }
 }

@@ -189,6 +189,10 @@
                 <source>Menu not exist.</source>
                 <target>Thực đơn không tồn tại</target>
             </trans-unit>
+            <trans-unit>
+                <source>Parent not exist.</source>
+                <target>Phụ huynh không tồn tại</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
