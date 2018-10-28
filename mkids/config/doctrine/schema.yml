@@ -329,6 +329,19 @@ TblMemberActivity:
     date: { type: date, notnull: true, comment: 'Ngày hoạt động' }
     type: { type: tinyint(2), notnull: true, default: 0, comment: 'Loạt hoạt động (0: Đi học; 1: Nghỉ học; 2: Đi dã ngoại; 3: Hoạt động văn nghệ; 4: Khai giảng; 5: Bế giảng; 6: Bắt đầu đi học; 7: Nghỉ hẳn)' }
     description: { type: string(255), comment: 'Thông tin hoạt động' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái kích hoạt (0: không kích hoạt; 1: kích hoạt)' }
+    is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
+  relations:
+    TblMember: { class: TblMember, local: member_id }
+
+TblMemberHealth:
+  tableName: tbl_member_health
+  actAs:
+    Timestampable: ~
+  columns:
+    member_id: { type: integer(8), notnull: true, comment: 'ID học sinh' }
+    date: { type: date, notnull: true, comment: 'Ngày hoạt động' }
+    description: { type: string(255), comment: 'Thông tin sức khỏe' }
     health: { type: tinyint(2), default: 0, comment: 'Sức khỏe (0: Ốm; 1: Bình thường; 2: Khỏe mạnh)' }
     height: { type: integer(5), comment: 'Chiều cao (cm)' }
     weight: { type: integer(5), comment: 'Cân nặng (kg)' }
