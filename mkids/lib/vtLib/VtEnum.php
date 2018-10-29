@@ -152,4 +152,15 @@ abstract class ArticleTypeEnum {
     );
   }
 }
+abstract class AbsenceTicketStatusEnum {
+  const WAITING = 0;
+  const APPROVE = 1;
+
+  public static function getArr() {
+    return array(
+      self::WAITING => 'Chưa phêt duyệt',
+      self::APPROVE => 'Đã phê duyệt',
+    );
+  }
+}
 

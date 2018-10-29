@@ -11,9 +11,6 @@ Doctrine_Manager::getInstance()->bindComponent('TblMemberActivity', 'doctrine');
  * @property date $date
  * @property tinyint $type
  * @property string $description
- * @property tinyint $health
- * @property integer $height
- * @property integer $weight
  * @property boolean $status
  * @property boolean $is_delete
  * @property TblMember $TblMember
@@ -22,9 +19,6 @@ Doctrine_Manager::getInstance()->bindComponent('TblMemberActivity', 'doctrine');
  * @method date              getDate()        Returns the current record's "date" value
  * @method tinyint           getType()        Returns the current record's "type" value
  * @method string            getDescription() Returns the current record's "description" value
- * @method tinyint           getHealth()      Returns the current record's "health" value
- * @method integer           getHeight()      Returns the current record's "height" value
- * @method integer           getWeight()      Returns the current record's "weight" value
  * @method boolean           getStatus()      Returns the current record's "status" value
  * @method boolean           getIsDelete()    Returns the current record's "is_delete" value
  * @method TblMember         getTblMember()   Returns the current record's "TblMember" value
@@ -32,9 +26,6 @@ Doctrine_Manager::getInstance()->bindComponent('TblMemberActivity', 'doctrine');
  * @method TblMemberActivity setDate()        Sets the current record's "date" value
  * @method TblMemberActivity setType()        Sets the current record's "type" value
  * @method TblMemberActivity setDescription() Sets the current record's "description" value
- * @method TblMemberActivity setHealth()      Sets the current record's "health" value
- * @method TblMemberActivity setHeight()      Sets the current record's "height" value
- * @method TblMemberActivity setWeight()      Sets the current record's "weight" value
  * @method TblMemberActivity setStatus()      Sets the current record's "status" value
  * @method TblMemberActivity setIsDelete()    Sets the current record's "is_delete" value
  * @method TblMemberActivity setTblMember()   Sets the current record's "TblMember" value
@@ -71,22 +62,6 @@ abstract class BaseTblMemberActivity extends sfDoctrineRecord
              'type' => 'string',
              'comment' => 'Thông tin hoạt động',
              'length' => 255,
-             ));
-        $this->hasColumn('health', 'tinyint', 2, array(
-             'type' => 'tinyint',
-             'default' => 0,
-             'comment' => 'Sức khỏe (0: Ốm; 1: Bình thường; 2: Khỏe mạnh)',
-             'length' => 2,
-             ));
-        $this->hasColumn('height', 'integer', 5, array(
-             'type' => 'integer',
-             'comment' => 'Chiều cao (cm)',
-             'length' => 5,
-             ));
-        $this->hasColumn('weight', 'integer', 5, array(
-             'type' => 'integer',
-             'comment' => 'Cân nặng (kg)',
-             'length' => 5,
              ));
         $this->hasColumn('status', 'boolean', null, array(
              'type' => 'boolean',

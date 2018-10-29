@@ -8,11 +8,11 @@
  * @author     Your name here
  * @version    SVN: $Id: sfDoctrineFormTemplate.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
  */
-class TblMemberActivityApiForm extends BaseTblMemberActivityForm
+class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
 {
   public function configure()
   {
-    $this->useFields(['member_id','date','type','description','status']);
+    $this->useFields(['member_id','date','reason','status']);
     $schoolId = $this->getOption('school_id');
     $this->validatorSchema['member_id'] = new sfValidatorDoctrineChoice(array(
       'model' => $this->getRelatedModelName('TblMember'),
@@ -23,7 +23,7 @@ class TblMemberActivityApiForm extends BaseTblMemberActivityForm
       'required' => 'Mã học sinh không được để trống'
     ));
 
-    $statusArr = ['' => 'status'] + StatusEnum::getArr();
+    $statusArr = ['' => 'status'] + AbsenceTicketStatusEnum::getArr();
     $this->validatorSchema['status'] = new sfValidatorChoice([
       'choices' => array_keys($statusArr),
       'required' => false
@@ -43,15 +43,19 @@ class TblMemberActivityApiForm extends BaseTblMemberActivityForm
       'invalid' => 'Ngày không hợp lệ'
     ));
 
-    $this->validatorSchema['type'] = new sfValidatorChoice(array(
-      'choices' => ActivityTypeEnum::getArr(),
-      'required' => true
-    ), array(
-      'invalid' => 'Loại không hợp lệ',
-      'required' => 'Loại không được để trống'
-    ));
+    $this->validatorSchema->setPostValidator(new sfValidatorCallback(array(
+      'callback' => array($this, 'checkUpdateStatusCredential')
+    )));
 
-    $this->validatorSchema['description']->setMessage('max_length','Mô tả quá dài (tối đa %max_length% ký tự)');
+    $this->validatorSchema['reason']->setMessage('max_length','Vui lòng nhập lý do tối đa %max_length% ký tự');
     $this->disableLocalCSRFProtection();
+  }
+
+  public function checkUpdateStatusCredential($validator, $values) {
+    if (isset($values['status']) && $values['status'] && $this->getOption('user_type') == UserTypeEnum::PARENTS) {
+      $errSchema = array('status' => new sfValidatorError($validator, sfContext::getInstance()->getI18N()->__('Bạn không có quyền cập nhật trạng thái đơn xin nghỉ')));
+      throw new sfValidatorErrorSchema($validator, $errSchema);
+    }
+    return $values;
   }
 }

@@ -35,6 +35,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @property Doctrine_Collection $TblComment
  * @property Doctrine_Collection $TblNotification
  * @property Doctrine_Collection $TblNotificationHis
+ * @property Doctrine_Collection $TblAbsenceTicket
  * 
  * @method string              getName()                   Returns the current record's "name" value
  * @method tinyint             getGender()                 Returns the current record's "gender" value
@@ -64,6 +65,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method Doctrine_Collection getTblComment()             Returns the current record's "TblComment" collection
  * @method Doctrine_Collection getTblNotification()        Returns the current record's "TblNotification" collection
  * @method Doctrine_Collection getTblNotificationHis()     Returns the current record's "TblNotificationHis" collection
+ * @method Doctrine_Collection getTblAbsenceTicket()       Returns the current record's "TblAbsenceTicket" collection
  * @method TblUser             setName()                   Sets the current record's "name" value
  * @method TblUser             setGender()                 Sets the current record's "gender" value
  * @method TblUser             setEmail()                  Sets the current record's "email" value
@@ -92,6 +94,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method TblUser             setTblComment()             Sets the current record's "TblComment" collection
  * @method TblUser             setTblNotification()        Sets the current record's "TblNotification" collection
  * @method TblUser             setTblNotificationHis()     Sets the current record's "TblNotificationHis" collection
+ * @method TblUser             setTblAbsenceTicket()       Sets the current record's "TblAbsenceTicket" collection
  * 
  * @package    xcode
  * @subpackage model
@@ -244,6 +247,10 @@ abstract class BaseTblUser extends sfDoctrineRecord
         $this->hasMany('TblNotificationHis', array(
              'local' => 'id',
              'foreign' => 'sender_id'));
+
+        $this->hasMany('TblAbsenceTicket', array(
+             'local' => 'id',
+             'foreign' => 'user_id'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();
         $this->actAs($timestampable0);

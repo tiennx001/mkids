@@ -23,7 +23,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @property Doctrine_Collection $TblNotificationProgram
  * @property Doctrine_Collection $TblArticle
  * @property Doctrine_Collection $TblMemberActivity
+ * @property Doctrine_Collection $TblMemberHealth
  * @property Doctrine_Collection $TblSummary
+ * @property Doctrine_Collection $TblAbsenceTicket
  * 
  * @method string              getName()                   Returns the current record's "name" value
  * @method string              getBirthday()               Returns the current record's "birthday" value
@@ -41,7 +43,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
  * @method Doctrine_Collection getTblArticle()             Returns the current record's "TblArticle" collection
  * @method Doctrine_Collection getTblMemberActivity()      Returns the current record's "TblMemberActivity" collection
+ * @method Doctrine_Collection getTblMemberHealth()        Returns the current record's "TblMemberHealth" collection
  * @method Doctrine_Collection getTblSummary()             Returns the current record's "TblSummary" collection
+ * @method Doctrine_Collection getTblAbsenceTicket()       Returns the current record's "TblAbsenceTicket" collection
  * @method TblMember           setName()                   Sets the current record's "name" value
  * @method TblMember           setBirthday()               Sets the current record's "birthday" value
  * @method TblMember           setHeight()                 Sets the current record's "height" value
@@ -58,7 +62,9 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method TblMember           setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
  * @method TblMember           setTblArticle()             Sets the current record's "TblArticle" collection
  * @method TblMember           setTblMemberActivity()      Sets the current record's "TblMemberActivity" collection
+ * @method TblMember           setTblMemberHealth()        Sets the current record's "TblMemberHealth" collection
  * @method TblMember           setTblSummary()             Sets the current record's "TblSummary" collection
+ * @method TblMember           setTblAbsenceTicket()       Sets the current record's "TblAbsenceTicket" collection
  * 
  * @package    xcode
  * @subpackage model
@@ -155,7 +161,15 @@ abstract class BaseTblMember extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'member_id'));
 
+        $this->hasMany('TblMemberHealth', array(
+             'local' => 'id',
+             'foreign' => 'member_id'));
+
         $this->hasMany('TblSummary', array(
+             'local' => 'id',
+             'foreign' => 'member_id'));
+
+        $this->hasMany('TblAbsenceTicket', array(
              'local' => 'id',
              'foreign' => 'member_id'));
 

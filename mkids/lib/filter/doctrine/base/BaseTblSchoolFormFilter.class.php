@@ -48,9 +48,9 @@ abstract class BaseTblSchoolFormFilter extends BaseFormFilterDoctrine
   }
 
   public function add
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 
-Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\mkids\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
+Deprecated: preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead in D:\Projects\PHP\mkids_team\mkids\lib\vendor\symfony\lib\util\sfToolkit.class.php on line 362
 TblUserListColumnQuery(Doctrine_Query $query, $field, $values)
   {
     if (!is_array($values))
