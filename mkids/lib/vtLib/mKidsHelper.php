@@ -13,7 +13,7 @@ class mKidsHelper
   const MOBILE_SIMPLE = '09x';
   const MOBILE_GLOBAL = '849x';
   const MOBILE_NOTPREFIX = '9x';
-  const PHONE_NUMBER_PATTERN = '/^(0|84)+(9\d{8}|1\d{9})$/'; // So dien thoai
+  const PHONE_NUMBER_PATTERN = '/^(0?|84)((3|[7-9])\d{8}|1\d{9})$/'; // So dien thoai
   const REGEX_EMAIL = '/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i'; // Email
 
   public static function getMobileNumber($msisdn, $type = self::MOBILE_SIMPLE, $trim = true)

@@ -562,4 +562,98 @@ class userActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
   }
+
+  /**
+   * Ham thay doi thong tin nguoi dung
+   *
+   * @author Tiennx6
+   * @since 29/10/2018
+   * @param sfWebRequest $request
+   * @return sfView
+   */
+  public function executeUpdateUserInfo(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    $vtUser = TblUserTable::getInstance()->getActiveUserById($info['user_id']);
+    if (!$vtUser) {
+      $errorCode = UserErrorCode::NO_RESULTS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $formValues = array(
+      'name' => $request->getPostParameter('name', null),
+      'gender' => $request->getPostParameter('gender', null),
+      'facebook' => $request->getPostParameter('facebook', null),
+      'address' => $request->getPostParameter('address', null),
+      'description' => $request->getPostParameter('description', null),
+      'image_path' => $request->getPostParameter('image', null),
+      'msisdn' => $request->getPostParameter('msisdn', null)
+    );
+
+    $form = new UserInfoForm($vtUser);
+    $form->bind($formValues);
+    if (!$form->isValid()) {
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $widget) {
+        if ($widget->hasError()) {
+          $message = VtHelper::strip_html_tags($widget->getError());
+          break;
+        }
+      }
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    try {
+      // Thuc hien cap nhat form
+      $form->save();
+
+      $errorCode = UserErrorCode::SUCCESS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    } catch (Exception $e) {
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+  }
+
+  /**
+   * Ham lay thong tin nguoi dung
+   *
+   * @author Tiennx6
+   * @since 29/10/2018
+   * @param sfWebRequest $request
+   * @return sfView
+   */
+  public function executeGetUserInfo(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    $vtUser = TblUserTable::getInstance()->getActiveUserById($info['user_id']);
+    if (!$vtUser) {
+      $errorCode = UserErrorCode::NO_RESULTS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $obj = new stdClass();
+    $obj->name = $vtUser->getName();
+    $obj->gender = $vtUser->getGender();
+    $obj->facebook = $vtUser->getFacebook();
+    $obj->address = $vtUser->getAddress();
+    $obj->description = $vtUser->getDescription();
+    $obj->imagePath = $vtUser->getImagePath();
+    $obj->name = $vtUser->getName();
+
+    $errorCode = UserErrorCode::SUCCESS;
+    $message = UserErrorCode::getMessage($errorCode);
+    $jsonObj = new jsonObject($errorCode, $message, $obj);
+    return $this->renderText($jsonObj->toJson());
+  }
 }

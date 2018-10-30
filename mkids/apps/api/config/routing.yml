@@ -27,6 +27,15 @@ validateToken:
 getInformation:
   url: /dieukhoan
   param: { module: about, action: index }
+
+updateUserInfo:
+  url: /updateUserInfo
+  param: { module: user, action: updateUserInfo }
+
+getUserInfo:
+  url: /getUserInfo
+  param: { module: user, action: getUserInfo }
+
 ############ Quan ly thong tin #############
 getSchoolInfo:
   url: /getSchoolInfo

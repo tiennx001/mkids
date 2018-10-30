@@ -3,3 +3,9 @@ signout:
 
 changePassword:
   is_secure: true
+
+updateUserInfo:
+  is_secure: true
+
+viewUserInfo:
+  is_secure: true

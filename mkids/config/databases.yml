@@ -5,12 +5,9 @@ all:
   doctrine:
     class: sfDoctrineDatabase
     param:
-#      dsn:      mysql:host=137.59.106.40;port=3306;dbname=mkids
-#      username: mkids
-#      password: mK1dDB!@#456
-      dsn:      mysql:host=localhost;port=8889;dbname=mkid
-      username: root
-      password: root
+      dsn:      mysql:host=137.59.106.40;port=3306;dbname=mkids
+      username: mkids
+      password: mK1dDB!@#456
       attributes:
         default_table_charset: utf8
         default_table_collate: utf8_general_ci

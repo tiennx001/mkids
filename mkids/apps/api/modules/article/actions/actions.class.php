@@ -208,8 +208,8 @@ class articleActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     }
 
-    $path = VtHelper::generatePath(sfConfig::get('app_user_image_path', '/uploads/images/article'));
-    $fileName = md5($info['account'] . date('YmdHis')) . '.' . sfConfig::get('app_user_image_ext', 'jpg');
+    $path = VtHelper::generatePath(sfConfig::get('app_article_image_path', '/uploads/images/article'));
+    $fileName = md5($info['account'] . date('YmdHis')) . '.' . sfConfig::get('app_conversion_image_extension', 'jpg');
     $avatarPath = $path . $fileName;
     try {
       // Convert and upload image

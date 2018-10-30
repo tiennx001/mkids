@@ -33,3 +33,7 @@ all:
   sms_user: khanhlp
   sms_pass: khanhlp
   sms_sender: 5656
+
+  article_image_path: /uploads/images/article
+  user_image_path: /uploads/images/user
+  conversion_image_extension: jpg
