@@ -160,7 +160,7 @@ getMemberActivity:
 updateHealthStatus:
   url: /updateHealthStatus
   param: { module: member, action: updateHealthStatus }
-getMemberActivity:
+getHealthStatus:
   url: /getHealthStatus
   param: { module: member, action: getHealthStatus }
 updateAbsenceTicket:
