@@ -36,6 +36,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @property Doctrine_Collection $TblNotification
  * @property Doctrine_Collection $TblNotificationHis
  * @property Doctrine_Collection $TblAbsenceTicket
+ * @property Doctrine_Collection $TblReminder
  * 
  * @method string              getName()                   Returns the current record's "name" value
  * @method tinyint             getGender()                 Returns the current record's "gender" value
@@ -66,6 +67,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method Doctrine_Collection getTblNotification()        Returns the current record's "TblNotification" collection
  * @method Doctrine_Collection getTblNotificationHis()     Returns the current record's "TblNotificationHis" collection
  * @method Doctrine_Collection getTblAbsenceTicket()       Returns the current record's "TblAbsenceTicket" collection
+ * @method Doctrine_Collection getTblReminder()            Returns the current record's "TblReminder" collection
  * @method TblUser             setName()                   Sets the current record's "name" value
  * @method TblUser             setGender()                 Sets the current record's "gender" value
  * @method TblUser             setEmail()                  Sets the current record's "email" value
@@ -95,6 +97,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblUser', 'doctrine');
  * @method TblUser             setTblNotification()        Sets the current record's "TblNotification" collection
  * @method TblUser             setTblNotificationHis()     Sets the current record's "TblNotificationHis" collection
  * @method TblUser             setTblAbsenceTicket()       Sets the current record's "TblAbsenceTicket" collection
+ * @method TblUser             setTblReminder()            Sets the current record's "TblReminder" collection
  * 
  * @package    xcode
  * @subpackage model
@@ -249,6 +252,10 @@ abstract class BaseTblUser extends sfDoctrineRecord
              'foreign' => 'sender_id'));
 
         $this->hasMany('TblAbsenceTicket', array(
+             'local' => 'id',
+             'foreign' => 'user_id'));
+
+        $this->hasMany('TblReminder', array(
              'local' => 'id',
              'foreign' => 'user_id'));
 

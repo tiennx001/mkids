@@ -410,15 +410,28 @@ TblNotificationHis:
 TblAbsenceTicket:
   tableName: tbl_absence_ticket
   actAs:
-    Timestampable:
-      updated:
-        disabled: true
+    Timestampable: ~
   columns:
     member_id: { type: integer(8), comment: 'ID học sinh' }
     date: { type: date, comment: 'Ngày nghỉ' }
     reason: { type: string(255), comment: 'Lý do nghỉ' }
     user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
-    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái (0: chưa phê duyệt; 1: đã phê duyệt)' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái (0: chưa phê duyệt; 1: đã phê duyệt; 2: hủy)' }
+    is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
+  relations:
+    TblMember: { class: TblMember, local: member_id }
+    TblUser: { class: TblUser, local: user_id }
+
+TblReminder:
+  tableName: tbl_reminder
+  actAs:
+    Timestampable: ~
+  columns:
+    member_id: { type: integer(8), comment: 'ID học sinh' }
+    description: { type: string(255), comment: 'Thông tin nhắc nhở' }
+    remind_at: { type: datetime, comment: 'Thời gian nhắc' }
+    user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
+    status: { type: boolean, notnull: true, default: false, comment: 'Trạng thái (0: chưa thực hiện; 1: đã thực hiện; 2: hủy)' }
     is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
   relations:
     TblMember: { class: TblMember, local: member_id }

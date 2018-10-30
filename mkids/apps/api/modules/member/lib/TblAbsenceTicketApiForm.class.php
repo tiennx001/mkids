@@ -12,11 +12,12 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
 {
   public function configure()
   {
-    $this->useFields(['member_id','date','reason','status']);
-    $schoolId = $this->getOption('school_id');
+    $this->useFields(['member_id', 'date', 'reason', 'status']);
+    $classIds = $this->getOption('class_ids');
+    $memberIds = $this->getOption('member_ids');
     $this->validatorSchema['member_id'] = new sfValidatorDoctrineChoice(array(
       'model' => $this->getRelatedModelName('TblMember'),
-      'query' => TblMemberTable::getInstance()->getListMemberQuery($schoolId)->andWhere('status = 1'),
+      'query' => TblMemberTable::getInstance()->getMemberByIdsQuery($classIds, $memberIds),
       'required' => true
     ), array(
       'invalid' => 'Học sinh không hợp lệ',
@@ -52,9 +53,19 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
   }
 
   public function checkUpdateStatusCredential($validator, $values) {
-    if (isset($values['status']) && $values['status'] && $this->getOption('user_type') == UserTypeEnum::PARENTS) {
+    $userInfo = $this->getOption('user_info');
+    if (isset($values['status']) && $values['status'] && $userInfo['user_type'] == UserTypeEnum::PARENTS) {
       $errSchema = array('status' => new sfValidatorError($validator, sfContext::getInstance()->getI18N()->__('Bạn không có quyền cập nhật trạng thái đơn xin nghỉ')));
       throw new sfValidatorErrorSchema($validator, $errSchema);
+    }
+    return $values;
+  }
+
+  public function processValues($values) {
+    $values = parent::processValues($values);
+    if ($this->isNew()) {
+      $userInfo = $this->getOption('user_info');
+      $values['user_id'] = $userInfo['user_id'];
     }
     return $values;
   }

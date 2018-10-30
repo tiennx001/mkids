@@ -293,7 +293,6 @@ class memberActions extends sfActions
       try{
         $message = $form->isNew() ? 'Create activity success' : 'Update activity success';
         $form->save();
-
         $errorCode = 0;
       }catch (Exception $e){
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
@@ -315,42 +314,59 @@ class memberActions extends sfActions
 
   public function executeUpdateAbsenceTicket(sfWebRequest $request){
     $data = [];
-    $userId = $this->getUser()->getUserId();
+    $info = $this->getUser()->getAttribute('userInfo');
 
     $formValues['member_id'] = $request->getPostParameter('memberId');
     $formValues['date'] = $request->getPostParameter('date');
     $formValues['reason'] = $request->getPostParameter('reason');
     $formValues['status'] = $request->getPostParameter('status');
 
-    //lay thong tin truong thuoc user dang nhap
-    $school = TblSchoolTable::getInstance()->getActiveSchoolByUserId($userId);
-    if(!$school){
-      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-      $message = UserErrorCode::getMessage($errorCode);
-      $jsonObj = new jsonObject($errorCode, $message, null, $data);
-      return $this->renderText($jsonObj->toJson());
+    $ticket = null;
+    $classIds = null;
+    if ($info['user_type'] == UserTypeEnum::TEACHER) {
+      $classIds = TblUserClassRefTable::getInstance()->getClassIdsByUserId($info['user_id']);
+      $ticketId = $request->getPostParameter('id');
+      if (!$ticketId) {
+        $errorCode = UserErrorCode::MISSING_PARAMETERS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+
+      $ticket = TblAbsenceTicketTable::getInstance()->getActiveTicketById($ticketId);
+      if (!$ticket) {
+        $errorCode = UserErrorCode::NO_RESULTS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
     }
 
-    if(!empty($formValues['member_id']) && !empty($formValues['date'])){
-      $activity = TblAbsenceTicketTable::getInstance()->getTicketByMemberIdAndDate($formValues['member_id'],$formValues['date']);
-    }else{
-      $activity = null;
+    $memberIds = null;
+    if ($info['user_type'] == UserTypeEnum::PARENTS) {
+      $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
+      if(!empty($formValues['member_id']) && !empty($formValues['date'])){
+        $ticket = TblAbsenceTicketTable::getInstance()->getTicketByMemberIdAndDate($formValues['member_id'], $formValues['date']);
+      }
     }
-    $form = new TblAbsenceTicketApiForm($activity, ['school_id' => $school['id']]);
-    if($formValues['status'] == '')
-      $form->useFields(['member_id','date','reason']);
+
+    $form = new TblAbsenceTicketApiForm($ticket, ['class_ids' => $classIds, 'member_ids' => $memberIds, 'user_info' => $info]);
+    if ($formValues['status'] == '') {
+      $form->useFields(['member_id', 'date', 'reason']);
+    }
+
     $form->bind($formValues);
-    if($form->isValid()) {
-      try{
-        $message = $form->isNew() ? 'Create absence ticket success' : 'Update absence ticket success';
+    if ($form->isValid()) {
+      try {
         $form->save();
-        $errorCode = 0;
-      }catch (Exception $e){
+        $errorCode = UserErrorCode::SUCCESS;
+        $message = UserErrorCode::getMessage($errorCode);
+      } catch (Exception $e) {
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
         $message = UserErrorCode::getMessage($errorCode);
         VtHelper::writeLogValue(sprintf('[management][executeCreateAbsenceTicket]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
       }
-    }else{
+    } else {
       $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
       $message = UserErrorCode::getMessage($errorCode);
       foreach ($form as $key => $f) {
@@ -433,14 +449,15 @@ class memberActions extends sfActions
         return $this->renderText($jsonObj->toJson());
       }
 
-      foreach ($listTickets as $activity) {
+      foreach ($listTickets as $ticket) {
         $actObj = new stdClass();
-        $actObj->id = $activity->getTblMember()->getId();
-        $actObj->name = $activity->getTblMember()->getName();
-        $actObj->imagePath = $activity->getTblMember()->getImagePath();
-        $actObj->status= $activity->getStatus();
-        $actObj->description= $activity->getReason();
-        $actObj->date = $activity->getDate();
+        $actObj->id = $ticket->getId();
+        $actObj->member_id = $ticket->getTblMember()->getId();
+        $actObj->name = $ticket->getTblMember()->getName();
+        $actObj->imagePath = $ticket->getTblMember()->getImagePath();
+        $actObj->status= $ticket->getStatus();
+        $actObj->reason= $ticket->getReason();
+        $actObj->date = $ticket->getDate();
         $data[] = $actObj;
       }
 

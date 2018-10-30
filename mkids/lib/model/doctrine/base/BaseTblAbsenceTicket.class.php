@@ -67,7 +67,7 @@ abstract class BaseTblAbsenceTicket extends sfDoctrineRecord
              'type' => 'boolean',
              'notnull' => true,
              'default' => false,
-             'comment' => 'Trạng thái (0: chưa phê duyệt; 1: đã phê duyệt)',
+             'comment' => 'Trạng thái (0: chưa phê duyệt; 1: đã phê duyệt; 2: hủy)',
              ));
         $this->hasColumn('is_delete', 'boolean', null, array(
              'type' => 'boolean',
@@ -87,12 +87,7 @@ abstract class BaseTblAbsenceTicket extends sfDoctrineRecord
              'local' => 'user_id',
              'foreign' => 'id'));
 
-        $timestampable0 = new Doctrine_Template_Timestampable(array(
-             'updated' => 
-             array(
-              'disabled' => true,
-             ),
-             ));
+        $timestampable0 = new Doctrine_Template_Timestampable();
         $this->actAs($timestampable0);
     }
 }

@@ -26,6 +26,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @property Doctrine_Collection $TblMemberHealth
  * @property Doctrine_Collection $TblSummary
  * @property Doctrine_Collection $TblAbsenceTicket
+ * @property Doctrine_Collection $TblReminder
  * 
  * @method string              getName()                   Returns the current record's "name" value
  * @method string              getBirthday()               Returns the current record's "birthday" value
@@ -46,6 +47,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method Doctrine_Collection getTblMemberHealth()        Returns the current record's "TblMemberHealth" collection
  * @method Doctrine_Collection getTblSummary()             Returns the current record's "TblSummary" collection
  * @method Doctrine_Collection getTblAbsenceTicket()       Returns the current record's "TblAbsenceTicket" collection
+ * @method Doctrine_Collection getTblReminder()            Returns the current record's "TblReminder" collection
  * @method TblMember           setName()                   Sets the current record's "name" value
  * @method TblMember           setBirthday()               Sets the current record's "birthday" value
  * @method TblMember           setHeight()                 Sets the current record's "height" value
@@ -65,6 +67,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblMember', 'doctrine');
  * @method TblMember           setTblMemberHealth()        Sets the current record's "TblMemberHealth" collection
  * @method TblMember           setTblSummary()             Sets the current record's "TblSummary" collection
  * @method TblMember           setTblAbsenceTicket()       Sets the current record's "TblAbsenceTicket" collection
+ * @method TblMember           setTblReminder()            Sets the current record's "TblReminder" collection
  * 
  * @package    xcode
  * @subpackage model
@@ -170,6 +173,10 @@ abstract class BaseTblMember extends sfDoctrineRecord
              'foreign' => 'member_id'));
 
         $this->hasMany('TblAbsenceTicket', array(
+             'local' => 'id',
+             'foreign' => 'member_id'));
+
+        $this->hasMany('TblReminder', array(
              'local' => 'id',
              'foreign' => 'member_id'));
 

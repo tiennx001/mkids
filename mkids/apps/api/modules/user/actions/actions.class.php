@@ -589,7 +589,7 @@ class userActions extends sfActions
       'address' => $request->getPostParameter('address', null),
       'description' => $request->getPostParameter('description', null),
       'image_path' => $request->getPostParameter('image', null),
-      'msisdn' => $request->getPostParameter('msisdn', null)
+      'msisdn' => $request->getPostParameter('phone', null)
     );
 
     $form = new UserInfoForm($vtUser);
@@ -649,7 +649,7 @@ class userActions extends sfActions
     $obj->address = $vtUser->getAddress();
     $obj->description = $vtUser->getDescription();
     $obj->imagePath = $vtUser->getImagePath();
-    $obj->name = $vtUser->getName();
+    $obj->phone = mKidsHelper::getMobileNumber($vtUser->getMsisdn(), mKidsHelper::MOBILE_SIMPLE);
 
     $errorCode = UserErrorCode::SUCCESS;
     $message = UserErrorCode::getMessage($errorCode);

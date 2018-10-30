@@ -88,9 +88,6 @@ updateMenuByDate:
 removeMenu:
   url: /removeMenu
   param: { module: management, action: removeMenu }
-updateMemberActivity:
-  url: /updateMemberActivity
-  param: { module: member, action: updateMemberActivity }
 updateParent:
   url: /updateParent
   param: { module: management, action: updateParent }
@@ -154,9 +151,24 @@ createComment:
 getAttendanceByClass:
   url: /getAttendanceByClass
   param: { module: member, action: getAttendanceByClass }
+updateMemberActivity:
+  url: /updateMemberActivity
+  param: { module: member, action: updateMemberActivity }
 getMemberActivity:
   url: /getMemberActivity
   param: { module: member, action: getMemberActivity }
+updateHealthStatus:
+  url: /updateHealthStatus
+  param: { module: member, action: updateHealthStatus }
+getMemberActivity:
+  url: /getHealthStatus
+  param: { module: member, action: getHealthStatus }
+updateAbsenceTicket:
+  url: /updateAbsenceTicket
+  param: { module: member, action: updateAbsenceTicket }
+getAbsenceTicket:
+  url: /getAbsenceTicket
+  param: { module: member, action: getAbsenceTicket }
 ############ END Theo doi hoc sinh ############
 
 ############ Tong ket ############

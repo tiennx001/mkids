@@ -23,6 +23,7 @@ abstract class BaseTblAbsenceTicketForm extends BaseFormDoctrine
       'status'     => new sfWidgetFormInputCheckbox(),
       'is_delete'  => new sfWidgetFormInputCheckbox(),
       'created_at' => new sfWidgetFormDateTime(),
+      'updated_at' => new sfWidgetFormDateTime(),
     ));
 
     $this->setValidators(array(
@@ -34,6 +35,7 @@ abstract class BaseTblAbsenceTicketForm extends BaseFormDoctrine
       'status'     => new sfValidatorBoolean(array('required' => false)),
       'is_delete'  => new sfValidatorBoolean(array('required' => false)),
       'created_at' => new sfValidatorDateTime(),
+      'updated_at' => new sfValidatorDateTime(),
     ));
 
     $this->widgetSchema->setNameFormat('tbl_absence_ticket[%s]');
