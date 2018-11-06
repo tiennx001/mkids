@@ -10,15 +10,18 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticleRef', 'doctrine');
  * @property integer $member_id
  * @property integer $class_id
  * @property integer $group_id
+ * @property integer $school_id
  * @property integer $article_id
  * 
  * @method integer       getMemberId()   Returns the current record's "member_id" value
  * @method integer       getClassId()    Returns the current record's "class_id" value
  * @method integer       getGroupId()    Returns the current record's "group_id" value
+ * @method integer       getSchoolId()   Returns the current record's "school_id" value
  * @method integer       getArticleId()  Returns the current record's "article_id" value
  * @method TblArticleRef setMemberId()   Sets the current record's "member_id" value
  * @method TblArticleRef setClassId()    Sets the current record's "class_id" value
  * @method TblArticleRef setGroupId()    Sets the current record's "group_id" value
+ * @method TblArticleRef setSchoolId()   Sets the current record's "school_id" value
  * @method TblArticleRef setArticleId()  Sets the current record's "article_id" value
  * 
  * @package    xcode
@@ -44,6 +47,11 @@ abstract class BaseTblArticleRef extends sfDoctrineRecord
         $this->hasColumn('group_id', 'integer', 8, array(
              'type' => 'integer',
              'comment' => 'ID khối',
+             'length' => 8,
+             ));
+        $this->hasColumn('school_id', 'integer', 8, array(
+             'type' => 'integer',
+             'comment' => 'ID trường',
              'length' => 8,
              ));
         $this->hasColumn('article_id', 'integer', 8, array(

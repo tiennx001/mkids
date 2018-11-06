@@ -50,24 +50,30 @@ class ArticleValidateForm extends BaseTblArticleForm
       'required' => $i18n->__('Vui lòng nhập loại tin tức')
     ));
 
+    $groupIds = TblGroupTable::getInstance()->getActiveGroupIdsByUserId($this->getOption('user_id'), $this->getOption('user_type'));
     $this->validatorSchema['tbl_group_list'] = new sfValidatorDoctrineChoice(array(
-      'required' => false,
+      'required' => $this->getOption('article_type') == ArticleTypeEnum::GROUPS,
       'model' => 'TblGroup',
       'column' => 'id',
+      'query' => TblGroupTable::getInstance()->getActiveQuery('a')->andWhereIn('a.id', $groupIds),
       'multiple' => true
     ));
 
+    $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($this->getOption('user_id'), $this->getOption('user_type'));
     $this->validatorSchema['tbl_class_list'] = new sfValidatorDoctrineChoice(array(
-      'required' => false,
+      'required' => $this->getOption('article_type') == ArticleTypeEnum::CLASSES,
       'model' => 'TblClass',
       'column' => 'id',
+      'query' => TblClassTable::getInstance()->getActiveQuery('a')->andWhereIn('a.id', $classIds),
       'multiple' => true
     ));
 
+    $memberIds = TblMemberTable::getInstance()->getActiveMemberIdsByUserId($this->getOption('user_id'), $this->getOption('user_type'));
     $this->validatorSchema['tbl_member_list'] = new sfValidatorDoctrineChoice(array(
-      'required' => false,
+      'required' => $this->getOption('article_type') == ArticleTypeEnum::MEMBERS,
       'model' => 'TblMember',
       'column' => 'id',
+      'query' => TblMemberTable::getInstance()->getActiveQuery('a')->andWhereIn('a.id', $memberIds),
       'multiple' => true
     ));
 

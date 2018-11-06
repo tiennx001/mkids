@@ -16,6 +16,7 @@ abstract class BaseTblArticleRefFormFilter extends BaseFormFilterDoctrine
       'member_id'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblMember'), 'add_empty' => true)),
       'class_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblClass'), 'add_empty' => true)),
       'group_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblGroup'), 'add_empty' => true)),
+      'school_id'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblSchool'), 'add_empty' => true)),
       'article_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblArticle'), 'add_empty' => true)),
     ));
 
@@ -23,6 +24,7 @@ abstract class BaseTblArticleRefFormFilter extends BaseFormFilterDoctrine
       'member_id'  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblMember'), 'column' => 'id')),
       'class_id'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblClass'), 'column' => 'id')),
       'group_id'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblGroup'), 'column' => 'id')),
+      'school_id'  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblSchool'), 'column' => 'id')),
       'article_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblArticle'), 'column' => 'id')),
     ));
 
@@ -47,6 +49,7 @@ abstract class BaseTblArticleRefFormFilter extends BaseFormFilterDoctrine
       'member_id'  => 'ForeignKey',
       'class_id'   => 'ForeignKey',
       'group_id'   => 'ForeignKey',
+      'school_id'  => 'ForeignKey',
       'article_id' => 'ForeignKey',
     );
   }

@@ -19,6 +19,7 @@ abstract class BaseTblNotificationProgramRefForm extends BaseFormDoctrine
       'member_id'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblMember'), 'add_empty' => true)),
       'class_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblClass'), 'add_empty' => true)),
       'group_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblGroup'), 'add_empty' => true)),
+      'school_id'  => new sfWidgetFormInputText(),
       'program_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblNotificationProgram'), 'add_empty' => false)),
     ));
 
@@ -27,6 +28,7 @@ abstract class BaseTblNotificationProgramRefForm extends BaseFormDoctrine
       'member_id'  => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblMember'), 'required' => false)),
       'class_id'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblClass'), 'required' => false)),
       'group_id'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblGroup'), 'required' => false)),
+      'school_id'  => new sfValidatorInteger(array('required' => false)),
       'program_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblNotificationProgram'))),
     ));
 

@@ -39,11 +39,7 @@ class memberActions extends sfActions
 
     $data = array();
     try {
-      $classIds = null;
-      if ($info['user_type'] == UserTypeEnum::TEACHER) {
-        $classIds = TblClassTable::getInstance()->getClassIdsByUserId($info['user_id']);
-      }
-
+      $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($info['user_id'], $info['user_type']);
       $date = $request->getPostParameter('date', null);
       if (!$date) {
         $errorCode = UserErrorCode::MISSING_PARAMETERS;

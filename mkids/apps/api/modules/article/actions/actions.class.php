@@ -72,7 +72,11 @@ class articleActions extends sfActions
       'tbl_member_list' => $memberArr
     );
 
-    $form = new ArticleValidateForm();
+    $form = new ArticleValidateForm(array(), array(
+      'user_id' => $info['user_id'],
+      'user_type' => $info['user_type'],
+      'article_type' => $type
+    ));
     $form->bind($values);
     if (!$form->isValid()) {
       VtHelper::writeLogValue('executeUpdateArticle|Acc=' . $info['account'] . '|Request values are not valid');
@@ -112,42 +116,49 @@ class articleActions extends sfActions
       $article->setUpdatedAt(date("Y-m-d H:i:s"));
       $article->save();
 
-      if (count($groupArr) || count($classArr) || count($memberArr)) {
-        if (!$isNew) {
-          // Delete old reference
-          TblArticleRefTable::getInstance()->deleteOldData($article->getId());
-        }
-
-        $coll = new Doctrine_Collection('TblArticleRef');
-        // Save reference table
-        switch ($type) {
-          case NotificationProgTypeEnum::TO_GROUP:
-            foreach ($groupArr as $groupId) {
-              $notifProgRef = new TblArticleRef();
-              $notifProgRef->setArticleId($article->getId());
-              $notifProgRef->setGroupId($groupId);
-              $coll->add($notifProgRef);
-            }
-            break;
-          case NotificationProgTypeEnum::TO_CLASS:
-            foreach ($classArr as $classId) {
-              $notifProgRef = new TblArticleRef();
-              $notifProgRef->setArticleId($article->getId());
-              $notifProgRef->setClassId($classId);
-              $coll->add($notifProgRef);
-            }
-            break;
-          case NotificationProgTypeEnum::TO_MEMBER:
-            foreach ($memberArr as $memberId) {
-              $notifProgRef = new TblArticleRef();
-              $notifProgRef->setArticleId($article->getId());
-              $notifProgRef->setMemberId($memberId);
-              $coll->add($notifProgRef);
-            }
-            break;
-        }
-        $coll->save();
+      if (!$isNew) {
+        // Delete old reference
+        TblArticleRefTable::getInstance()->deleteOldData($article->getId());
       }
+
+      $coll = new Doctrine_Collection('TblArticleRef');
+      // Save reference table
+      switch ($type) {
+        case ArticleTypeEnum::ALL:
+          $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($this->getOption('user_id'), $this->getOption('user_type'));
+          foreach ($schoolIds as $schoolId) {
+            $articleRef = new TblArticleRef();
+            $articleRef->setArticleId($article->getId());
+            $articleRef->setSchoolId($schoolId);
+            $coll->add($articleRef);
+          }
+          break;
+        case ArticleTypeEnum::GROUPS:
+          foreach ($groupArr as $groupId) {
+            $articleRef = new TblArticleRef();
+            $articleRef->setArticleId($article->getId());
+            $articleRef->setGroupId($groupId);
+            $coll->add($articleRef);
+          }
+          break;
+        case ArticleTypeEnum::CLASSES:
+          foreach ($classArr as $classId) {
+            $articleRef = new TblArticleRef();
+            $articleRef->setArticleId($article->getId());
+            $articleRef->setClassId($classId);
+            $coll->add($articleRef);
+          }
+          break;
+        case ArticleTypeEnum::MEMBERS:
+          foreach ($memberArr as $memberId) {
+            $articleRef = new TblArticleRef();
+            $articleRef->setArticleId($article->getId());
+            $articleRef->setMemberId($memberId);
+            $coll->add($articleRef);
+          }
+          break;
+      }
+      $coll->save();
 
       $errorCode = UserErrorCode::SUCCESS;
       $message = UserErrorCode::getMessage($errorCode);
@@ -313,7 +324,11 @@ class articleActions extends sfActions
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $listArticles = TblArticleTable::getInstance()->getListArticles($kw, $offset, $pageSize, $info['user_id'], $info['user_type']);
+      $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($info['user_id'], $info['user_type']);
+      $groupIds = TblGroupTable::getInstance()->getActiveGroupIdsByUserId($info['user_id'], $info['user_type']);
+      $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($info['user_id'], $info['user_type']);
+      $memberIds = TblMemberTable::getInstance()->getActiveMemberIdsByUserId($info['user_id'], $info['user_type']);
+      $listArticles = TblArticleTable::getInstance()->getListArticles($kw, $offset, $pageSize, $schoolIds, $groupIds, $classIds, $memberIds);
       if (count($listArticles)) {
         foreach ($listArticles as $article) {
           $item = new stdClass();

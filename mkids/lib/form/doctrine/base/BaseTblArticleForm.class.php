@@ -24,6 +24,7 @@ abstract class BaseTblArticleForm extends BaseFormDoctrine
       'is_delete'       => new sfWidgetFormInputCheckbox(),
       'created_at'      => new sfWidgetFormDateTime(),
       'updated_at'      => new sfWidgetFormDateTime(),
+      'tbl_school_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'TblSchool')),
       'tbl_group_list'  => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'TblGroup')),
       'tbl_class_list'  => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'TblClass')),
       'tbl_member_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'TblMember')),
@@ -39,6 +40,7 @@ abstract class BaseTblArticleForm extends BaseFormDoctrine
       'is_delete'       => new sfValidatorBoolean(array('required' => false)),
       'created_at'      => new sfValidatorDateTime(),
       'updated_at'      => new sfValidatorDateTime(),
+      'tbl_school_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'TblSchool', 'required' => false)),
       'tbl_group_list'  => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'TblGroup', 'required' => false)),
       'tbl_class_list'  => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'TblClass', 'required' => false)),
       'tbl_member_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'TblMember', 'required' => false)),
@@ -62,6 +64,11 @@ abstract class BaseTblArticleForm extends BaseFormDoctrine
   {
     parent::updateDefaultsFromObject();
 
+    if (isset($this->widgetSchema['tbl_school_list']))
+    {
+      $this->setDefault('tbl_school_list', $this->object->TblSchool->getPrimaryKeys());
+    }
+
     if (isset($this->widgetSchema['tbl_group_list']))
     {
       $this->setDefault('tbl_group_list', $this->object->TblGroup->getPrimaryKeys());
@@ -81,11 +88,50 @@ abstract class BaseTblArticleForm extends BaseFormDoctrine
 
   protected function doSave($con = null)
   {
+    $this->saveTblSchoolList($con);
     $this->saveTblGroupList($con);
     $this->saveTblClassList($con);
     $this->saveTblMemberList($con);
 
     parent::doSave($con);
+  }
+
+  public function saveTblSchoolList($con = null)
+  {
+    if (!$this->isValid())
+    {
+      throw $this->getErrorSchema();
+    }
+
+    if (!isset($this->widgetSchema['tbl_school_list']))
+    {
+      // somebody has unset this widget
+      return;
+    }
+
+    if (null === $con)
+    {
+      $con = $this->getConnection();
+    }
+
+    $existing = $this->object->TblSchool->getPrimaryKeys();
+    $values = $this->getValue('tbl_school_list');
+    if (!is_array($values))
+    {
+      $values = array();
+    }
+
+    $unlink = array_diff($existing, $values);
+    if (count($unlink))
+    {
+      $this->object->unlink('TblSchool', array_values($unlink));
+    }
+
+    $link = array_diff($values, $existing);
+    if (count($link))
+    {
+      $this->object->link('TblSchool', array_values($link));
+    }
   }
 
   public function saveTblGroupList($con = null)

@@ -19,6 +19,7 @@ abstract class BaseTblArticleRefForm extends BaseFormDoctrine
       'member_id'  => new sfWidgetFormInputText(),
       'class_id'   => new sfWidgetFormInputText(),
       'group_id'   => new sfWidgetFormInputText(),
+      'school_id'  => new sfWidgetFormInputText(),
       'article_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblArticle'), 'add_empty' => false)),
     ));
 
@@ -27,6 +28,7 @@ abstract class BaseTblArticleRefForm extends BaseFormDoctrine
       'member_id'  => new sfValidatorInteger(array('required' => false)),
       'class_id'   => new sfValidatorInteger(array('required' => false)),
       'group_id'   => new sfValidatorInteger(array('required' => false)),
+      'school_id'  => new sfValidatorInteger(array('required' => false)),
       'article_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('TblArticle'))),
     ));
 

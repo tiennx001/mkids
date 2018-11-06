@@ -9,38 +9,53 @@ Doctrine_Manager::getInstance()->bindComponent('TblNotificationProgram', 'doctri
  * 
  * @property string $name
  * @property tinyint $type
+ * @property string $title
  * @property string $content
+ * @property string $image_path
  * @property integer $article_id
  * @property datetime $start_time
+ * @property datetime $end_time
  * @property integer $user_id
  * @property tinyint $status
+ * @property boolean $bypass
  * @property TblUser $TblUser
  * @property TblArticle $TblArticle
+ * @property Doctrine_Collection $TblSchool
  * @property Doctrine_Collection $TblGroup
  * @property Doctrine_Collection $TblClass
  * @property Doctrine_Collection $TblMember
  * 
  * @method string                 getName()       Returns the current record's "name" value
  * @method tinyint                getType()       Returns the current record's "type" value
+ * @method string                 getTitle()      Returns the current record's "title" value
  * @method string                 getContent()    Returns the current record's "content" value
+ * @method string                 getImagePath()  Returns the current record's "image_path" value
  * @method integer                getArticleId()  Returns the current record's "article_id" value
  * @method datetime               getStartTime()  Returns the current record's "start_time" value
+ * @method datetime               getEndTime()    Returns the current record's "end_time" value
  * @method integer                getUserId()     Returns the current record's "user_id" value
  * @method tinyint                getStatus()     Returns the current record's "status" value
+ * @method boolean                getBypass()     Returns the current record's "bypass" value
  * @method TblUser                getTblUser()    Returns the current record's "TblUser" value
  * @method TblArticle             getTblArticle() Returns the current record's "TblArticle" value
+ * @method Doctrine_Collection    getTblSchool()  Returns the current record's "TblSchool" collection
  * @method Doctrine_Collection    getTblGroup()   Returns the current record's "TblGroup" collection
  * @method Doctrine_Collection    getTblClass()   Returns the current record's "TblClass" collection
  * @method Doctrine_Collection    getTblMember()  Returns the current record's "TblMember" collection
  * @method TblNotificationProgram setName()       Sets the current record's "name" value
  * @method TblNotificationProgram setType()       Sets the current record's "type" value
+ * @method TblNotificationProgram setTitle()      Sets the current record's "title" value
  * @method TblNotificationProgram setContent()    Sets the current record's "content" value
+ * @method TblNotificationProgram setImagePath()  Sets the current record's "image_path" value
  * @method TblNotificationProgram setArticleId()  Sets the current record's "article_id" value
  * @method TblNotificationProgram setStartTime()  Sets the current record's "start_time" value
+ * @method TblNotificationProgram setEndTime()    Sets the current record's "end_time" value
  * @method TblNotificationProgram setUserId()     Sets the current record's "user_id" value
  * @method TblNotificationProgram setStatus()     Sets the current record's "status" value
+ * @method TblNotificationProgram setBypass()     Sets the current record's "bypass" value
  * @method TblNotificationProgram setTblUser()    Sets the current record's "TblUser" value
  * @method TblNotificationProgram setTblArticle() Sets the current record's "TblArticle" value
+ * @method TblNotificationProgram setTblSchool()  Sets the current record's "TblSchool" collection
  * @method TblNotificationProgram setTblGroup()   Sets the current record's "TblGroup" collection
  * @method TblNotificationProgram setTblClass()   Sets the current record's "TblClass" collection
  * @method TblNotificationProgram setTblMember()  Sets the current record's "TblMember" collection
@@ -58,7 +73,7 @@ abstract class BaseTblNotificationProgram extends sfDoctrineRecord
         $this->hasColumn('name', 'string', 255, array(
              'type' => 'string',
              'notnull' => true,
-             'comment' => 'Tiêu đề',
+             'comment' => 'Tên chương trình ',
              'length' => 255,
              ));
         $this->hasColumn('type', 'tinyint', 2, array(
@@ -68,11 +83,22 @@ abstract class BaseTblNotificationProgram extends sfDoctrineRecord
              'comment' => 'Phạm vi thông báo (0 - Toàn trường; 1 - Theo khối; 2 - Theo lớp; 3 - Từng cá nhân)',
              'length' => 2,
              ));
-        $this->hasColumn('content', 'string', 1024, array(
+        $this->hasColumn('title', 'string', 1024, array(
+             'type' => 'string',
+             'notnull' => true,
+             'comment' => 'Tiêu đề thông báo',
+             'length' => 1024,
+             ));
+        $this->hasColumn('content', 'string', 65535, array(
              'type' => 'string',
              'notnull' => true,
              'comment' => 'Nội dung thông báo',
-             'length' => 1024,
+             'length' => 65535,
+             ));
+        $this->hasColumn('image_path', 'string', 255, array(
+             'type' => 'string',
+             'comment' => 'Đường dẫn ảnh minh họa',
+             'length' => 255,
              ));
         $this->hasColumn('article_id', 'integer', 8, array(
              'type' => 'integer',
@@ -84,6 +110,11 @@ abstract class BaseTblNotificationProgram extends sfDoctrineRecord
              'notnull' => true,
              'comment' => 'Thời gian bắt đầu',
              ));
+        $this->hasColumn('end_time', 'datetime', null, array(
+             'type' => 'datetime',
+             'notnull' => true,
+             'comment' => 'Thời gian kết thúc',
+             ));
         $this->hasColumn('user_id', 'integer', 8, array(
              'type' => 'integer',
              'notnull' => true,
@@ -94,8 +125,13 @@ abstract class BaseTblNotificationProgram extends sfDoctrineRecord
              'type' => 'tinyint',
              'notnull' => true,
              'default' => 0,
-             'comment' => 'Trạng thái (0: nháp; 1: chờ phê duyệt; 2: phê duyệt; 3: đã gửi)',
+             'comment' => 'Trạng thái (0: mới tạo; 1: sẵn sàng; 2: chờ gửi test; 3: đang gửi test; 4: hoàn thành test; 5: chờ gửi; 6: đang gửi; 7: hoàn thành gửi; 8: hủy)',
              'length' => 2,
+             ));
+        $this->hasColumn('bypass', 'boolean', null, array(
+             'type' => 'boolean',
+             'default' => false,
+             'comment' => 'Chấp nhận gửi ngoài giờ hành chính (0: không; 1: có)',
              ));
     }
 
@@ -109,6 +145,11 @@ abstract class BaseTblNotificationProgram extends sfDoctrineRecord
         $this->hasOne('TblArticle', array(
              'local' => 'article_id',
              'foreign' => 'id'));
+
+        $this->hasMany('TblSchool', array(
+             'refClass' => 'TblNotificationProgramRef',
+             'local' => 'program_id',
+             'foreign' => 'school_id'));
 
         $this->hasMany('TblGroup', array(
              'refClass' => 'TblNotificationProgramRef',

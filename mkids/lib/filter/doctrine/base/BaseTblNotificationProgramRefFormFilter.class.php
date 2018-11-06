@@ -16,6 +16,7 @@ abstract class BaseTblNotificationProgramRefFormFilter extends BaseFormFilterDoc
       'member_id'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblMember'), 'add_empty' => true)),
       'class_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblClass'), 'add_empty' => true)),
       'group_id'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblGroup'), 'add_empty' => true)),
+      'school_id'  => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblSchool'), 'add_empty' => true)),
       'program_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('TblNotificationProgram'), 'add_empty' => true)),
     ));
 
@@ -23,6 +24,7 @@ abstract class BaseTblNotificationProgramRefFormFilter extends BaseFormFilterDoc
       'member_id'  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblMember'), 'column' => 'id')),
       'class_id'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblClass'), 'column' => 'id')),
       'group_id'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblGroup'), 'column' => 'id')),
+      'school_id'  => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblSchool'), 'column' => 'id')),
       'program_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('TblNotificationProgram'), 'column' => 'id')),
     ));
 
@@ -47,6 +49,7 @@ abstract class BaseTblNotificationProgramRefFormFilter extends BaseFormFilterDoc
       'member_id'  => 'ForeignKey',
       'class_id'   => 'ForeignKey',
       'group_id'   => 'ForeignKey',
+      'school_id'  => 'ForeignKey',
       'program_id' => 'ForeignKey',
     );
   }

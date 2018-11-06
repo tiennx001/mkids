@@ -17,27 +17,33 @@ Doctrine_Manager::getInstance()->bindComponent('TblSchool', 'doctrine');
  * @property Doctrine_Collection $TblUser
  * @property Doctrine_Collection $TblGroup
  * @property Doctrine_Collection $TblMenu
+ * @property Doctrine_Collection $TblNotificationProgram
+ * @property Doctrine_Collection $TblArticle
  * 
- * @method string              getName()        Returns the current record's "name" value
- * @method string              getPhone()       Returns the current record's "phone" value
- * @method string              getEmail()       Returns the current record's "email" value
- * @method string              getWebsite()     Returns the current record's "website" value
- * @method string              getAddress()     Returns the current record's "address" value
- * @method string              getDescription() Returns the current record's "description" value
- * @method boolean             getStatus()      Returns the current record's "status" value
- * @method Doctrine_Collection getTblUser()     Returns the current record's "TblUser" collection
- * @method Doctrine_Collection getTblGroup()    Returns the current record's "TblGroup" collection
- * @method Doctrine_Collection getTblMenu()     Returns the current record's "TblMenu" collection
- * @method TblSchool           setName()        Sets the current record's "name" value
- * @method TblSchool           setPhone()       Sets the current record's "phone" value
- * @method TblSchool           setEmail()       Sets the current record's "email" value
- * @method TblSchool           setWebsite()     Sets the current record's "website" value
- * @method TblSchool           setAddress()     Sets the current record's "address" value
- * @method TblSchool           setDescription() Sets the current record's "description" value
- * @method TblSchool           setStatus()      Sets the current record's "status" value
- * @method TblSchool           setTblUser()     Sets the current record's "TblUser" collection
- * @method TblSchool           setTblGroup()    Sets the current record's "TblGroup" collection
- * @method TblSchool           setTblMenu()     Sets the current record's "TblMenu" collection
+ * @method string              getName()                   Returns the current record's "name" value
+ * @method string              getPhone()                  Returns the current record's "phone" value
+ * @method string              getEmail()                  Returns the current record's "email" value
+ * @method string              getWebsite()                Returns the current record's "website" value
+ * @method string              getAddress()                Returns the current record's "address" value
+ * @method string              getDescription()            Returns the current record's "description" value
+ * @method boolean             getStatus()                 Returns the current record's "status" value
+ * @method Doctrine_Collection getTblUser()                Returns the current record's "TblUser" collection
+ * @method Doctrine_Collection getTblGroup()               Returns the current record's "TblGroup" collection
+ * @method Doctrine_Collection getTblMenu()                Returns the current record's "TblMenu" collection
+ * @method Doctrine_Collection getTblNotificationProgram() Returns the current record's "TblNotificationProgram" collection
+ * @method Doctrine_Collection getTblArticle()             Returns the current record's "TblArticle" collection
+ * @method TblSchool           setName()                   Sets the current record's "name" value
+ * @method TblSchool           setPhone()                  Sets the current record's "phone" value
+ * @method TblSchool           setEmail()                  Sets the current record's "email" value
+ * @method TblSchool           setWebsite()                Sets the current record's "website" value
+ * @method TblSchool           setAddress()                Sets the current record's "address" value
+ * @method TblSchool           setDescription()            Sets the current record's "description" value
+ * @method TblSchool           setStatus()                 Sets the current record's "status" value
+ * @method TblSchool           setTblUser()                Sets the current record's "TblUser" collection
+ * @method TblSchool           setTblGroup()               Sets the current record's "TblGroup" collection
+ * @method TblSchool           setTblMenu()                Sets the current record's "TblMenu" collection
+ * @method TblSchool           setTblNotificationProgram() Sets the current record's "TblNotificationProgram" collection
+ * @method TblSchool           setTblArticle()             Sets the current record's "TblArticle" collection
  * 
  * @package    xcode
  * @subpackage model
@@ -103,6 +109,16 @@ abstract class BaseTblSchool extends sfDoctrineRecord
         $this->hasMany('TblMenu', array(
              'local' => 'id',
              'foreign' => 'school_id'));
+
+        $this->hasMany('TblNotificationProgram', array(
+             'refClass' => 'TblNotificationProgramRef',
+             'local' => 'school_id',
+             'foreign' => 'program_id'));
+
+        $this->hasMany('TblArticle', array(
+             'refClass' => 'TblArticleRef',
+             'local' => 'school_id',
+             'foreign' => 'article_id'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();
         $this->actAs($timestampable0);

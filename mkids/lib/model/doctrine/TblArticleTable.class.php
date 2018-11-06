@@ -32,10 +32,16 @@ class TblArticleTable extends Doctrine_Table
       ->fetchOne();
   }
 
-  public function getListArticles($kw, $offset, $limit, $userId, $userType)
+  public function getListArticles($kw, $offset, $limit, $schoolIds, $groupIds, $classIds, $memberIds)
   {
     $q = $this->getActiveQuery('a')
-      ->andWhere('a.user_id = ?', $userId);
+      ->leftJoin('a.TblArticleRef ar')
+      ->andWhere(sprintf('ar.school_id IN (%s) OR ar.group_id IN (%s) OR ar.class_id IN (%s) OR ar.member_id IN (%s)',
+        implode(',', $schoolIds),
+        implode(',', $groupIds),
+        implode(',', $classIds),
+        implode(',', $memberIds)
+      ));
 
     if ($kw) {
       $q->andWhere('a.title LIKE ?', '%' . $kw . '%');
@@ -46,31 +52,20 @@ class TblArticleTable extends Doctrine_Table
       ->execute();
   }
 
-  public function getArticleById($id) {
+  public function getArticleById($id)
+  {
     return $this->getActiveQuery('a')
       ->andWhere('a.id = ?', $id)
       ->fetchOne();
   }
 
-  public function checkArticleForSchool($id, $schoolIds, $userType = UserTypeEnum::PRINCIPAL)
+  public function checkArticleForSchool($id, $schoolIds)
   {
-    if ($userType == UserTypeEnum::TEACHER) {
-      return $this->getActiveQuery('a')
-        ->leftJoin('a.TblUser u')
-        ->leftJoin('u.TblClass c')
-        ->leftJoin('c.TblGroup g')
-        ->leftJoin('g.TblSchool s')
-        ->andWhere('a.id = ?', $id)
-        ->andWhereIn('s.id', $schoolIds)
-        ->count();
-    } else {
-      return $this->getActiveQuery('a')
-        ->leftJoin('a.TblUser u')
-        ->leftJoin('u.TblUserSchoolRef r')
-        ->andWhere('a.id = ?', $id)
-        ->andWhereIn('r.id', $schoolIds)
-        ->count();
-    }
+    return $this->getActiveQuery('a')
+      ->leftJoin('a.TblArticleRef ar')
+      ->andWhere('a.id = ?', $id)
+      ->andWhereIn('ar.school_id', $schoolIds)
+      ->count();
   }
 
   public function checkArticleForGroups($id, $groupIds)
@@ -106,8 +101,7 @@ class TblArticleTable extends Doctrine_Table
       case ArticleTypeEnum::ALL:
         $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($userId, $userType);
         if ($schoolIds) {
-          return $this->checkArticleForSchool($id, $schoolIds, UserTypeEnum::PRINCIPAL) ||
-          $this->checkArticleForSchool($id, $schoolIds, UserTypeEnum::TEACHER);
+          return $this->checkArticleForSchool($id, $schoolIds);
         }
         break;
       case ArticleTypeEnum::GROUPS:

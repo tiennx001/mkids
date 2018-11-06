@@ -14,6 +14,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @property boolean $status
  * @property boolean $is_delete
  * @property TblUser $TblUser
+ * @property Doctrine_Collection $TblSchool
  * @property Doctrine_Collection $TblGroup
  * @property Doctrine_Collection $TblClass
  * @property Doctrine_Collection $TblMember
@@ -30,6 +31,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method boolean             getStatus()                 Returns the current record's "status" value
  * @method boolean             getIsDelete()               Returns the current record's "is_delete" value
  * @method TblUser             getTblUser()                Returns the current record's "TblUser" value
+ * @method Doctrine_Collection getTblSchool()              Returns the current record's "TblSchool" collection
  * @method Doctrine_Collection getTblGroup()               Returns the current record's "TblGroup" collection
  * @method Doctrine_Collection getTblClass()               Returns the current record's "TblClass" collection
  * @method Doctrine_Collection getTblMember()              Returns the current record's "TblMember" collection
@@ -45,6 +47,7 @@ Doctrine_Manager::getInstance()->bindComponent('TblArticle', 'doctrine');
  * @method TblArticle          setStatus()                 Sets the current record's "status" value
  * @method TblArticle          setIsDelete()               Sets the current record's "is_delete" value
  * @method TblArticle          setTblUser()                Sets the current record's "TblUser" value
+ * @method TblArticle          setTblSchool()              Sets the current record's "TblSchool" collection
  * @method TblArticle          setTblGroup()               Sets the current record's "TblGroup" collection
  * @method TblArticle          setTblClass()               Sets the current record's "TblClass" collection
  * @method TblArticle          setTblMember()              Sets the current record's "TblMember" collection
@@ -108,6 +111,11 @@ abstract class BaseTblArticle extends sfDoctrineRecord
         $this->hasOne('TblUser', array(
              'local' => 'user_id',
              'foreign' => 'id'));
+
+        $this->hasMany('TblSchool', array(
+             'refClass' => 'TblArticleRef',
+             'local' => 'article_id',
+             'foreign' => 'school_id'));
 
         $this->hasMany('TblGroup', array(
              'refClass' => 'TblArticleRef',

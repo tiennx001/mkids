@@ -232,16 +232,21 @@ TblNotificationProgram:
   actAs:
     Timestampable: ~
   columns:
-    name: { type: string(255), notnull: true, comment: 'Tiêu đề' }
+    name: { type: string(255), notnull: true, comment: 'Tên chương trình ' }
     type: { type: tinyint(2), notnull: true, default: 0, comment: 'Phạm vi thông báo (0 - Toàn trường; 1 - Theo khối; 2 - Theo lớp; 3 - Từng cá nhân)' }
-    content: { type: string(1024), notnull: true, comment: 'Nội dung thông báo' }
+    title: { type: string(1024), notnull: true, comment: 'Tiêu đề thông báo' }
+    content: { type: string(65535), notnull: true, comment: 'Nội dung thông báo' }
+    image_path: { type: string(255), comment: 'Đường dẫn ảnh minh họa' }
     article_id: { type: integer(8), comment: 'Gắn thông báo vào bài viết' }
     start_time: { type: datetime, notnull: true, comment: 'Thời gian bắt đầu' }
+    end_time: { type: datetime, notnull: true, comment: 'Thời gian kết thúc' }
     user_id: { type: integer(8), notnull: true, comment: 'ID người tạo' }
-    status: { type: tinyint(2), notnull: true, default: 0, comment: 'Trạng thái (0: nháp; 1: chờ phê duyệt; 2: phê duyệt; 3: đã gửi)' }
+    status: { type: tinyint(2), notnull: true, default: 0, comment: 'Trạng thái (0: mới tạo; 1: sẵn sàng; 2: chờ gửi test; 3: đang gửi test; 4: hoàn thành test; 5: chờ gửi; 6: đang gửi; 7: hoàn thành gửi; 8: hủy)' }
+    bypass: { type: boolean, default: false, comment: 'Chấp nhận gửi ngoài giờ hành chính (0: không; 1: có)' }
   relations:
     TblUser: { class: TblUser, local: user_id }
     TblArticle: { class: TblArticle, local: article_id }
+    TblSchool: { class: TblSchool, refClass: TblNotificationProgramRef, local: program_id, foreign: school_id }
     TblGroup: { class: TblGroup, refClass: TblNotificationProgramRef, local: program_id, foreign: group_id }
     TblClass: { class: TblClass, refClass: TblNotificationProgramRef, local: program_id, foreign: class_id }
     TblMember: { class: TblMember, refClass: TblNotificationProgramRef, local: program_id, foreign: member_id }
@@ -258,6 +263,7 @@ TblNotificationProgramRef:
     member_id: { type: integer(8), comment: 'ID học sinh' }
     class_id: { type: integer(8), comment: 'ID lớp học' }
     group_id: { type: integer(8), comment: 'ID khối' }
+    school_id: { type: integer(8), comment: 'ID trường' }
     program_id: { type: integer(8), notnull: true, comment: 'ID chương trình' }
 
 TblArticle:
@@ -273,6 +279,7 @@ TblArticle:
     is_delete: { type: boolean, default: false, comment: 'Trạng thái xóa (0: chưa xóa - 1: đã xóa)' }
   relations:
     TblUser: { class: TblUser, local: user_id }
+    TblSchool: { class: TblSchool, refClass: TblArticleRef, local: article_id, foreign: school_id }
     TblGroup: { class: TblGroup, refClass: TblArticleRef, local: article_id, foreign: group_id }
     TblClass: { class: TblClass, refClass: TblArticleRef, local: article_id, foreign: class_id }
     TblMember: { class: TblMember, refClass: TblArticleRef, local: article_id, foreign: member_id }
@@ -302,6 +309,7 @@ TblArticleRef:
     member_id: { type: integer(8), comment: 'ID học sinh' }
     class_id: { type: integer(8), comment: 'ID lớp học' }
     group_id: { type: integer(8), comment: 'ID khối' }
+    school_id: { type: integer(8), comment: 'ID trường' }
     article_id: { type: integer(8), notnull: true, comment: 'ID bài viết' }
 
 TblComment:
