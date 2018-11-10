@@ -25,10 +25,9 @@ class TblAbsenceTicketTable extends Doctrine_Table
 
   public function getTicketByMemberIdAndDate($memberId, $date)
   {
-    return $this->createQuery()
-      ->where('is_delete = 0')
-      ->andWhere('member_id = ?', $memberId)
-      ->andWhere('date = ?', $date)
+    return $this->getActiveQuery('at')
+      ->andWhere('at.member_id = ?', $memberId)
+      ->andWhere('at.date = ?', $date)
       ->fetchOne();
   }
 

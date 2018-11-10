@@ -15,10 +15,11 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
     $this->useFields(['member_id', 'date', 'reason', 'status']);
     $classIds = $this->getOption('class_ids');
     $memberIds = $this->getOption('member_ids');
+    $userInfo = $this->getOption('user_info');
     $this->validatorSchema['member_id'] = new sfValidatorDoctrineChoice(array(
       'model' => $this->getRelatedModelName('TblMember'),
       'query' => TblMemberTable::getInstance()->getMemberByIdsQuery($classIds, $memberIds),
-      'required' => true
+      'required' => $userInfo['user_type'] == UserTypeEnum::TEACHER
     ), array(
       'invalid' => 'Học sinh không hợp lệ',
       'required' => 'Mã học sinh không được để trống'

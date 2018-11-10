@@ -21,7 +21,7 @@ all:
       'article:updateArticle': [PRINCIPAL, TEACHER, PARENTS]
       'article:getArticleList': [PRINCIPAL, TEACHER, PARENTS]
       'article:removeArticle': [PRINCIPAL, TEACHER]
-      'comment:createComment': [PARENTS]
+      'comment:createComment': [PRINCIPAL, TEACHER, PARENTS]
       'comment:replyComment': [PRINCIPAL, TEACHER, PARENTS]
       'comment:getCommentList': [PRINCIPAL, TEACHER, PARENTS]
       'comment:removeComment': [PRINCIPAL, TEACHER]

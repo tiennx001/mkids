@@ -99,7 +99,7 @@ class mKidsHelper
    * @author huypv
    * @param int $width
    * @param int $height
-   * * @param int $type
+   * @param int $type
    * @return string /medias/huypv/2011/06/15/thumbs/abc_90_60.jpg
    */
   public static function getThumbUrl($source, $width = null, $height = null, $type = '')
@@ -813,5 +813,9 @@ class mKidsHelper
       }
     }
     return $newArray;
+  }
+
+  public static function getImageFullPath($imagePath) {
+    return sfConfig::get('app_media_server') . $imagePath;
   }
 }

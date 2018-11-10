@@ -15,4 +15,14 @@ class TblUser extends BaseTblUser
   public function checkPassword($password) {
     return sha1($this->getSalt() . $password) == $this->getPassword();
   }
+
+  public function updatePassword($password)
+  {
+    try {
+      $this->setPassword(sha1($this->getSalt() . $password));
+      $this->save();
+    } catch (Exception $e) {
+      throw new Exception('Cannot update user password: ' . $e->getMessage());
+    }
+  }
 }

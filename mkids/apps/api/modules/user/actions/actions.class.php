@@ -384,29 +384,31 @@ class userActions extends sfActions
    */
   public function executeChangePassword(sfWebRequest $request)
   {
-    $password = $request->getPostParameter('password', null);
-    if (!$password) {
-      $errorCode = UserErrorCode::MISSING_PARAMETERS;
-      $message = UserErrorCode::getMessage($errorCode);
-      $jsonObj = new jsonObject($errorCode, $message);
-      return $this->renderText($jsonObj->toJson());
-    }
+    $info = $this->getUser()->getAttribute('userInfo');
+    $vtUser = TblUserTable::getInstance()->findOneBy('id', $info['user_id']);
 
+    $currentPassword = $request->getPostParameter('currentPassword', null);
+    $password = $request->getPostParameter('password', null);
+    $values['current_password'] = $currentPassword;
     $values['password'] = $password;
-    $form = new PassValidateForm();
+
+    $form = new PassValidateForm($vtUser);
     $form->bind($values);
     if (!$form->isValid()) {
       $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
-      if ($form['password']->hasError())
-        $message = VtHelper::strip_html_tags($form['password']->getError());
+      $message = UserErrorCode::getMessage($errorCode);
+      foreach ($form as $widget) {
+        if ($widget->hasError()) {
+          $message = VtHelper::strip_html_tags($widget->getError());
+          break;
+        }
+      }
       $jsonObj = new jsonObject($errorCode, $message);
       return $this->renderText($jsonObj->toJson());
     }
 
-    $info = $this->getUser()->getAttribute('userInfo');
     try {
-      $vtUser = TblUserTable::getInstance()->findOneBy('id', $info['user_id']);
-      TblUserTable::getInstance()->updatePassword($vtUser, $password);
+      $vtUser->updatePassword($password);
       $errorCode = UserErrorCode::SUCCESS;
       $message = UserErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message);
@@ -648,7 +650,7 @@ class userActions extends sfActions
     $obj->facebook = $vtUser->getFacebook();
     $obj->address = $vtUser->getAddress();
     $obj->description = $vtUser->getDescription();
-    $obj->imagePath = $vtUser->getImagePath();
+    $obj->imagePath = mKidsHelper::getImageFullPath($vtUser->getImagePath());
     $obj->phone = mKidsHelper::getMobileNumber($vtUser->getMsisdn(), mKidsHelper::MOBILE_SIMPLE);
 
     $errorCode = UserErrorCode::SUCCESS;

@@ -78,7 +78,7 @@ class memberActions extends sfActions
             $memberObj = new stdClass();
             $memberObj->id = $member->getId();
             $memberObj->name = $member->getName();
-            $memberObj->imagePath = $member->getImagePath();
+            $memberObj->imagePath = mKidsHelper::getImageFullPath($member->getImagePath());
             if (in_array($activity->getType(), ActivityTypeEnum::getAttendanceArr())) {
               $data['attendantMembers'][] = $memberObj;
             } else {
@@ -180,7 +180,7 @@ class memberActions extends sfActions
         $actObj = new stdClass();
         $actObj->id = $activity->getTblMember()->getId();
         $actObj->name = $activity->getTblMember()->getName();
-        $actObj->imagePath = $activity->getTblMember()->getImagePath();
+        $actObj->imagePath = mKidsHelper::getImageFullPath($activity->getTblMember()->getImagePath());
         $actObj->type = $activity->getType();
         $actObj->description= $activity->getDescription();
         $actObj->date = $activity->getDate();
@@ -379,7 +379,7 @@ class memberActions extends sfActions
         $actObj = new stdClass();
         $actObj->id = $health->getTblMember()->getId();
         $actObj->name = $health->getTblMember()->getName();
-        $actObj->imagePath = $health->getTblMember()->getImagePath();
+        $actObj->imagePath = mKidsHelper::getImageFullPath($health->getTblMember()->getImagePath());
         $actObj->description= $health->getDescription();
         $actObj->date = $health->getDate();
         $actObj->weight = $health->getWeight();
@@ -434,13 +434,17 @@ class memberActions extends sfActions
     $memberIds = null;
     if ($info['user_type'] == UserTypeEnum::PARENTS) {
       $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
-      if(!empty($formValues['member_id']) && !empty($formValues['date'])){
-        $ticket = TblAbsenceTicketTable::getInstance()->getTicketByMemberIdAndDate($formValues['member_id'], $formValues['date']);
+      // Fix - Tam thoi - Phu huynh chi co 1 con hoc o truong
+      $memberId = $memberIds[0];
+      $formValues['member_id'] = $memberId;
+      unset($formValues['status']);
+      if(!empty($formValues['date'])) {
+        $ticket = TblAbsenceTicketTable::getInstance()->getTicketByMemberIdAndDate($memberId, $formValues['date']);
       }
     }
 
     $form = new TblAbsenceTicketApiForm($ticket, ['class_ids' => $classIds, 'member_ids' => $memberIds, 'user_info' => $info]);
-    if ($formValues['status'] == '') {
+    if (!isset($formValues['status'])) {
       $form->useFields(['member_id', 'date', 'reason']);
     }
 
@@ -453,7 +457,7 @@ class memberActions extends sfActions
       } catch (Exception $e) {
         $errorCode = UserErrorCode::INTERNAL_SERVER_ERROR;
         $message = UserErrorCode::getMessage($errorCode);
-        VtHelper::writeLogValue(sprintf('[management][executeCreateAbsenceTicket]|ERROR = %s|params:%s', $e->getMessage(),json_encode($formValues)));
+        VtHelper::writeLogValue(sprintf('[management][executeCreateAbsenceTicket]|ERROR = %s|params:%s', $e->getMessage(), json_encode($formValues)));
       }
     } else {
       $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
@@ -543,7 +547,7 @@ class memberActions extends sfActions
         $actObj->id = $ticket->getId();
         $actObj->member_id = $ticket->getTblMember()->getId();
         $actObj->name = $ticket->getTblMember()->getName();
-        $actObj->imagePath = $ticket->getTblMember()->getImagePath();
+        $actObj->imagePath = mKidsHelper::getImageFullPath($ticket->getTblMember()->getImagePath());
         $actObj->status= $ticket->getStatus();
         $actObj->reason= $ticket->getReason();
         $actObj->date = $ticket->getDate();

@@ -229,7 +229,9 @@ class commentActions extends sfActions
             $userObj->id = $tblUser->getId();
             $userObj->name = $tblUser->getName();
             $userObj->imagePath = $tblUser->getImagePath();
+            $userObj->type = $tblUser->getType();
             $item->user = $userObj;
+            $item->isOwner = $tblUser->getId() == $info['user_id'] ? 1 : 0;
           }
           $item->commentTime = $comment->created_at;
           // Get reply comment list

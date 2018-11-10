@@ -181,7 +181,7 @@ class summaryActions extends sfActions
           $item = new stdClass();
           $item->id = $summaryRecord->TblMember->id;
           $item->name = $summaryRecord->TblMember->name;
-          $item->imagePath = $summaryRecord->TblMember->image_path;
+          $item->imagePath = mKidsHelper::getImageFullPath($summaryRecord->TblMember->image_path);
           $item->date = $summaryRecord->date;
           $item->week = $summaryRecord->week;
           $item->summary = $summaryRecord->summary;

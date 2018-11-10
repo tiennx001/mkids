@@ -214,7 +214,7 @@ class notificationActions extends sfActions
               $memberObj = new stdClass();
               $memberObj->id = $member->getId();
               $memberObj->name = $member->getName();
-              $memberObj->imagePath = $member->getImagePath();
+              $memberObj->imagePath = mKidsHelper::getImageFullPath($member->getImagePath());
               $item->memberList[] = $memberObj;
             }
           }

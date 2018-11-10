@@ -49,6 +49,7 @@ class TblArticleTable extends Doctrine_Table
 
     return $q->offset($offset)
       ->limit($limit)
+      ->orderBy('a.id DESC')
       ->execute();
   }
 

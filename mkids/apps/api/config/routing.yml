@@ -130,6 +130,9 @@ getArticleList:
 removeArticle:
   url: /removeArticle
   param: { module: article, action: removeArticle }
+getImageList:
+  url: /getImageList
+  param: { module: article, action: getImageList }
 ############ END Bang tin ############
 
 ############ Binh luan ############

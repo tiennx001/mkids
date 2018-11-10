@@ -341,7 +341,7 @@ class articleActions extends sfActions
               $imageObj = new stdClass();
               $imageObj->id = $image->getId();
               $imageObj->title = $image->getTitle();
-              $imageObj->imagePath = $image->getImagePath();
+              $imageObj->imagePath = mKidsHelper::getImageFullPath($image->getImagePath());
               $item->imageList[] = $imageObj;
             }
           }
@@ -366,7 +366,7 @@ class articleActions extends sfActions
               $memberObj = new stdClass();
               $memberObj->id = $member->getId();
               $memberObj->name = $member->getName();
-              $memberObj->imagePath = $member->getImagePath();
+              $memberObj->imagePath = mKidsHelper::getImageFullPath($member->getImagePath());
               $item->memberList[] = $memberObj;
             }
           }
@@ -427,6 +427,113 @@ class articleActions extends sfActions
       return $this->renderText($jsonObj->toJson());
     } catch (Exception $e) {
       VtHelper::writeLogValue('executeUpdateArticle|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
+      $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
+      $message = defaultErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+  }
+
+  /**
+   * Ham lay danh sach anh theo ngay
+   *
+   * @author Tiennx6
+   * @since 10/11/2018
+   * @param sfWebRequest $request
+   * @return sfView
+   */
+  public function executeGetImageList(sfWebRequest $request)
+  {
+    $info = $this->getUser()->getAttribute('userInfo');
+    VtHelper::writeLogValue('executeGetImageList|Acc=' . $info['account'] . '|Starting request with params=' . json_encode($request));
+
+    $page = (int)$request->getPostParameter('page', 1);
+    $pageSize = (int)$request->getPostParameter('pageSize', 10);
+    $date = $request->getPostParameter('date', null);
+
+    if (!$date) {
+      $errorCode = UserErrorCode::MISSING_PARAMETERS;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+      $errorCode = UserErrorCode::INVALID_DATE_FORMAT;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if ($date > date('Y-m-d')) {
+      $errorCode = UserErrorCode::FILTER_DATE_COULD_NOT_GREATER_THAN_NOW;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    if ($page < 1 || $pageSize < 1) {
+      $errorCode = UserErrorCode::INVALID_PARAMETER_VALUE;
+      $message = UserErrorCode::getMessage($errorCode);
+      $jsonObj = new jsonObject($errorCode, $message);
+      return $this->renderText($jsonObj->toJson());
+    }
+
+    $offset = ($page - 1) * $pageSize;
+    $data = array();
+    try {
+      $schoolIds = TblSchoolTable::getInstance()->getActiveSchoolIdsByUserId($info['user_id'], $info['user_type']);
+      $groupIds = TblGroupTable::getInstance()->getActiveGroupIdsByUserId($info['user_id'], $info['user_type']);
+      $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($info['user_id'], $info['user_type']);
+      $memberIds = TblMemberTable::getInstance()->getActiveMemberIdsByUserId($info['user_id'], $info['user_type']);
+      $listImages = TblArticleImageTable::getInstance()->getListImages($date, $offset, $pageSize, $schoolIds, $groupIds, $classIds, $memberIds);
+      if (count($listImages)) {
+        foreach ($listImages as $image) {
+          $item = new stdClass();
+          $item->id = $image->id;
+          $item->title = $image->title;
+          $item->imagePath = mKidsHelper::getImageFullPath($image->image_path);
+          $item->articleId = $image->article_id;
+//          $article = $image->getTblArticle();
+//          if ($article->getTblGroup() && count($article->getTblGroup())) {
+//            foreach ($article->getTblGroup() as $group) {
+//              $groupObj = new stdClass();
+//              $groupObj->id = $group->getId();
+//              $groupObj->name = $group->getName();
+//              $item->groupList[] = $groupObj;
+//            }
+//          }
+//          if ($article->getTblClass() && count($article->getTblClass())) {
+//            foreach ($article->getTblClass() as $class) {
+//              $classObj = new stdClass();
+//              $classObj->id = $class->getId();
+//              $classObj->name = $class->getName();
+//              $item->classList[] = $classObj;
+//            }
+//          }
+//          if ($article->getTblMember() && count($article->getTblMember())) {
+//            foreach ($article->getTblMember() as $member) {
+//              $memberObj = new stdClass();
+//              $memberObj->id = $member->getId();
+//              $memberObj->name = $member->getName();
+//              $memberObj->imagePath = $member->getImagePath();
+//              $item->memberList[] = $memberObj;
+//            }
+//          }
+          $data[] = $item;
+        }
+        $errorCode = UserErrorCode::SUCCESS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message, null, $data);
+        return $this->renderText($jsonObj->toJson());
+      } else {
+        $errorCode = UserErrorCode::NO_RESULTS;
+        $message = UserErrorCode::getMessage($errorCode);
+        $jsonObj = new jsonObject($errorCode, $message);
+        return $this->renderText($jsonObj->toJson());
+      }
+    } catch (Exception $e) {
+      VtHelper::writeLogValue('executeGetImageList|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
       $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
       $message = defaultErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message);

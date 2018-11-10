@@ -438,7 +438,7 @@ class managementActions extends sfActions
         'id' => $teacher['id'],
         'name' => $teacher['name'],
         'description' => $teacher['description'],
-        'imagePath' => $teacher['image_path'],
+        'imagePath' => mKidsHelper::getImageFullPath($teacher['image_path']),
         'class' => $temp
       ];
     }
@@ -592,7 +592,7 @@ class managementActions extends sfActions
         'id' => $student['id'],
         'name' => $student['name'],
         'description' => $student['description'],
-        'imagePath' => $student['image_path'],
+        'imagePath' => mKidsHelper::getImageFullPath($student['image_path']),
         'classId' => $student['class_id'],
         'className' => $student['TblClass']['name'],
       ];
@@ -750,7 +750,7 @@ class managementActions extends sfActions
         'id' => $menu['id'],
         'title' => $menu['title'],
         'description' => $menu['description'],
-        'imagePath' => $menu['image_path'],
+        'imagePath' => mKidsHelper::getImageFullPath($menu['image_path']),
       ];
 
       if(count($menu['TblGroup'])){
@@ -1016,7 +1016,7 @@ class managementActions extends sfActions
         'id' => $parent['id'],
         'name' => $parent['name'],
         'description' => $parent['description'],
-        'imagePath' => $parent['image_path'],
+        'imagePath' => mKidsHelper::getImageFullPath($parent['image_path']),
         'gender' => $parent['gender'],
         'email' => $parent['email'],
         'facebook' => $parent['facebook'],

@@ -102,12 +102,12 @@ class TblMemberTable extends Doctrine_Table
     $q = $this->getActiveQuery('m');
 
     if ($memberIds) {
-      $q->andWhere('m.id', $memberIds);
+      $q->andWhereIn('m.id', $memberIds);
     }
 
     if ($classIds) {
       $q->innerJoin('m.TblClass c')
-        ->andWhere('c.id', $classIds);
+        ->andWhereIn('c.id', $classIds);
     }
 
     return $q;
