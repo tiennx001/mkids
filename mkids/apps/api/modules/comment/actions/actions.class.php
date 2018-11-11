@@ -228,7 +228,7 @@ class commentActions extends sfActions
             $userObj = new stdClass();
             $userObj->id = $tblUser->getId();
             $userObj->name = $tblUser->getName();
-            $userObj->imagePath = $tblUser->getImagePath();
+            $userObj->imagePath = mKidsHelper::getImageFullPath($tblUser->getImagePath());
             $userObj->type = $tblUser->getType();
             $item->user = $userObj;
             $item->isOwner = $tblUser->getId() == $info['user_id'] ? 1 : 0;
@@ -246,7 +246,7 @@ class commentActions extends sfActions
                 $replyUserObj = new stdClass();
                 $replyUserObj->id = $replyUser->getId();
                 $replyUserObj->name = $replyUser->getName();
-                $replyUserObj->imagePath = $replyUser->getImagePath();
+                $replyUserObj->imagePath = mKidsHelper::getImageFullPath($replyUser->getImagePath());
                 $replyItem->replyUser = $replyUserObj;
               }
               $replyItem->replyTime = $replyComment->created_at;
