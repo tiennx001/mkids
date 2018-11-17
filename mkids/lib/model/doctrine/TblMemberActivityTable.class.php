@@ -45,8 +45,8 @@ class TblMemberActivityTable extends Doctrine_Table
       ->andWhere('a.member_id = ?', $memberId);
 
     if ($classIds) {
-      $q->leftJoin('a.TblClass c')
-        ->andWhereIn('c.id', $classIds);
+      $q->leftJoin('a.TblUserClassRef ucr')
+        ->andWhereIn('ucr.class_id', $classIds);
     }
 
     if ($memberIds) {

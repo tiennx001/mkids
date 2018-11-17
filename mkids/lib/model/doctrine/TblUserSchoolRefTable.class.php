@@ -16,4 +16,13 @@ class TblUserSchoolRefTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('TblUserSchoolRef');
     }
+
+    public function getSchoolIdsByUserId($userId)
+    {
+        return $this->createQuery('a')
+          ->leftJoin('a.TblSchool b')
+          ->where('a.user_id = ?', $userId)
+          ->andWhere('b.status = 1 AND b.is_delete = 0')
+          ->execute()->toKeyValueArray('b.id', 'b.name');
+    }
 }

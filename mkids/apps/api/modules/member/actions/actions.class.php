@@ -156,16 +156,14 @@ class memberActions extends sfActions
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $classIds = null;
-      if ($info['user_type'] == UserTypeEnum::TEACHER) {
-        $classIds = TblUserClassRefTable::getInstance()->getClassIdsByUserId($info['user_id']);
-      }
-
       $memberIds = null;
+      $classIds = null;
       if ($info['user_type'] == UserTypeEnum::PARENTS) {
         $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
         // Fix - Tam thoi - Phu huynh chi co 1 con hoc o truong
         $memberId = $memberIds[0];
+      } else {
+        $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($info['user_id'], $info['user_type']);
       }
 
       $listActivities = TblMemberActivityTable::getInstance()->getMemberHistory($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $pageSize);
@@ -355,16 +353,14 @@ class memberActions extends sfActions
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $classIds = null;
-      if ($info['user_type'] == UserTypeEnum::TEACHER) {
-        $classIds = TblUserClassRefTable::getInstance()->getClassIdsByUserId($info['user_id']);
-      }
-
       $memberIds = null;
+      $classIds = null;
       if ($info['user_type'] == UserTypeEnum::PARENTS) {
         $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
         // Fix - Tam thoi - Phu huynh chi co 1 con hoc o truong
         $memberId = $memberIds[0];
+      } else {
+        $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($info['user_id'], $info['user_type']);
       }
 
       $listActivities = TblMemberHealthTable::getInstance()->getMemberHealth($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $pageSize);
@@ -522,16 +518,14 @@ class memberActions extends sfActions
     $offset = ($page - 1) * $pageSize;
     $data = array();
     try {
-      $classIds = null;
-      if ($info['user_type'] == UserTypeEnum::TEACHER) {
-        $classIds = TblUserClassRefTable::getInstance()->getClassIdsByUserId($info['user_id']);
-      }
-
       $memberIds = null;
+      $classIds = null;
       if ($info['user_type'] == UserTypeEnum::PARENTS) {
         $memberIds = TblMemberUserRefTable::getInstance()->getMemberIdsByUserId($info['user_id']);
         // Fix - Tam thoi - Phu huynh chi co 1 con hoc o truong
         $memberId = $memberIds[0];
+      } else {
+        $classIds = TblClassTable::getInstance()->getActiveClassIdsByUserId($info['user_id'], $info['user_type']);
       }
 
       $listTickets = TblAbsenceTicketTable::getInstance()->getAbsenceTicketList($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $pageSize);
