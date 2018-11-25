@@ -61,6 +61,12 @@ all:
           username:   'icontact.vvn@gmail.com'
           password:   'iContact@2016'
 
+  storage:
+    param:
+      session_name: mkids_api_session
+      session_cookie_lifetime: 1800
+      session_cookie_httponly: true
+
 #  #Redis cache
 #  view_cache:
 #    class: sfRedisCache

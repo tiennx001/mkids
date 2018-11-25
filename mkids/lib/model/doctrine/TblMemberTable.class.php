@@ -90,8 +90,8 @@ class TblMemberTable extends Doctrine_Table
           ->innerJoin('m.TblClass c')
           ->innerJoin('c.TblGroup g')
           ->innerJoin('g.TblSchool s')
-          ->innerJoin('g.TblUserSchoolRef s')
-          ->andWhere('s.user_id = ?', $userId)
+          ->innerJoin('s.TblUserSchoolRef usr')
+          ->andWhere('usr.user_id = ?', $userId)
           ->execute()
           ->toKeyValueArray('mId', 'mName');
         return array_keys($arr);

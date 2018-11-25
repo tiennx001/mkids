@@ -12,8 +12,8 @@ all:
     function_roles:
       'notification:updateNotificationProgram': [PRINCIPAL, TEACHER]
       'notification:getNotificationProgramList': [PRINCIPAL, TEACHER]
-      'notification:getNewNotifications': [PARENTS]
-      'notification:getNotifications': [PARENTS]
+      'notification:getNewNotifications': [PRINCIPAL, TEACHER, PARENTS]
+      'notification:getNotifications': [PRINCIPAL, TEACHER, PARENTS]
       'management:updateSchoolInfo': [PRINCIPAL]
       'management:updateGroup': [PRINCIPAL]
       'management:updateClass': [PRINCIPAL]
