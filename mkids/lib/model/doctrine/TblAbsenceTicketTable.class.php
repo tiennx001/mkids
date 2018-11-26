@@ -34,11 +34,11 @@ class TblAbsenceTicketTable extends Doctrine_Table
   public function getAbsenceTicketList($fromDate, $toDate, $memberId, $classIds, $memberIds, $offset, $limit)
   {
     $q = $this->getActiveQuery('a')
-      ->leftJoin('a.TblMember')
+      ->leftJoin('a.TblMember m')
       ->andWhere('a.member_id = ?', $memberId);
 
     if ($classIds) {
-      $q->leftJoin('a.TblClass c')
+      $q->leftJoin('m.TblClass c')
         ->andWhereIn('c.id', $classIds);
     }
 

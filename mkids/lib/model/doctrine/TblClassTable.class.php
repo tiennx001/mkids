@@ -115,8 +115,8 @@ class TblClassTable extends Doctrine_Table
           ->select('c.id cId, c.name cName')
           ->innerJoin('c.TblGroup g')
           ->innerJoin('g.TblSchool s')
-          ->innerJoin('s.TblUserSchoolRef s')
-          ->andWhere('s.user_id = ?', $userId)
+          ->innerJoin('s.TblUserSchoolRef usr')
+          ->andWhere('usr.user_id = ?', $userId)
           ->execute()
           ->toKeyValueArray('cId', 'cName');
         return array_keys($arr);

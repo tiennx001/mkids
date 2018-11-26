@@ -28,7 +28,7 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
     $statusArr = ['' => 'status'] + AbsenceTicketStatusEnum::getArr();
     $this->validatorSchema['status'] = new sfValidatorChoice([
       'choices' => array_keys($statusArr),
-      'required' => false
+      'required' => $userInfo['user_type'] != UserTypeEnum::PARENTS
     ],[
       'invalid' => 'Trạng thái không hợp lệ',
       'required' => 'Trạng thái không được để trống'
@@ -45,11 +45,17 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
       'invalid' => 'Ngày không hợp lệ'
     ));
 
+    $this->validatorSchema['reason'] = new sfValidatorString(array(
+      'max_length' => 255,
+      'required' => $userInfo['user_type'] == UserTypeEnum::PARENTS
+    ), array(
+      'max_length' => 'Vui lòng nhập lý do tối đa %max_length% ký tự',
+    ));
+
     $this->validatorSchema->setPostValidator(new sfValidatorCallback(array(
       'callback' => array($this, 'checkUpdateStatusCredential')
     )));
 
-    $this->validatorSchema['reason']->setMessage('max_length','Vui lòng nhập lý do tối đa %max_length% ký tự');
     $this->disableLocalCSRFProtection();
   }
 
@@ -57,6 +63,10 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
     $userInfo = $this->getOption('user_info');
     if (isset($values['status']) && $values['status'] && $userInfo['user_type'] == UserTypeEnum::PARENTS) {
       $errSchema = array('status' => new sfValidatorError($validator, sfContext::getInstance()->getI18N()->__('Bạn không có quyền cập nhật trạng thái đơn xin nghỉ')));
+      throw new sfValidatorErrorSchema($validator, $errSchema);
+    }
+    if (!$this->isNew() && $this->getObject()->getStatus() != AbsenceTicketStatusEnum::WAITING && $userInfo['user_type'] == UserTypeEnum::PARENTS) {
+      $errSchema = array('status' => new sfValidatorError($validator, sfContext::getInstance()->getI18N()->__('Bạn không có quyền cập nhật đơn đã phê duyệt hoặc đã hủy')));
       throw new sfValidatorErrorSchema($validator, $errSchema);
     }
     return $values;
@@ -67,6 +77,11 @@ class TblAbsenceTicketApiForm extends TblAbsenceTicketForm
     if ($this->isNew()) {
       $userInfo = $this->getOption('user_info');
       $values['user_id'] = $userInfo['user_id'];
+    }
+    // Luu them thong tin nguoi phe duyet
+    $userInfo = $this->getOption('user_info');
+    if ($userInfo['user_type'] != UserTypeEnum::PARENTS) {
+      $values['approver_id'] = $userInfo['user_id'];
     }
     return $values;
   }

@@ -314,7 +314,7 @@ class memberActions extends sfActions
   public function executeGetHealthStatus(sfWebRequest $request)
   {
     $info = $this->getUser()->getAttribute('userInfo');
-    VtHelper::writeLogValue('executeGetMemberActivity|Acc=' . $info['account'] . '|Starting request with params=' . json_encode($request));
+    VtHelper::writeLogValue('executeGetHealthStatus|Acc=' . $info['account'] . '|Starting request with params=' . json_encode($request));
 
     $memberId = (int)$request->getPostParameter('memberId', null);
     $fromDate = $request->getPostParameter('fromDate');
@@ -389,7 +389,7 @@ class memberActions extends sfActions
       $jsonObj = new jsonObject($errorCode, $message, null, $data);
       return $this->renderText($jsonObj->toJson());
     } catch (Exception $e) {
-      VtHelper::writeLogValue('executeGetMemberActivity|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
+      VtHelper::writeLogValue('executeGetHealthStatus|Acc=' . $info['account'] . '|Internal server error=' . $e->getMessage());
       $errorCode = defaultErrorCode::INTERNAL_SERVER_ERROR;
       $message = defaultErrorCode::getMessage($errorCode);
       $jsonObj = new jsonObject($errorCode, $message);
@@ -408,7 +408,7 @@ class memberActions extends sfActions
 
     $ticket = null;
     $classIds = null;
-    if ($info['user_type'] == UserTypeEnum::TEACHER) {
+    if ($info['user_type'] != UserTypeEnum::PARENTS) {
       $classIds = TblUserClassRefTable::getInstance()->getClassIdsByUserId($info['user_id']);
       $ticketId = $request->getPostParameter('id');
       if (!$ticketId) {
@@ -440,10 +440,6 @@ class memberActions extends sfActions
     }
 
     $form = new TblAbsenceTicketApiForm($ticket, ['class_ids' => $classIds, 'member_ids' => $memberIds, 'user_info' => $info]);
-    if (!isset($formValues['status'])) {
-      $form->useFields(['member_id', 'date', 'reason']);
-    }
-
     $form->bind($formValues);
     if ($form->isValid()) {
       try {
@@ -539,12 +535,13 @@ class memberActions extends sfActions
       foreach ($listTickets as $ticket) {
         $actObj = new stdClass();
         $actObj->id = $ticket->getId();
-        $actObj->member_id = $ticket->getTblMember()->getId();
+        $actObj->memberId = $ticket->getTblMember()->getId();
         $actObj->name = $ticket->getTblMember()->getName();
         $actObj->imagePath = mKidsHelper::getImageFullPath($ticket->getTblMember()->getImagePath());
         $actObj->status= $ticket->getStatus();
         $actObj->reason= $ticket->getReason();
         $actObj->date = $ticket->getDate();
+        $actObj->approverId = $ticket->getApproverId();
         $data[] = $actObj;
       }
 

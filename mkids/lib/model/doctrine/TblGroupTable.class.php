@@ -68,8 +68,8 @@ class TblGroupTable extends Doctrine_Table
         $arr = $this->getActiveQuery('g')
           ->select('g.id gId, g.name gName')
           ->innerJoin('g.TblSchool s')
-          ->innerJoin('s.TblUserSchoolRef s')
-          ->andWhere('s.user_id = ?', $userId)
+          ->innerJoin('s.TblUserSchoolRef usr')
+          ->andWhere('usr.user_id = ?', $userId)
           ->execute()
           ->toKeyValueArray('gId', 'gName');
         return array_keys($arr);
