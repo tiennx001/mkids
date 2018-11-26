@@ -7,5 +7,5 @@ changePassword:
 updateUserInfo:
   is_secure: true
 
-viewUserInfo:
+getUserInfo:
   is_secure: true

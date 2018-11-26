@@ -816,6 +816,9 @@ class mKidsHelper
   }
 
   public static function getImageFullPath($imagePath) {
-    return sfConfig::get('app_media_server') . $imagePath;
+    if ($imagePath) {
+      return sfConfig::get('app_media_server') . $imagePath;
+    }
+    return '';
   }
 }
